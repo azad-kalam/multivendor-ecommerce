@@ -1,0 +1,1 @@
+@include('inc.headers.global.global_header')
