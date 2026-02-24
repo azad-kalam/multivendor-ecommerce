@@ -1,0 +1,1 @@
+@include('admin.all_vendor.search.vendor_table')

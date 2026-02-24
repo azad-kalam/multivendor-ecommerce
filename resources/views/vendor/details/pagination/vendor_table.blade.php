@@ -1,0 +1,1 @@
+@include('vendor.details.search.vendor_table')

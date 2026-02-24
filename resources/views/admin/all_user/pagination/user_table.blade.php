@@ -1,0 +1,1 @@
+@include('admin.all_user.search.user_table')

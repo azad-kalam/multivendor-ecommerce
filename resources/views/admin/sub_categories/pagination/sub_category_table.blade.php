@@ -1,0 +1,1 @@
+@include('admin.sub_categories.search.sub_category_table')
