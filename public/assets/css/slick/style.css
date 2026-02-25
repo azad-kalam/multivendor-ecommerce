@@ -1,0 +1,84 @@
+/* Thumbnail Slider start here */
+#product-thumbnails .slide-item {
+    display: flex;
+}
+
+#product-thumbnails .slide-item .thumb-img {
+    width: 100%;
+    height: 155px;
+    object-fit: cover;
+    border: 1px solid black;
+    cursor: pointer;
+    margin: 1px 0px;
+    border-radius: 2px;
+}
+
+#product-thumbnails .slide-item .thumb-img:hover {
+    border-color: red;
+    transform: scale(1.01);
+}
+
+/* Vertical arrows */
+.vertical-slider .slick-prev,
+.vertical-slider .slick-next {
+    color: white;
+    width: 15px;
+    height: 15px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.vertical-slider .slick-prev {
+    top: -15px !important;
+    left: 50% !important;
+    transform: translateX(-50%);
+    z-index: 1;
+}
+
+.vertical-slider .slick-next {
+    top: auto !important;
+    left: 50% !important;
+    transform: translateX(-50%);
+    z-index: 1;
+}
+
+.vertical-slider .slick-prev:before,
+.vertical-slider .slick-next:before {
+    transform: rotate(-88deg);
+}
+
+/* thumbnail slider end here */
+
+/* Main Image Slider start here */
+#product-main-img .product-preview {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 500px;
+    overflow: hidden;
+}
+
+#product-main-img .product-preview .main-img {
+    width: 400px;
+    height: 400px;
+    padding: 5px;
+}
+
+.main-slider .slick-prev,
+.main-slider .slick-next {
+    width: 25px;
+    height: 25px;
+    color: white;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+/* main image slider end here */
