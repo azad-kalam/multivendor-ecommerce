@@ -644,8 +644,9 @@
                                         </div> --}}
 
                                         <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
-                                            <form action="{{ route('admin.profile.update', $user->id) }}" method="POST"
+                                            <form action="{{ route('admin.profile.update') }}" method="POST"
                                                 enctype="multipart/form-data">
+
                                                 @csrf
                                                 @method('PUT')
 
@@ -668,110 +669,61 @@
                                                 {{-- Profile Image Input --}}
                                                 @include('partials.global_file.profile.edit_file')
 
-                                                {{-- Full Name --}}
-                                                <div class="row mb-3">
-                                                    <label class="col-md-4 col-lg-3 col-form-label">Full Name</label>
-                                                    <div class="col-md-8 col-lg-9">
-                                                        <input name="name" type="text"
-                                                            class="form-control form-control-sm"
-                                                            value="{{ old('name', $user->name) }}">
-                                                    </div>
-                                                </div>
-
-                                                {{-- About --}}
-                                                <div class="row mb-3">
-                                                    <label class="col-md-4 col-lg-3 col-form-label small">About</label>
-                                                    <div class="col-md-8 col-lg-9">
-                                                        <textarea name="about" class="form-control form-control-sm" rows="4">{{ old('about', $profile->about ?? '') }}</textarea>
-                                                    </div>
-                                                </div>
-
-                                                {{-- Company --}}
-                                                <div class="row mb-3">
-                                                    <label class="col-md-4 col-lg-3 col-form-label small">Company</label>
-                                                    <div class="col-md-8 col-lg-9">
-                                                        <input name="company" type="text"
-                                                            class="form-control form-control-sm"
-                                                            value="{{ old('company', $profile->company ?? '') }}">
-                                                    </div>
-                                                </div>
-
-                                                {{-- Job --}}
-                                                <div class="row mb-3">
-                                                    <label class="col-md-4 col-lg-3 col-form-label small">Job</label>
-                                                    <div class="col-md-8 col-lg-9">
-                                                        <input name="job" type="text"
-                                                            class="form-control form-control-sm"
-                                                            value="{{ old('job', $profile->job ?? '') }}">
-                                                    </div>
-                                                </div>
-
-                                                {{-- Country --}}
-                                                <div class="row mb-3">
-                                                    <label class="col-md-4 col-lg-3 col-form-label small">Country</label>
-                                                    <div class="col-md-8 col-lg-9">
-                                                        <input name="country" type="text"
-                                                            class="form-control form-control-sm"
-                                                            value="{{ old('country', $profile->country ?? '') }}">
-                                                    </div>
-                                                </div>
-
-                                                {{-- Address --}}
-                                                <div class="row mb-3">
-                                                    <label class="col-md-4 col-lg-3 col-form-label small">Address</label>
-                                                    <div class="col-md-8 col-lg-9">
-                                                        <textarea name="address" class="form-control form-control-sm" rows="4">{{ old('address', $profile->address ?? '') }}</textarea>
-                                                    </div>
-                                                </div>
-
-                                                {{-- Phone --}}
-                                                <div class="row mb-3">
-                                                    <label class="col-md-4 col-lg-3 col-form-label small">Phone</label>
-                                                    <div class="col-md-8 col-lg-9">
-                                                        <input name="phone" type="text"
-                                                            class="form-control form-control-sm"
-                                                            value="{{ old('phone', $user->phone ?? '') }}">
-                                                    </div>
+                                                {{-- Name --}}
+                                                <div class="mb-3">
+                                                    <label>Name</label>
+                                                    <input type="text" name="name"
+                                                        value="{{ old('name', $user->name) }}" class="form-control">
                                                 </div>
 
                                                 {{-- Email --}}
-                                                <div class="row mb-3">
-                                                    <label class="col-md-4 col-lg-3 col-form-label small">Email</label>
-                                                    <div class="col-md-8 col-lg-9">
-                                                        <input name="email" type="email"
-                                                            class="form-control form-control-sm"
-                                                            value="{{ old('email', $user->email ?? '') }}">
-                                                    </div>
+                                                <div class="mb-3">
+                                                    <label>Email</label>
+                                                    <input type="email" name="email"
+                                                        value="{{ old('email', $user->email) }}" class="form-control">
                                                 </div>
 
-                                                {{-- Social Links --}}
-                                                @php
-                                                    $socials = [
-                                                        'twitter' => 'Twitter Link',
-                                                        'facebook' => 'Facebook Link',
-                                                        'instagram' => 'Instagram Link',
-                                                        'linkedin' => 'Linkedin Link',
-                                                    ];
-                                                @endphp
+                                                {{-- Phone --}}
+                                                <div class="mb-3">
+                                                    <label>Phone</label>
+                                                    <input type="text" name="phone"
+                                                        value="{{ old('phone', $user->phone) }}" class="form-control">
+                                                </div>
 
-                                                @foreach ($socials as $field => $label)
-                                                    <div class="row mb-3">
-                                                        <label
-                                                            class="col-md-4 col-lg-3 col-form-label small">{{ $label }}</label>
-                                                        <div class="col-md-8 col-lg-9">
-                                                            <input name="{{ $field }}" type="text"
-                                                                class="form-control form-control-sm"
-                                                                value="{{ old($field, $profile->$field ?? '') }}">
-                                                        </div>
-                                                    </div>
-                                                @endforeach
+                                                {{-- About --}}
+                                                <div class="mb-3">
+                                                    <label>About</label>
+                                                    <textarea name="about" class="form-control">
+                                                        {{ old('about', $profile->about ?? '') }}
+                                                    </textarea>
+                                                </div>
 
-                                                {{-- Submit Button --}}
+                                                {{-- Company --}}
+                                                <div class="mb-3">
+                                                    <label>Company</label>
+                                                    <input type="text" name="company"
+                                                        value="{{ old('company', $profile->company ?? '') }}"
+                                                        class="form-control">
+                                                </div>
+
+                                                {{-- Social --}}
+                                                <div class="mb-3">
+                                                    <label>Twitter</label>
+                                                    <input type="text" name="twitter"
+                                                        value="{{ old('twitter', $profile->twitter ?? '') }}"
+                                                        class="form-control">
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label>Facebook</label>
+                                                    <input type="text" name="facebook"
+                                                        value="{{ old('facebook', $profile->facebook ?? '') }}"
+                                                        class="form-control">
+                                                </div>
                                                 <div class="text-center">
                                                     <button type="submit" class="btn btn-primary btn-sm">Save
                                                         Changes</button>
                                                 </div>
-
                                             </form>
                                         </div>
 
