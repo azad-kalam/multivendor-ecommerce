@@ -17,4 +17,7 @@ Route::middleware(['auth', 'verified', RoleMiddleware::class . ':admin'])
 
         Route::put('/profile/update', [AdminProfileController::class, 'update'])
             ->name('profile.update');
+
+        Route::get('/profile/change-password', [AdminProfileController::class, 'changePassword'])->name('profile.change-password');
+        Route::post('/profile/change-password', [AdminProfileController::class, 'updatePassword'])->name('profile.update-password');
     });

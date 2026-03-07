@@ -5,36 +5,29 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\File;
 use App\Models\Profile;
 use App\Models\Image;
+use App\Models\User;
 
 class ProfileController extends Controller
 {
-
-    // profile page
     public function index()
     {
         $user = Auth::user();
-
-        $profile = $user->profile()->with('image')->first();
+        $profile = Profile::with('image')->where('user_id', $user->id)->first();
 
         return view('admin.profile.index', compact('user', 'profile'));
     }
 
-
-    // edit page
     public function edit()
     {
         $user = Auth::user();
-
-        $profile = $user->profile()->with('image')->first();
-
+        $profile = Profile::with('image')->where('user_id', $user->id)->first();
         return view('admin.profile.index', compact('user', 'profile'));
     }
 
-
-    // update profile
     public function update(Request $request)
     {
 
@@ -51,8 +44,6 @@ class ProfileController extends Controller
             'linkedin_profile' => 'nullable|url|regex:/^(https?:\/\/)?(www\.)?linkedin\.com\/.*$/',
         ]);
 
-
-        // update users table
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
@@ -62,9 +53,7 @@ class ProfileController extends Controller
 
         // update profiles table
         $profile = Profile::updateOrCreate(
-
             ['user_id' => $user->id],
-
             [
                 'about' => $request->about,
                 'company' => $request->company,
@@ -76,11 +65,8 @@ class ProfileController extends Controller
                 'instagram' => $request->instagram_profile,
                 'linkedin' => $request->linkedin_profile
             ]
-
         );
 
-
-        // image upload
         if ($request->hasFile('profile_image')) {
 
             $path = public_path('uploads/profile/');
@@ -120,9 +106,39 @@ class ProfileController extends Controller
 
         }
 
-
         return redirect()->route('admin.profile.index')
             ->with('toastr_success', 'Profile Updated Successfully');
 
+    }
+
+    public function changePassword()
+    {
+        return view('admin.profile.index');
+    }
+    public function updatePassword(Request $request)
+    {
+        $user = Auth::user();
+        $request->validate([
+            'password' => 'required',
+            'newpassword' => 'required|string|min:8',
+            'renewpassword' => 'required|string|min:8',
+        ]);
+
+        // check current password
+        if (!Hash::check($request->password, $user->password)) {
+            return back()->with('toastr_error', 'Current password is incorrect.');
+        }
+
+        // check new password match
+        if ($request->newpassword !== $request->renewpassword) {
+            return back()->with('toastr_error', 'New password and confirmation password do not match.');
+        }
+
+        // update password
+        $user->password = Hash::make($request->newpassword);
+        $user->save();
+
+        return redirect()->route('admin.profile.index')
+            ->with('toastr_success', 'Password updated successfully.');
     }
 }
