@@ -30,8 +30,8 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
-
         $user = Auth::user();
+
         $request->validate([
             'name' => 'nullable|max:255',
             'email' => 'nullable|email|max:255|unique:users,email,' . $user->id,
@@ -47,11 +47,9 @@ class ProfileController extends Controller
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
-            'phone' => $request->phone
+            'phone' => $request->phone,
         ]);
 
-
-        // update profiles table
         $profile = Profile::updateOrCreate(
             ['user_id' => $user->id],
             [
@@ -63,52 +61,48 @@ class ProfileController extends Controller
                 'twitter' => $request->twitter_profile,
                 'facebook' => $request->facebook_profile,
                 'instagram' => $request->instagram_profile,
-                'linkedin' => $request->linkedin_profile
+                'linkedin' => $request->linkedin_profile,
             ]
         );
 
         if ($request->hasFile('profile_image')) {
+            $file = $request->file('profile_image');
+            $originalFileName = $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
+            $fileName = time() . '_' . uniqid() . '.' . $extension;
 
             $path = public_path('uploads/profile/');
-
             if (!File::exists($path)) {
                 File::makeDirectory($path, 0755, true);
             }
 
-            // delete old image
-            if ($profile->image) {
+            $file->move($path, $fileName);
 
-                $oldImagePath = public_path($profile->image->public_path);
+            $hash = md5_file($path . $fileName);
 
-                if (File::exists($oldImagePath)) {
-                    File::delete($oldImagePath);
-                }
-
-                $profile->image()->delete();
+            if (Image::where('file_hash', $hash)->exists()) {
+                File::delete($path . $fileName);
+                return redirect()->back()
+                    ->with('toastr_error', 'Duplicate image detected ! Please choose a different image.');
             }
 
-            $file = $request->file('profile_image');
-            $OriginalFileName = $file->getClientOriginalName();
-
-            $extension = $file->getClientOriginalExtension();
-
-            $fileName = time() . '_' . uniqid() . '.' . $extension;
-
-            $file->move($path, $fileName);
+            $oldImage = Image::where('profile_id', $profile->id)->first();
+            if ($oldImage && File::exists(public_path($oldImage->public_path))) {
+                File::delete(public_path($oldImage->public_path));
+                $oldImage->delete();
+            }
 
             Image::create([
                 'profile_id' => $profile->id,
-                'file_name' => $OriginalFileName,
+                'file_name' => $originalFileName,
                 'public_path' => 'uploads/profile/' . $fileName,
-                'file_hash' => md5_file($path . $fileName),
-                'alt_text' => $user->name . ' profile image'
+                'file_hash' => $hash,
+                'alt_text' => $profile->user->name . ' profile image',
             ]);
-
         }
 
         return redirect()->route('admin.profile.index')
             ->with('toastr_success', 'Profile Updated Successfully');
-
     }
 
     public function changePassword()

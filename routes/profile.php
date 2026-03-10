@@ -5,38 +5,31 @@ use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
 use App\Http\Controllers\Vendor\ProfileController as VendorProfileController;
 
-Route::middleware(['auth', 'verified', RoleMiddleware::class . ':admin'])
-    ->prefix('admin')
-    ->name('admin.')
-    ->group(function () {
+$roles = [
+    'admin' => AdminProfileController::class,
+    'vendor' => VendorProfileController::class,
+];
 
-        Route::get('/profile', [AdminProfileController::class, 'index'])
-            ->name('profile.index');
+foreach ($roles as $role => $controller) {
 
-        Route::get('/profile/edit', [AdminProfileController::class, 'edit'])
-            ->name('profile.edit');
+    Route::middleware(['auth', 'verified', RoleMiddleware::class . ':' . $role])
+        ->prefix($role)
+        ->name($role . '.')
+        ->group(function () use ($controller) {
 
-        Route::put('/profile/update', [AdminProfileController::class, 'update'])
-            ->name('profile.update');
+            Route::controller($controller)->group(function () {
 
-        Route::get('/profile/change-password', [AdminProfileController::class, 'changePassword'])->name('profile.change-password');
-        Route::post('/profile/change-password', [AdminProfileController::class, 'updatePassword'])->name('profile.update-password');
-    });
+                Route::get('/profile', 'index')->name('profile.index');
 
-    Route::middleware(['auth', 'verified', RoleMiddleware::class . ':vendor'])
-    ->prefix('vendor')
-    ->name('vendor.')
-    ->group(function () {
+                Route::get('/profile/edit', 'edit')->name('profile.edit');
 
-        Route::get('/profile', [VendorProfileController::class, 'index'])
-            ->name('profile.index');
+                Route::put('/profile/update', 'update')->name('profile.update');
 
-        Route::get('/profile/edit', [VendorProfileController::class, 'edit'])
-            ->name('profile.edit');
+                Route::get('/profile/change-password', 'changePassword')
+                    ->name('profile.change-password');
 
-        Route::put('/profile/update', [VendorProfileController::class, 'update'])
-            ->name('profile.update');
-
-        Route::get('/profile/change-password', [VendorProfileController::class, 'changePassword'])->name('profile.change-password');
-        Route::post('/profile/change-password', [VendorProfileController::class, 'updatePassword'])->name('profile.update-password');
-    });
+                Route::post('/profile/change-password', 'updatePassword')
+                    ->name('profile.update-password');
+            });
+        });
+}

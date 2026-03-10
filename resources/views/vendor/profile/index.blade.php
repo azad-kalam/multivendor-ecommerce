@@ -1,12 +1,12 @@
-@extends('layouts.master_layout', ['title' => 'Admin profile'])
+@extends('layouts.master_layout', ['title' => 'vendor profile'])
 @section('content')
-    @include('inc.headers.admin.admin_header')
-    @include('inc.asidebar.admin.admin_asidebar')
+    @include('inc.headers.vendor.vendor_header')
+    @include('inc.asidebar.vendor.vendor_asidebar')
     <main id="main">
         <div class="row">
             <div class="col-12">
                 <div class="pagetitle mt-3 p-1">
-                    <a href="{{ route('admin.dashboard') }}"
+                    <a href="{{ route('vendor.dashboard') }}"
                         class="btn btn-outline-secondary p-1 text-capitalize user-role video-thumbnail">
                         {{ Auth::check() ? Auth::user()->role : 'Guest' }}
                     </a>
@@ -15,14 +15,14 @@
                         <ol class="breadcrumb m-0 mb-1">
                             <!-- Home Breadcrumb -->
                             <li class="breadcrumb-item">
-                                <a href="{{ route('admin.dashboard') }}">
+                                <a href="{{ route('vendor.dashboard') }}">
                                     <span class="small">Dashboard</span>
                                 </a>
                             </li>
 
                             <!-- Products Breadcrumb -->
                             <li class="breadcrumb-item">
-                                <a href="{{ route('admin.profile.index') }}">
+                                <a href="{{ route('vendor.profile.index') }}">
                                     <span class="small active">Profile</span>
                                 </a>
                             </li>
@@ -176,7 +176,7 @@
 
                                         <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
                                             <!-- edit profile form start here -->
-                                            <form action="{{ route('admin.profile.update') }}" method="POST"
+                                            <form action="{{ route('vendor.profile.update') }}" method="POST"
                                                 enctype="multipart/form-data">
                                                 @csrf
                                                 @method('PUT')
@@ -431,7 +431,7 @@
 
                                         <div class="tab-pane fade pt-3" id="profile-change-password">
                                             <!-- Change Password Form start here-->
-                                            <form method="POST" action="{{ route('admin.profile.update-password') }}">
+                                            <form method="POST" action="{{ route('vendor.profile.update-password') }}">
                                                 @csrf
                                                 <div class="row mb-4">
                                                     <label for="currentPassword"
