@@ -1,4 +1,4 @@
-@extends('layouts.master_layout', ['title' => 'vendor profile'])
+@extends('layouts.master_layout', ['title' => 'Vendor profile'])
 @section('content')
     @include('inc.headers.vendor.vendor_header')
     @include('inc.asidebar.vendor.vendor_asidebar')
@@ -243,7 +243,7 @@
                                                 <div class="row mb-3">
                                                     <label class="col-md-4 col-lg-3 col-form-label">About</label>
                                                     <div class="col-md-8 col-lg-9">
-                                                        <textarea name="about" class="form-control" style="height: 100px">{{ $profile->about }}</textarea>
+                                                        <textarea name="about" class="form-control" style="height: 100px">{{ old('about', $profile->about ?? '') }}</textarea>
 
                                                         @error('about')
                                                             <span class="text-danger d-block">{{ $message }}</span>
@@ -487,9 +487,7 @@
                         </div>
                     </div>
                 </section>
-
             </div>
-
         </div>
     </main>
 @endsection
