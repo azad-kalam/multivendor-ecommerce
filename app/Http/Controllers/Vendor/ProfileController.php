@@ -101,7 +101,39 @@ class ProfileController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.profile.index')
+        return redirect()->route('vendor.profile.index')
             ->with('toastr_success', 'Profile Updated Successfully');
+    }
+
+
+    public function changePassword()
+    {
+        return view('vendor.profile.index');
+    }
+    public function updatePassword(Request $request)
+    {
+        $user = Auth::user();
+        $request->validate([
+            'password' => 'required',
+            'newpassword' => 'required|string|min:8',
+            'renewpassword' => 'required|string|min:8',
+        ]);
+
+        // check current password
+        if (!Hash::check($request->password, $user->password)) {
+            return back()->with('toastr_error', 'Current password is incorrect.');
+        }
+
+        // check new password match
+        if ($request->newpassword !== $request->renewpassword) {
+            return back()->with('toastr_error', 'New password and confirmation password do not match.');
+        }
+
+        // update password
+        $user->password = Hash::make($request->newpassword);
+        $user->save();
+
+        return redirect()->route('vendor.profile.index')
+            ->with('toastr_success', 'Password updated successfully.');
     }
 }
