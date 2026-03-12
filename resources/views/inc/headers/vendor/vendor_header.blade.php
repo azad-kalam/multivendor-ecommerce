@@ -193,12 +193,12 @@
                                             <i class="fa fa-user-circle text-secondary fa-2x"></i>
                                         @endif
                                     </div>
-                                    <span class="d-none d-md-block dropdown-toggle ps-2">{{ Auth::User()->name }}</span>
+                                    <span class="d-none d-md-block dropdown-toggle ps-2">{{ auth()->user()->name }}</span>
                                 </a>
 
                                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                                     <li class="dropdown-header">
-                                        <h6>{{ Auth::User()->name }}</h6>
+                                        <h6>{{ auth()->user()->name }}</h6>
                                         <span>{{ auth()->user()->profile->job }}</span>
                                     </li>
                                     <li>

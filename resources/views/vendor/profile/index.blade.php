@@ -8,7 +8,7 @@
                 <div class="pagetitle mt-3 p-1">
                     <a href="{{ route('vendor.dashboard') }}"
                         class="btn btn-outline-secondary p-1 text-capitalize user-role video-thumbnail">
-                        {{ Auth::check() ? Auth::user()->role : 'Guest' }}
+                        {{ auth()->check() ? auth()->user()->role : 'Guest' }}
                     </a>
 
                     <nav aria-label="breadcrumb" class="d-flex my-1">
@@ -385,32 +385,54 @@
 
                                         <div class="tab-pane fade pt-3" id="profile-settings">
                                             <!-- Settings change start here-->
-                                            <form>
-                                                <div class="row mb-3">
-                                                    <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Email
+                                            <form action="{{ route('vendor.profile.email.notification.update') }}"
+                                                method="POST">
+                                                @csrf
+
+                                                @php
+                                                    // use type hint comment
+                                                    /** @var \App\Models\User $user */
+                                                    $user = Auth::user();
+                                                    $notification = $user->emailNotification;
+                                                @endphp
+
+                                                <div class="mb-3 row">
+                                                    <label for="emailNotifications"
+                                                        class="col-md-4 col-lg-3 col-form-label">Email
                                                         Notifications</label>
                                                     <div class="col-md-8 col-lg-9">
-                                                        <div class="form-check">
+
+                                                        <!-- Changes made to your account -->
+                                                        <div class="form-check mb-2">
                                                             <input class="form-check-input" type="checkbox"
-                                                                id="changesMade" checked>
+                                                                name="changes_made" id="changesMade"
+                                                                {{ $notification?->changes_made ? 'checked' : '' }}>
                                                             <label class="form-check-label" for="changesMade">
                                                                 Changes made to your account
                                                             </label>
                                                         </div>
-                                                        <div class="form-check">
+
+                                                        <!-- Information on new products and services -->
+                                                        <div class="form-check mb-2">
                                                             <input class="form-check-input" type="checkbox"
-                                                                id="newProducts" checked>
+                                                                name="new_products" id="newProducts"
+                                                                {{ $notification?->new_products ? 'checked' : '' }}>
                                                             <label class="form-check-label" for="newProducts">
                                                                 Information on new products and services
                                                             </label>
                                                         </div>
-                                                        <div class="form-check">
+
+                                                        <!-- Marketing and promo offers -->
+                                                        <div class="form-check mb-2">
                                                             <input class="form-check-input" type="checkbox"
-                                                                id="proOffers">
+                                                                name="pro_offers" id="proOffers"
+                                                                {{ $notification?->pro_offers ? 'checked' : '' }}>
                                                             <label class="form-check-label" for="proOffers">
                                                                 Marketing and promo offers
                                                             </label>
                                                         </div>
+
+                                                        <!-- Security alerts (disabled) -->
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="checkbox"
                                                                 id="securityNotify" checked disabled>
@@ -418,10 +440,11 @@
                                                                 Security alerts
                                                             </label>
                                                         </div>
+
                                                     </div>
                                                 </div>
 
-                                                <div class="text-end">
+                                                <div class="text-end mt-3">
                                                     <button type="submit" class="btn btn-outline-success">Save
                                                         Changes</button>
                                                 </div>

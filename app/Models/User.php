@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
 
 use App\Models\Profile;
@@ -54,5 +55,10 @@ class User extends Authenticatable
     public function profile()
     {
         return $this->hasOne(Profile::class, 'user_id','id');
+    }
+
+     public function emailNotification()
+    {
+        return $this->hasOne(EmailNotification::class);
     }
 }

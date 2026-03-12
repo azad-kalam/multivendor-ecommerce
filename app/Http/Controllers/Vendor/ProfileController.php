@@ -105,6 +105,22 @@ class ProfileController extends Controller
             ->with('toastr_success', 'Profile Updated Successfully');
     }
 
+    public function updateEmailNotification(Request $request)
+    {
+        $user = Auth::user();
+
+        $user->emailNotification()->updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'changes_made' => $request->has('changes_made'),
+                'new_products' => $request->has('new_products'),
+                'pro_offers' => $request->has('pro_offers'),
+            ]
+        );
+
+        return back()->with('toastr_success', 'Notification settings updated');
+    }
+
 
     public function changePassword()
     {

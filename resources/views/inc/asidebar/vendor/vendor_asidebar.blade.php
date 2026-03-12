@@ -82,14 +82,14 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="pages-register.html">
+            <a class="nav-link collapsed" href="{{ route('homepage.index') }}">
                 <i class="bi bi-card-list"></i>
                 <span>Register</span>
             </a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="pages-login.html">
+            <a class="nav-link collapsed" href="{{ route('homepage.login') }}">
                 <i class="bi bi-box-arrow-in-right"></i>
                 <span>Login</span>
             </a>

@@ -30,6 +30,9 @@ foreach ($roles as $role => $controller) {
 
                 Route::post('/profile/change-password', 'updatePassword')
                     ->name('profile.update-password');
+
+                Route::post('/profile/email-notification/update', 'updateEmailNotification')
+                    ->name('profile.email.notification.update');
             });
         });
 }
