@@ -35,7 +35,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('admin.products.CRUD.create') }}">
+                    <a href="{{ route('vendor.products.create') }}">
                         <i class="bi bi-circle"></i><span>Add Product</span>
                     </a>
                 </li>
