@@ -134,11 +134,16 @@
                                 <!-- Category -->
                                 <div class="form-group mb-4">
                                     <label for="category_id" class="form-label ms-1 pt-2">Category Select:</label>
-                                    <select class="form-select" id="category_id" name="category_id"
-                                        aria-label="Category selection" required>
-                                        <option value="{{ $productFind->subcategory->category->id }}">
-                                            {{ $productFind->subcategory->category->name }}
-                                        </option>
+                                    <select class="form-select" id="category_id" name="category_id" required>
+                                        <option disabled selected hidden>Select Category</option>
+
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category->id }}"
+                                                {{ $productFind->subcategory->category_id == $category->id ? 'selected' : '' }}>
+                                                {{ $category->name }}
+                                            </option>
+                                        @endforeach
+
                                     </select>
                                     @error('category_id')
                                         <span class="text-danger">{{ $message }}</span>
@@ -150,13 +155,19 @@
                                     <label for="subcategory_id" class="form-label ms-1 pt-2">
                                         Sub-category Select:
                                     </label>
-                                    <select class="form-select" id="subcategory_id" name="subcategory_id"
-                                        aria-label="Subcategory selection" required>
-                                        <option class="hidden"
-                                            value="{{ old('subcategory_id', $productFind->subcategory->id) }}">
-                                            {{ $productFind->subcategory->subcategory_name }}
-                                        </option>
+                                    <select class="form-select" id="subcategory_id" name="subcategory_id" required>
+                                        <option disabled selected hidden>Select Subcategory</option>
+
+                                        @if (isset($subcategories) && $subcategories->count())
+                                            @foreach ($subcategories as $sub)
+                                                <option value="{{ $sub->id }}"
+                                                    {{ old('subcategory_id', $productFind->subcategory_id) == $sub->id ? 'selected' : '' }}>
+                                                    {{ $sub->subcategory_name }}
+                                                </option>
+                                            @endforeach
+                                        @endif
                                     </select>
+
                                     @error('subcategory_id')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror

@@ -36,12 +36,11 @@ class ProductController extends Controller
 
     public function dependentCategoryID($category_id)
     {
-        $subcategories = Subcategory::select(['id', 'subcategory_name'])->where('category_id', $category_id)->get();
-        return response()->json([
-            $category_id,
-            'categoryDependentIDStatus' => 'success',
-            'subcategories' => $subcategories
-        ]);
+        $subcategories_data = Subcategory::where('category_id', $category_id)
+            ->select('id', 'subcategory_name')
+            ->get();
+
+        return response()->json($subcategories_data);
     }
 
 
@@ -182,7 +181,11 @@ class ProductController extends Controller
     public function edit($id)
     {
         $productFind = Product::findOrFail($id);
-        return view('admin.products.CRUD.edit', compact('productFind'));
+        $categories = Category::select('id', 'name')->get();
+        $subcategories = Subcategory::where('category_id', $productFind->subcategory->category_id)
+            ->select('id', 'subcategory_name')->get();
+
+        return view('admin.products.CRUD.edit', compact('productFind', 'categories', 'subcategories'));
     }
 
 
