@@ -56,23 +56,31 @@
     </div>
 </div>
 
+
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const deleteButtons = document.querySelectorAll('.deleteBtn');
-        const deleteForm = document.getElementById('globalDeleteForm');
+    document.addEventListener("DOMContentLoaded", function() {
+
+        const deleteButtons = document.querySelectorAll(".deleteBtn");
+        const modalElement = document.getElementById("globalDeleteModal");
+        const deleteForm = document.getElementById("globalDeleteForm");
+        const deleteModal = new bootstrap.Modal(modalElement);
 
         deleteButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const deleteUrl = this.getAttribute('data-url');
+            button.addEventListener("click", function() {
 
-                if (!deleteUrl) {
-                    console.error('Delete URL not found');
+                const url = this.dataset.url;
+
+                if (!url) {
+                    toastr.error("Delete URL missing for this item.");
                     return;
                 }
 
-                deleteForm.setAttribute('action', deleteUrl);
+                deleteForm.action = url;
+
+                deleteModal.show();
             });
         });
+
     });
 </script>
 

@@ -430,7 +430,7 @@
                                         </button>
                                     </a>
 
-                                    <button type="button" class="btn btn-outline-danger px-1 py-0"
+                                    <button type="button" class="btn btn-outline-danger px-1 py-0 deleteBtn"
                                         data-url="{{ route('admin.products.CRUD.destroy', $product->id) }}"
                                         onclick="openGlobalDeleteModal(this)" title="Delete product">
                                         <i class="fa-regular fa-trash-can"></i>
