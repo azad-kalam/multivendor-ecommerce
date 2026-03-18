@@ -408,9 +408,12 @@
                                 <!-- Discount Start -->
                                 <div class="mb-4 pb-2">
                                     <label for="discount_start" class="form-label ms-1">Discount Start:</label>
+
                                     <input type="datetime-local" id="discount_start" name="discount_start"
                                         class="form-control"
-                                        value="{{ \Carbon\Carbon::parse($productFind->price->discount_start)->format('Y-m-d\TH:i') }}">
+                                        value="{{ optional($productFind->price)->discount_start
+                                            ? \Carbon\Carbon::parse(optional($productFind->price)->discount_start)->format('Y-m-d\TH:i')
+                                            : '' }}">
 
                                     @if (empty($productFind->price->discount_start))
                                         <small class="mt-1 ms-1 text-danger">Data Empty.</small>
@@ -424,9 +427,12 @@
                                 <!-- Discount End -->
                                 <div class="mb-4">
                                     <label for="discount_end" class="form-label ms-1">Discount End:</label>
+
                                     <input type="datetime-local" id="discount_end" name="discount_end"
                                         class="form-control" placeholder="dd-mm-yyyy hh:mm AM/PM"
-                                        value="{{ $productFind->price->discount_end ? \Carbon\Carbon::parse($productFind->price->discount_end)->format('Y-m-d\TH:i') : '' }}">
+                                        value="{{ $productFind->price && $productFind->price->discount_end
+                                            ? \Carbon\Carbon::parse($productFind->price->discount_end)->format('Y-m-d\TH:i')
+                                            : '' }}">
 
                                     @if (empty($productFind->price->discount_end))
                                         <small class="mt-1 ms-1 text-danger">Data Empty.</small>
