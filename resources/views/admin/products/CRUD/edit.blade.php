@@ -794,6 +794,7 @@
         </div>
     </main>
 @endsection
+
 <script>
     function admin_edit_productName() {
         let name = document.getElementById('productEditName').value;

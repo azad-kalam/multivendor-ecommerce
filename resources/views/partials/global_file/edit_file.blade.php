@@ -3,7 +3,6 @@
 
     <input type="file" class="form-control" id="product_image" name="image[]" accept="image/*" capture="camera" multiple>
 
-    <!-- File Allowed Info -->
     <div class="d-flex mt-2">
         <small class="text-success mx-1">
             <span class="text-danger" style="font-size: 14px;">Allowed:</span>
@@ -16,7 +15,6 @@
     </div>
 
     <div class="d-flex align-items-center justify-content-between mt-2">
-        <!-- File Name -->
         <div>
             <span class="text-danger" style="font-size: 15px;">File name:</span>
             <span>[</span>
@@ -26,7 +24,6 @@
             <span>]</span>
         </div>
 
-        <!-- Image Preview -->
         <div class="btn btn-outline-success p-1 border border-1 border-dark rounded"
             style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
             <div id="imageDisplay">
@@ -46,3 +43,47 @@
         <span class="text-danger">{{ $message }}</span>
     @enderror
 </div>
+
+<script>
+    document.getElementById('product_image').addEventListener('change', function(event) {
+        const imageDisplay = document.getElementById('imageDisplay');
+        const fileNameText = document.getElementById('fileNameText');
+
+        imageDisplay.innerHTML = "";
+        fileNameText.innerHTML = "";
+
+        const files = event.target.files;
+
+        if (files.length > 0) {
+            let names = [];
+
+            // সব file name collect
+            for (let i = 0; i < files.length; i++) {
+                names.push(files[i].name);
+            }
+
+            // শুধু প্রথম image preview
+            const firstFile = files[0];
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                let img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.width = "50px";
+                img.style.height = "50px";
+                img.style.borderRadius = "5px";
+                img.style.objectFit = "cover";
+
+                imageDisplay.appendChild(img);
+            };
+
+            reader.readAsDataURL(firstFile);
+
+            // সব file name show
+            fileNameText.innerHTML = names.join(', ');
+        } else {
+            imageDisplay.innerHTML = "<small class='text-danger'>No Image</small>";
+            fileNameText.innerHTML = "No file";
+        }
+    });
+</script>
