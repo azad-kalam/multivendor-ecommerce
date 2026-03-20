@@ -173,67 +173,6 @@
 
                                     <div class="card-body">
                                         <!-- Image Upload -->
-                                        {{-- <div class="form-group mb-3">
-                                            <label for="image_update" class="form-label ms-1">
-                                                Image Choose:
-                                            </label>
-
-                                            <input type="file" class="form-control" id="image" name="image"
-                                                accept="image/*" capture="camera">
-
-                                            <small class="text-muted d-block mt-2">
-                                                <span class="text-danger">Allowed:</span> [ JPG, JPEG, PNG, GIF, SVG,
-                                                WEBP
-                                                ].
-                                                Maximum:
-                                                2MB.
-                                            </small>
-
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <!-- File Name -->
-                                                <div class="mt-1">
-                                                    <span class="text-danger" style="font-size: 15px;">File
-                                                        name:</span>
-                                                    <span>[</span>
-                                                    <span id="updatefileNameText" class="text-primary"
-                                                        style="font-size: 15px;">
-                                                        {{ $productFind->images->first()->filename ?? 'No file' }}
-                                                    </span>
-                                                    <span>]</span>
-                                                </div>
-
-                                                @if (
-                                                    !empty($productFind->images->first()?->public_path) &&
-                                                        file_exists(public_path($productFind->images->first()->public_path)))
-                                                    <div class="btn btn-outline-success p-1 border border-1 border-dark rounded"
-                                                        style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
-
-                                                        <div id="updateimageDisplay"
-                                                            data-old='
-                                                            <img src="{{ asset($productFind->images->first()->public_path) }}"
-                                                                style="width:50px; height:50px; border-radius: 5px;" alt="Image">
-                                                        '>
-                                                            <img src="{{ asset($productFind->images->first()->public_path) }}"
-                                                                style="width:50px; height:50px; border-radius: 5px;"
-                                                                alt="Image">
-                                                        </div>
-                                                    </div>
-                                                @else
-                                                    <div class="btn btn-outline-success p-1 border border-1 border-dark rounded"
-                                                        style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
-                                                        <div id="updateimageDisplay"
-                                                            data-old='<small class="text-danger">No Found</small>'>
-                                                            <small class="text-danger">No Image</small>
-                                                        </div>
-                                                    </div>
-                                                @endif
-
-                                            </div>
-                                            @error('image')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div> --}}
-
                                         @include('partials.global_file.edit_file')
 
                                         <!-- Video URL -->

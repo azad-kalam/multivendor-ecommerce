@@ -272,11 +272,6 @@ class ProductController extends Controller
                         $image = $item['file'];
                         $hash = $item['hash'];
 
-                        // $originalName = $image->getClientOriginalName();
-                        // $ext = $image->getClientOriginalExtension();
-                        // $uniqueName = time() . '_' . rand(1, 9) . '.' . $ext;
-                        // $image->move($publicFolder, $uniqueName);
-
                         $data = resize_image($image); // Call the helper function to resize the image
                         $img = $data['img'];
                         $originalName = $data['originalName'];

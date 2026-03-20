@@ -167,55 +167,6 @@
 
                                         <div class="card-body">
                                             <!-- Choose Image Upload -->
-                                            {{-- <div class="form-group mb-4">
-                                                <label for="product_image" class="form-label ms-1">
-                                                    Choose File: <span class="text-danger" aria-hidden="true">*</span>
-                                                </label>
-                                                <input type="file" class="form-control" id="product_image"
-                                                    name="image[]" accept="image/*" capture="camera" multiple required>
-
-                                                @error('image')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-
-                                                <!-- File Allowed Info -->
-                                                <div class="d-flex mt-2">
-                                                    <small class="text-success mx-1">
-                                                        <span class="text-danger" style="font-size: 14px;">Allowed:</span>
-                                                        <b class="text-danger">[</b>
-                                                        <span style="font-size: 13px;">JPG, JPEG, PNG, GIF, SVG, WEBP
-                                                        </span>
-                                                        <b class="text-danger">].</b>
-                                                        Maximum: 2 MB.
-                                                    </small>
-                                                </div>
-
-                                                <div class="d-flex align-items-center justify-content-between">
-                                                    <!-- File name -->
-                                                    <div>
-                                                        <span class="text-danger" style="font-size: 14px;">
-                                                            Filename:
-                                                        </span>
-                                                        <b class="text-danger">[</b>
-                                                        <span id="fileNameText" class="text-primary"
-                                                            style="font-size: 14px;">
-                                                            No file
-                                                        </span>
-                                                        <b class="text-danger">]</b>
-                                                    </div>
-
-                                                    <!-- Image display -->
-                                                    <div id="imageDisplay"
-                                                        style="width:60px; height:60px; border-radius: 5px;"
-                                                        class="btn btn-outline-success p-1 border border-1 border-dark d-flex align-items-center text-center justify-content-center">
-                                                    </div>
-                                                </div>
-
-                                                @error('image')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div> --}}
-
                                             @include('partials.global_file.create_file')
 
                                             <!-- Video URL -->

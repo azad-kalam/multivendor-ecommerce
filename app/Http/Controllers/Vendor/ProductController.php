@@ -148,14 +148,12 @@ class ProductController extends Controller
             if ($request->hasFile('image')) {
                 foreach ($request->file('image') as $image) {
                     $hash = md5_file($image->getRealPath());
-                    $originalName = $image->getClientOriginalName();
-                    $ext = $image->getClientOriginalExtension();
-                    $uniqueName = time() . '_' . uniqid() . '.' . $ext;
 
-                    $manager = new ImageManager(new Driver());
-                    $img = $manager->read($image->getRealPath());
-                    $img->scaleDown(800, 800);
-                    $img->save($publicFolder . $uniqueName, quality: 80);
+                    $data = resize_image($image); // Call the helper function to resize the image
+                    $img = $data['img'];
+                    $originalName = $data['originalName'];
+                    $uniqueName = $data['uniqueName'];
+                    $img->save($publicFolder . $uniqueName, quality: 80);// Move the image to the desktop directory
 
                     $product->images()->create([
                         'file_name' => $originalName,
@@ -282,11 +280,12 @@ class ProductController extends Controller
                         $image = $item['file'];
                         $hash = $item['hash'];
 
-                        $originalName = $image->getClientOriginalName();
-                        $ext = $image->getClientOriginalExtension();
-                        $uniqueName = time() . '_' . rand(1, 9) . '.' . $ext;
+                        $data = resize_image($image); // Call the helper function to resize the image
+                        $img = $data['img'];
+                        $originalName = $data['originalName'];
+                        $uniqueName = $data['uniqueName'];
+                        $img->save($publicFolder . $uniqueName, quality: 80);// Move the image to the desktop directory
 
-                        $image->move($publicFolder, $uniqueName);
                         $product->images()->create([
                             'file_name' => $originalName,
                             'public_path' => $dbPath . $uniqueName,
