@@ -8,7 +8,7 @@
                 <div class="pagetitle">
                     <!-- Role Display (User/Guest) -->
                     <span class="btn btn-outline-secondary p-1 text-capitalize user-role video-thumbnail">
-                        {{ Auth::check() ? Auth::user()->role : 'Guest' }}
+                        {{ auth()->user()?->role ?? 'Guest' }}
                     </span>
 
                     <nav aria-label="breadcrumb" class="d-flex my-1">
@@ -132,28 +132,27 @@
                                     <div class="card-body">
                                         <!-- Category -->
                                         <div class="form-group mb-4">
-                                            <label for="category_id" class="form-label ms-1 pt-2">Category
-                                                Select:</label>
-                                            <select class="form-select" id="category_id" name="category_id"
-                                                aria-label="Category selection" required>
-                                                <option value="{{ $productFind->subcategory->category->id }}">
-                                                    {{ $productFind->subcategory->category->name }}
-                                                </option>
+                                            <label for="category_id" class="form-label ms-1 pt-2">Category Select:</label>
+                                            <select name="category_id" id="category_id" class="form-select">
+                                                <option disabled>Select Category</option>
+                                                @foreach ($categories as $category)
+                                                    <option value="{{ $category->id }}"
+                                                        {{ $category->id == $productFind->subcategory->category_id ? 'selected' : '' }}>
+                                                        {{ $category->name }}
+                                                    </option>
+                                                @endforeach
                                             </select>
                                             @error('category_id')
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
 
-                                        <!-- Subcategory -->
+                                        {{-- Subcategory --}}
                                         <div class="form-group mb-4">
-                                            <label for="subcategory_id" class="form-label ms-1 pt-2">
-                                                Sub-category Select:
-                                            </label>
-                                            <select class="form-select" id="subcategory_id" name="subcategory_id"
-                                                aria-label="Subcategory selection" required>
-                                                <option class="hidden"
-                                                    value="{{ old('subcategory_id', $productFind->subcategory->id) }}">
+                                            <label for="subcategory_id" class="form-label ms-1 pt-2">Sub-category
+                                                Select:</label>
+                                            <select class="form-select" id="subcategory_id" name="subcategory_id" required>
+                                                <option value="{{ $productFind->subcategory->id }}" selected>
                                                     {{ $productFind->subcategory->subcategory_name }}
                                                 </option>
                                             </select>
@@ -161,6 +160,7 @@
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
+
                                     </div>
                                 </div>
                                 {{-- Categorization ends here --}}
@@ -398,7 +398,7 @@
                                         </fieldset>
 
                                         <!-- Discount Start -->
-                                         <div class="mb-4 pb-2">
+                                        <div class="mb-4 pb-2">
                                             <label for="discount_start" class="form-label ms-1">Discount
                                                 Start:</label>
                                             <input type="datetime-local" id="discount_start" name="discount_start"
@@ -725,7 +725,7 @@
                                 {{-- specification ends here --}}
 
                                 {{-- SEO starts here --}}
-                               <div class="card p-2 pb-1 mb-2">
+                                <div class="card p-2 pb-1 mb-2">
                                     <div class="card-header p-0 border-0">
                                         <h3 class="card-title text-center fw-bold">SEO</h3>
                                     </div>
@@ -735,8 +735,8 @@
                                             <label for="meta_title" class="form-label ms-1">
                                                 Meta Title:
                                             </label>
-                                            <textarea style="resize: none; overflow-y: scroll" id="meta_title" name="meta_title" class="form-control" rows="5" required
-                                                placeholder="Enter meta title here...">{{ old('meta_title', $productFind->meta_title) }}</textarea>
+                                            <textarea style="resize: none; overflow-y: scroll" id="meta_title" name="meta_title" class="form-control"
+                                                rows="5" required placeholder="Enter meta title here...">{{ old('meta_title', $productFind->meta_title) }}</textarea>
 
                                             @if (empty(old('meta_title', $productFind->meta_title)))
                                                 <small class="text-danger ms-1">Meta title is not set.</small>
@@ -770,8 +770,8 @@
                                             <label for="meta_keywords" class="form-label ms-1">
                                                 Meta Keywords:
                                             </label>
-                                            <textarea style="resize: none; overflow-y: scroll" id="meta_keywords" name="meta_keywords" class="form-control p-2" rows="5"
-                                                required placeholder="Enter comma-separated keywords">{{ old('meta_keywords', $productFind->meta_keywords) }}</textarea>
+                                            <textarea style="resize: none; overflow-y: scroll" id="meta_keywords" name="meta_keywords" class="form-control p-2"
+                                                rows="5" required placeholder="Enter comma-separated keywords">{{ old('meta_keywords', $productFind->meta_keywords) }}</textarea>
 
                                             @if (empty(old('meta_keywords', $productFind->meta_keywords)))
                                                 <small class="text-danger ms-1">Meta keywords are not set.</small>

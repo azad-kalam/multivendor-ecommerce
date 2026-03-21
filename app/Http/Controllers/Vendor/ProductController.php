@@ -50,22 +50,14 @@ class ProductController extends Controller
         return view('vendor.products.create', compact('categorieIdName'));
     }
 
+    // নির্দিষ্ট ক্যাটেগরির সব সাবক্যাটেগরি JSON এ ফেরত দেবে
     public function dependencyCategoryID($category_id)
     {
-        $subcategories = Subcategory::select(['id', 'subcategory_name'])->where('category_id', $category_id)->get();
+        $subcategories = Subcategory::where('category_id', $category_id)
+            ->select('id', 'subcategory_name')
+            ->get();
 
-        if ($subcategories->isEmpty()) {
-            return response()->json([
-                'categoryDependentIDStatus' => 'empty',
-                'message' => 'subcategories no available.',
-                'subcategories' => []
-            ]);
-        }
-
-        return response()->json([
-            'categoryDependentIDStatus' => 'success',
-            'subcategories' => $subcategories
-        ]);
+        return response()->json($subcategories);
     }
 
     public function store(Request $request)
@@ -187,10 +179,14 @@ class ProductController extends Controller
         return view('vendor.products.show', compact('productDetails'));
     }
 
-    public function edit(string $id)
+    public function edit($id)
     {
-        $productFind = Product::findOrFail($id);
-        return view('vendor.products.edit', compact('productFind'));
+        $categories = Category::select('id', 'name')->get();
+
+        $productFind = Product::with('subcategory:id,subcategory_name,category_id')
+            ->findOrFail($id);
+
+        return view('vendor.products.edit', compact('productFind', 'categories'));
     }
 
     public function update(Request $request, Product $product)
