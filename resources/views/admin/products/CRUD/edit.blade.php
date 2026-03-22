@@ -8,7 +8,7 @@
                 <div class="pagetitle">
                     <!-- Role Display (User/Guest) -->
                     <span class="btn btn-outline-secondary p-1 text-capitalize user-role video-thumbnail">
-                        {{ Auth::check() ? Auth::user()->role : 'Guest' }}
+                        {{ auth()->user()->role ?? 'Guest' }}
                     </span>
 
                     <nav aria-label="breadcrumb" class="d-flex my-1">
@@ -358,29 +358,31 @@
                                     @enderror
                                 </div>
 
-
-                                <!-- Discount Type -->
-                                <fieldset class="mb-5 border-0">
+                                {{-- Discount Type --}}
+                                <fieldset class="mb-4 border-0">
                                     <legend class="form-label me-5 h6">Discount Type:</legend>
 
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input border border-dark p-2" type="radio"
-                                            name="discount_type" id="discount_none" value="none"
-                                            {{ old('discount_type', 'none') == 'none' ? 'checked' : '' }}>
+                                        <input class="form-check-input border border-dark p-2 product_field"
+                                            type="radio" name="discount_type" id="discount_none" value="none"
+                                            {{ old('discount_type', $productFind->price->discount_type) == 'none' ? 'checked' : '' }}>
+
                                         <label class="form-check-label" for="discount_none">None</label>
                                     </div>
 
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input border border-dark p-2" type="radio"
-                                            name="discount_type" id="discount_flat" value="flat"
-                                            {{ old('discount_type') == 'flat' ? 'checked' : '' }}>
+                                        <input class="form-check-input border border-dark p-2 product_field"
+                                            type="radio" name="discount_type" id="discount_flat" value="flat"
+                                            {{ old('discount_type', $productFind->price->discount_type) == 'flat' ? 'checked' : '' }}>
+
                                         <label class="form-check-label" for="discount_flat">Flat</label>
                                     </div>
 
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input border border-dark p-2" type="radio"
-                                            name="discount_type" id="discount_percent" value="percent"
-                                            {{ old('discount_type') == 'percent' ? 'checked' : '' }}>
+                                        <input class="form-check-input border border-dark p-2 product_field"
+                                            type="radio" name="discount_type" id="discount_percent" value="percent"
+                                            {{ old('discount_type', $productFind->price->discount_type) == 'percent' ? 'checked' : '' }}>
+
                                         <label class="form-check-label" for="discount_percent">Percent</label>
                                     </div>
 
@@ -389,12 +391,13 @@
                                     @enderror
                                 </fieldset>
 
-                                {{-- discount value --}}
+                                {{-- Discount Value --}}
                                 <div class="form-group mb-5">
                                     <label for="discount_value" class="form-label">Discount Value</label>
 
                                     <input type="number" class="form-control product_field" id="discount_value"
-                                        name="discount_value" min="0" value="{{ old('discount_value') }}">
+                                        name="discount_value" min="0"
+                                        value="{{ old('discount_value', $productFind->price->discount_value) }}">
 
                                     <small class="text-success d-block mt-1">
                                         Enter percentage if percent is selected, Or fixed amount if flat.
@@ -796,14 +799,46 @@
 @endsection
 
 <script>
-    function admin_edit_productName() {
-        let name = document.getElementById('productEditName').value;
-        if (name == '') {
-            document.getElementById('productEditSlug').value = '';
-            return;
+    document.addEventListener("DOMContentLoaded", function() {
+
+        const productNameInput = document.getElementById('productEditName');
+        const productSlugInput = document.getElementById('productEditSlug');
+        const radios = document.querySelectorAll('input[name="discount_type"]');
+        const discountInput = document.getElementById('discount_value');
+
+        function admin_edit_productName() {
+            let name = productNameInput.value;
+
+            if (name === '') {
+                productSlugInput.value = '';
+                return;
+            }
+
+            let slugGenerate = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+            let random11String = Math.random().toString(36).substring(2, 13);
+            productSlugInput.value = slugGenerate + '-' + random11String;
         }
-        let slugGenerate = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-        let random11String = Math.random().toString(36).substring(2, 13); // 11 character random
-        let randomSlugGenerate = document.getElementById('productEditSlug').value = slugGenerate + '-' + random11String;
-    }
+
+        if (productNameInput) {
+            productNameInput.addEventListener('input', admin_edit_productName);
+        }
+
+        function toggleDiscountField() {
+            const selected = document.querySelector('input[name="discount_type"]:checked');
+
+            if (selected && selected.value === 'none') {
+                discountInput.disabled = true;
+                discountInput.required = false;
+                discountInput.value = '';
+            } else {
+                discountInput.disabled = false;
+                discountInput.required = true;
+            }
+        }
+        toggleDiscountField();
+        radios.forEach(function(radio) {
+            radio.addEventListener("change", toggleDiscountField);
+        });
+
+    });
 </script>
