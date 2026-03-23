@@ -14,9 +14,19 @@ class VendorController extends Controller
     public function index()
     {
         if (Auth::check() && Auth::user()->role === 'vendor') {
+
             $vendor = Auth::user();
+            $currentIp = request()->ip();
+
+            // IP check
+            if ($vendor->last_ip_address && $vendor->last_ip_address !== $currentIp) {
+                Auth::logout();
+                return redirect()->route('homepage.index')->with('toastr_error', 'Unauthorized IP');
+            }
+
             return view('vendor.details.index', compact('vendor'));
         }
+
         abort(403);
     }
 
