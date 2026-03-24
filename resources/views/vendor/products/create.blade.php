@@ -211,27 +211,6 @@
                                             </div>
 
                                             <!-- Featured -->
-                                            {{-- <fieldset class="mb-4">
-                                                <legend class="form-label me-5 h6">Featured:</legend>
-
-                                                <div class="form-check form-check-inline">
-                                                    <input type="radio" class="form-check-input border border-dark p-2"
-                                                        id="featured_no" name="featured" value="0" checked>
-                                                    <label class="form-check-label" for="featured_no">No</label>
-                                                </div>
-
-                                                <div class="form-check form-check-inline">
-                                                    <input type="radio" class="form-check-input border border-dark p-2"
-                                                        id="featured_yes" name="featured" value="1">
-                                                    <label class="form-check-label" for="featured_yes">Yes</label>
-                                                </div>
-
-                                                @error('featured')
-                                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                                @enderror
-                                            </fieldset> --}}
-
-                                            <!-- Featured -->
                                             <div class="mb-4">
                                                 <label class="form-label me-5">Featured:</label>
 
@@ -258,8 +237,8 @@
                                     {{-- Visibility & Status ends here --}}
 
                                     {{-- Inventory starts here --}}
-                                        <div class="card p-2 mb-1">
-                                    <div class="card-header p-0 border-0">
+                                    <div class="card p-2 mb-1">
+                                        <div class="card-header p-0 border-0">
                                             <h3 class="card-title text-center fw-bold">Inventory</h3>
                                         </div>
                                         <div class="card-body">
@@ -305,7 +284,7 @@
                                 <div class="col-md-5 p-1">
                                     {{-- pricing starts here --}}
                                     <div class="card p-2 mb-1">
-                                    <div class="card-header border-0 p-0">
+                                        <div class="card-header border-0 p-0">
                                             <h3 class="card-title text-center fw-bold">Pricing</h3>
                                         </div>
                                         <div class="card-body">
@@ -364,7 +343,7 @@
                                             </fieldset>
 
                                             {{-- discount value --}}
-                                           <div class="form-group mb-5">
+                                            <div class="form-group mb-5">
                                                 <label for="discount_value" class="form-label">Discount Value</label>
 
                                                 <input type="number" class="form-control product_field"
@@ -380,7 +359,7 @@
                                             </div>
 
                                             <!-- Discount Start -->
-                                         <div class="mb-4 pb-2">
+                                            <div class="mb-4 pb-2">
                                                 <label for="discount_start" class="form-label">Discount Start:</label>
                                                 <input type="datetime-local" id="discount_start" name="discount_start"
                                                     class="form-control" placeholder="dd-mm-yyyy hh:mm AM/PM">
@@ -403,8 +382,8 @@
                                     {{-- pricing ends here --}}
 
                                     {{-- specification starts here --}}
-                                  <div class="card p-2 mb-2">
-                                    <div class="card-header p-0 border-0 mb-2">
+                                    <div class="card p-2 mb-2">
+                                        <div class="card-header p-0 border-0 mb-2">
                                             <h3 class="card-title text-center fw-bold">Specification</h3>
                                         </div>
                                         <div class="card-body">
@@ -620,7 +599,7 @@
 
                                     {{-- SEO starts here --}}
                                     <div class="card p-2 pb-1 mb-2">
-                                    <div class="card-header p-0 border-0">
+                                        <div class="card-header p-0 border-0">
                                             <h3 class="card-title text-center fw-bold">SEO</h3>
                                         </div>
                                         <div class="card-body">
@@ -684,15 +663,4 @@
     </main>
 @endsection
 
-<script>
-    function slugGenerateFromName() {
-        let name = document.getElementById('product_name').value;
-        if (name == '') {
-            document.getElementById('product_slug').value = '';
-            return;
-        }
-        let slugGenerate = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-        let random11String = Math.random().toString(36).substring(2, 13); // 11 character random
-        let randomSlugGenerate = document.getElementById('product_slug').value = slugGenerate + '-' + random11String;
-    }
-</script>
+@include('custom_global_components.products.auto_generate')
