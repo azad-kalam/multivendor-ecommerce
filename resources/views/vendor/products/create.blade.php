@@ -9,6 +9,7 @@
                     <div class="pagetitle">
                         <span class="btn btn-outline-secondary p-1 text-capitalize video-thumbnail">
                             {{ Auth::check() ? Auth::user()->role : 'Guest' }}
+
                         </span>
                         <nav aria-label="breadcrumb" class="d-flex my-1">
                             <ol class="breadcrumb m-0 mb-1">

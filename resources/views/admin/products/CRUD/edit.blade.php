@@ -66,9 +66,8 @@
                                     <label for="productEditName" class="form-label ms-1">
                                         Product Name:
                                     </label>
-                                    <input type="text" class="form-control" id="productEditName" name="name"
-                                        value="{{ old('name', $productFind->name) }}" autocomplete="off"
-                                        oninput="admin_edit_productName()">
+                                    <input type="text" class="form-control" id="product_name" name="name"
+                                        value="{{ old('name', $productFind->name) }}" autocomplete="off">
 
                                     @error('name')
                                         <div class="text-danger">{{ $message }}</div>
@@ -104,7 +103,7 @@
                                     <label for="productEditSlug" class="form-label">
                                         SLUG: <span class="fw-bolder">[ SEO-Friendly URL ]</span>
                                     </label>
-                                    <input type="text" class="form-control" id="productEditSlug" name="slug"
+                                    <input type="text" class="form-control" id="product_slug" name="slug"
                                         value="{{ old('slug', $productFind->slug) }}">
                                     @error('slug')
                                         <span class="text-danger">{{ $message }}</span>
@@ -798,47 +797,4 @@
     </main>
 @endsection
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-
-        const productNameInput = document.getElementById('productEditName');
-        const productSlugInput = document.getElementById('productEditSlug');
-        const radios = document.querySelectorAll('input[name="discount_type"]');
-        const discountInput = document.getElementById('discount_value');
-
-        function admin_edit_productName() {
-            let name = productNameInput.value;
-
-            if (name === '') {
-                productSlugInput.value = '';
-                return;
-            }
-
-            let slugGenerate = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-            let random11String = Math.random().toString(36).substring(2, 13);
-            productSlugInput.value = slugGenerate + '-' + random11String;
-        }
-
-        if (productNameInput) {
-            productNameInput.addEventListener('input', admin_edit_productName);
-        }
-
-        function toggleDiscountField() {
-            const selected = document.querySelector('input[name="discount_type"]:checked');
-
-            if (selected && selected.value === 'none') {
-                discountInput.disabled = true;
-                discountInput.required = false;
-                discountInput.value = '';
-            } else {
-                discountInput.disabled = false;
-                discountInput.required = true;
-            }
-        }
-        toggleDiscountField();
-        radios.forEach(function(radio) {
-            radio.addEventListener("change", toggleDiscountField);
-        });
-
-    });
-</script>
+@include('custom_global_components.products.auto_generate')
