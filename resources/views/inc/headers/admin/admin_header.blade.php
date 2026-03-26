@@ -76,7 +76,8 @@
                                     </li>
 
                                     <li>
-                                        <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                                        <a href="{{ route('admin.profile.index') }}"
+                                            class="dropdown-item d-flex align-items-center">
                                             <i class="bi bi-gear"></i>
                                             <span>Account Settings</span>
                                         </a>
