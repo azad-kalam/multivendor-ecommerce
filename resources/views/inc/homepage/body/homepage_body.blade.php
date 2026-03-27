@@ -208,6 +208,7 @@
                   Latest <span>products</span>
               </h2>
           </div>
+
           <div class="row">
               @foreach ($products as $product)
                   <div class="col-md-3 mb-3">
@@ -281,6 +282,27 @@
       </div>
   </section> --}}
   <!-- latest products end here -->
+
+  {{-- category start here --}}
+  <section class="product_section">
+      <div class="container-fluid">
+          <div class="heading_container heading_center">
+              <h2>
+                  Category <span>products</span>
+              </h2>
+          </div>
+          <div>
+              <ul class="list-unstyled d-flex">
+                  @foreach ($categories as $category)
+                      <li class="category_list me-4">
+                          {{ $category->name }}
+                      </li>
+                  @endforeach
+              </ul>
+          </div>
+      </div>
+  </section>
+  {{-- category start here --}}
 
 
   <!-- latest products start here -->
