@@ -201,111 +201,6 @@
   <!-- new arrival section end here -->
 
   <!-- latest products start here -->
-  {{-- <section class="product_section layout_padding">
-      <div class="container-fluid">
-          <div class="heading_container heading_center">
-              <h2>
-                  Latest <span>products</span>
-              </h2>
-          </div>
-
-          <div class="row">
-              @foreach ($products as $product)
-                  <div class="col-md-3 mb-3">
-                      <div class="card homepage_card">
-                          <div class="card-header d-flex align-items-center justify-content-center p-1"
-                              style="width:150px; height:150px; margin:0 auto;">
-
-                              @php
-                                  $image = $product->images->first();
-                              @endphp
-
-                              @if ($image)
-                                  <a href="{{ route('frontend.show', $product->id) }}"
-                                      class="text-decoration-none w-100 h-100">
-                                      <img src="{{ asset($image->public_path) }}"
-                                          class="img-fluid w-100 h-100 object-fit-cover p-1"
-                                          alt="{{ $image->alt_text ?? 'Product Image' }}">
-                                  </a>
-                              @else
-                                  <a href="javascript:void(0)"
-                                      class="text-decoration-none w-100 h-100 d-flex justify-content-center align-items-center">
-                                      <span class="text-danger">No Image</span>
-                                  </a>
-                              @endif
-                          </div>
-                          <div class="card-body">
-
-                              <div class="d-flex justify-content-between align-items-center mx-2 mb-1">
-                                  <span class="fw-bold">Name:</span>
-                                  {{ $product->name ?? 'N/A' }}
-                              </div>
-
-
-                              <div class="d-flex justify-content-between align-items-center mx-2 mb-1">
-                                  <span class="fw-bold">Price:</span>
-                                  @if ($product->price)
-                                      <span><i class="fa-solid fa-bangladeshi-taka-sign"></i>
-                                          {{ $product->price->regular_price }}
-                                      </span>
-                                  @else
-                                      <span class="text-danger">N/A</span>
-                                  @endif
-                              </div>
-
-
-                              <div class="d-flex justify-content-between align-items-center mx-2 mb-1">
-                                  <span class="fw-bold">Category:</span>
-                                  @if ($product->subcategory && $product->subcategory->category)
-                                      {{ $product->subcategory->category->name }}
-                                  @else
-                                      <span class="text-danger">N/A</span>
-                                  @endif
-                              </div>
-
-
-                              <div>
-                                  <span class="fw-bold mx-2">Short Description:</span>
-                                  @if ($product->short_description)
-                                      <textarea class="form-control border border-1 border-dark bg-transparent" rows="2" readonly
-                                          style="resize: none; overflow-y: scroll;">{{ $product->short_description }}</textarea>
-                                  @else
-                                      <span class="text-danger">N/A</span>
-                                  @endif
-                              </div>
-
-                          </div>
-                      </div>
-                  </div>
-              @endforeach
-          </div>
-      </div>
-  </section> --}}
-  <!-- latest products end here -->
-
-  {{-- category start here --}}
-  <section class="product_section">
-      <div class="container-fluid">
-          <div class="heading_container heading_center">
-              <h2>
-                  Category <span>products</span>
-              </h2>
-          </div>
-          <div>
-              <ul class="list-unstyled d-flex">
-                  @foreach ($categories as $category)
-                      <li class="category_list me-4">
-                          {{ $category->name }}
-                      </li>
-                  @endforeach
-              </ul>
-          </div>
-      </div>
-  </section>
-  {{-- category start here --}}
-
-
-  <!-- latest products start here -->
   <section class="product_section layout_padding">
       <div class="container-fluid">
           <div class="heading_container heading_center">
@@ -386,6 +281,27 @@
       </div>
   </section>
   <!-- latest products end here -->
+
+  {{-- category start here --}}
+  <section class="product_section">
+      <div class="container-fluid">
+          <div class="heading_container heading_center">
+              <h2>
+                  Category <span>products</span>
+              </h2>
+          </div>
+          <div class="bg-info">
+              <ul class="list-unstyled d-flex">
+                  @foreach ($categories as $category)
+                      <li class="category_list me-4">
+                          {{ $category->name }}
+                      </li>
+                  @endforeach
+              </ul>
+          </div>
+      </div>
+  </section>
+  {{-- category start here --}}
 
   <!-- our product section start here -->
   <section class="product_section layout_padding">

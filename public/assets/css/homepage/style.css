@@ -1250,6 +1250,7 @@ div.form_sub .field input[type="email"]:focus {
 
 /* list-unstyled start here */
 .category_list {
+    font-weight: 700 !important;
     color: black;
 }
 
