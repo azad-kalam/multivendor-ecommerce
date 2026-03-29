@@ -289,6 +289,9 @@
               <h2>
                   Category <span>products</span>
               </h2>
+              <h1>
+                  Category <span>products show</span>
+              </h1>
           </div>
           <div class="bg-info">
               <ul class="list-unstyled d-flex">
