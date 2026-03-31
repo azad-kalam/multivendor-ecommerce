@@ -9,7 +9,7 @@ use App\Models\Product;
 
 class HomeController extends Controller
 {
-     public function index()
+    public function index()
     {
         $categories = Category::with('subcategories')->get();
         $products = Product::with('images')
@@ -18,5 +18,17 @@ class HomeController extends Controller
             ->limit(16)
             ->get();
         return view('homepage.index', compact('categories', 'products'));
+    }
+
+
+
+
+
+    public function category_wise_product_show($id)
+    {
+        $category = Category::with(['subcategories.firstProduct.images'])
+            ->findOrFail($id);
+
+        return view('homepage.index', compact('category'));
     }
 }

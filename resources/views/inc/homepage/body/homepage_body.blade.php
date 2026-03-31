@@ -282,29 +282,82 @@
   </section>
   <!-- latest products end here -->
 
-  {{-- category start here --}}
+
+  {{-- category products start here --}}
   <section class="product_section">
       <div class="container-fluid">
           <div class="heading_container heading_center">
               <h2>
                   Category <span>products</span>
               </h2>
-              <h1>
-                  Category <span>products show</span>
-              </h1>
           </div>
-          <div class="bg-info">
+          <div>
               <ul class="list-unstyled d-flex">
-                  @foreach ($categories as $category)
-                      <li class="category_list me-4">
-                          {{ $category->name }}
-                      </li>
-                  @endforeach
+                  <ul class="list-unstyled d-flex">
+                      @foreach (\App\Models\Category::all() as $cat)
+                          <li class="category_list me-4">
+                              <a href="{{ route('homepage.category_wise_product_show', $cat->id) }}"
+                                  class="text-decoration-none text-dark">
+                                  {{ $cat->name }}
+                              </a>
+                          </li>
+                      @endforeach
+                  </ul>
               </ul>
+          </div>
+
+          <div class="row">
+              @foreach ($category->subcategories as $subcategory)
+                  @php
+                      $product = $subcategory->firstProduct;
+                  @endphp
+
+                  <div class="col-md-3 mb-4">
+                      <div class="product-card text-center p-3 border" style="height: 380px;">
+                          @if ($product && $product->images->first())
+                              <div class="product-img mb-3">
+                                  <img src="{{ asset($product->images->first()->public_path) }}" alt="Product Image"
+                                      style="width: 100%; height: 180px; object-fit: contain;">
+                              </div>
+                          @endif
+
+                          <p class="text-muted mb-1" style="font-size: 12px;">
+                              {{ $subcategory->subcategory_name ?? 'No Subcategory' }}
+                          </p>
+
+                          <h6 class="fw-bold mb-2">
+                              {{ $product->name ?? 'No Product' }}
+                          </h6>
+
+                          <div class="mb-2">
+                              @if ($product && $product->price)
+                                  <span class="text-danger fw-bold">
+                                      ${{ $product->price->regular_price }}
+                                  </span>
+                                  <span class="text-muted text-decoration-line-through ms-1">
+                                      $990.00
+                                  </span>
+                              @else
+                                  <span class="text-muted">N/A</span>
+                              @endif
+                          </div>
+
+                          <div class="mb-2 text-warning">
+                              ★★★★★
+                          </div>
+
+                          <div class="d-flex justify-content-center gap-3 mt-2">
+                              <i class="fa fa-heart"></i>
+                              <i class="fa fa-random"></i>
+                              <i class="fa fa-eye"></i>
+                          </div>
+                      </div>
+                  </div>
+              @endforeach
           </div>
       </div>
   </section>
-  {{-- category start here --}}
+  {{-- category products end here --}}
 
   <!-- our product section start here -->
   <section class="product_section layout_padding">

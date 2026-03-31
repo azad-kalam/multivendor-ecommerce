@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 use App\Models\Category;
 use App\Models\Product;
@@ -36,5 +37,10 @@ class Subcategory extends Model
     public function products(): HasMany
     {
         return $this->hasMany(Product::class, 'subcategory_id', 'id');
+    }
+
+    public function firstProduct(): HasOne
+    {
+        return $this->hasOne(Product::class, 'subcategory_id', 'id')->oldestOfMany();
     }
 }
