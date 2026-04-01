@@ -200,71 +200,56 @@
   </section>
   <!-- new arrival section end here -->
 
-  <!-- latest products start here -->
-  <section class="product_section layout_padding">
+  <!-- latest products start here-->
+  <section class="product_section">
       <div class="container-fluid">
           <div class="heading_container heading_center">
-              <h2>
-                  Latest <span>products</span>
-              </h2>
+              <h2>Latest <span>products</span></h2>
           </div>
+
           <div class="row">
               @foreach ($products as $product)
                   <div class="col-md-3 mb-3">
                       <div class="card homepage_card">
+
                           <div class="card-header d-flex align-items-center justify-content-center p-1"
                               style="width:150px; height:150px; margin:0 auto;">
 
-                              @php
-                                  $image = $product->images->first();
-                              @endphp
+                              @php $image = $product->images->first(); @endphp
 
                               @if ($image)
-                                  <a href="{{ route('frontend.show', $product->id) }}"
-                                      class="text-decoration-none w-100 h-100">
-                                      <img src="{{ asset($image->public_path) }}"
-                                          class="img-fluid w-100 h-100 object-fit-cover p-1"
-                                          alt="{{ $image->alt_text ?? 'Product Image' }}">
-                                  </a>
+                                  <img src="{{ asset($image->public_path) }}"
+                                      class="img-fluid w-100 h-100 object-fit-cover p-1">
                               @else
-                                  <a href="javascript:void(0)"
-                                      class="text-decoration-none w-100 h-100 d-flex justify-content-center align-items-center">
-                                      <span class="text-danger">No Image</span>
-                                  </a>
+                                  <span class="text-danger">No Image</span>
                               @endif
                           </div>
+
                           <div class="card-body">
 
-                              <div class="d-flex justify-content-between align-items-center mx-2 mb-1">
+                              <div class="d-flex justify-content-between mb-1">
                                   <span class="fw-bold">Name:</span>
-                                  {{ $product->name ?? 'N/A' }}
+                                  <span>{{ $product->name ?? 'N/A' }}</span>
                               </div>
 
-
-                              <div class="d-flex justify-content-between align-items-center mx-2 mb-1">
+                              <div class="d-flex justify-content-between mb-1">
                                   <span class="fw-bold">Price:</span>
                                   @if ($product->price)
-                                      <span><i class="fa-solid fa-bangladeshi-taka-sign"></i>
-                                          {{ $product->price->regular_price }}
-                                      </span>
+                                      <span>{{ $product->price->regular_price }}</span>
                                   @else
                                       <span class="text-danger">N/A</span>
                                   @endif
                               </div>
 
-
-                              <div class="d-flex justify-content-between align-items-center mx-2 mb-1">
+                              <div class="d-flex justify-content-between mb-1">
                                   <span class="fw-bold">Category:</span>
-                                  @if ($product->subcategory && $product->subcategory->category)
-                                      {{ $product->subcategory->category->name }}
-                                  @else
-                                      <span class="text-danger">N/A</span>
-                                  @endif
+                                  <span>
+                                      {{ $product->subcategory && $product->subcategory->category ? $product->subcategory->category->name : 'N/A' }}
+                                  </span>
                               </div>
-
 
                               <div>
-                                  <span class="fw-bold mx-2">Short Description:</span>
+                                  <span class="fw-bold">Short Description:</span>
                                   @if ($product->short_description)
                                       <textarea class="form-control border border-1 border-dark bg-transparent" rows="2" readonly
                                           style="resize: none; overflow-y: scroll;">{{ $product->short_description }}</textarea>
@@ -282,82 +267,78 @@
   </section>
   <!-- latest products end here -->
 
-
-  {{-- category products start here --}}
+  <!-- category products start -->
   <section class="product_section">
       <div class="container-fluid">
           <div class="heading_container heading_center">
-              <h2>
-                  Category <span>products</span>
-              </h2>
+              <h2>Category <span>products</span></h2>
           </div>
-          <div>
-              <ul class="list-unstyled d-flex">
-                  <ul class="list-unstyled d-flex">
-                      @foreach (\App\Models\Category::all() as $cat)
-                          <li class="category_list me-4">
-                              <a href="{{ route('homepage.category_wise_product_show', $cat->id) }}"
-                                  class="text-decoration-none text-dark">
-                                  {{ $cat->name }}
-                              </a>
-                          </li>
-                      @endforeach
-                  </ul>
-              </ul>
-          </div>
+          <ul class="list-unstyled d-flex">
+              @foreach ($categories as $cat)
+                  <li class="category_list me-4">
+                      <a href="{{ route('homepage.category_wise_product_show', $cat->id) }}">
+                          {{ $cat->name }}
+                      </a>
+                  </li>
+              @endforeach
+          </ul>
 
           <div class="row">
-              @foreach ($category->subcategories as $subcategory)
-                  @php
-                      $product = $subcategory->firstProduct;
-                  @endphp
+              @if (isset($category))
+                  @foreach ($category->subcategories as $subcategory)
+                      @php
+                          $product = $subcategory->firstProduct;
+                      @endphp
 
-                  <div class="col-md-3 mb-4">
-                      <div class="product-card text-center p-3 border" style="height: 380px;">
-                          @if ($product && $product->images->first())
-                              <div class="product-img mb-3">
-                                  <img src="{{ asset($product->images->first()->public_path) }}" alt="Product Image"
-                                      style="width: 100%; height: 180px; object-fit: contain;">
-                              </div>
-                          @endif
+                      <div class="col-md-3 mb-4">
+                          <div class="product-card text-center p-3 border" style="height: 380px;">
 
-                          <p class="text-muted mb-1" style="font-size: 12px;">
-                              {{ $subcategory->subcategory_name ?? 'No Subcategory' }}
-                          </p>
-
-                          <h6 class="fw-bold mb-2">
-                              {{ $product->name ?? 'No Product' }}
-                          </h6>
-
-                          <div class="mb-2">
-                              @if ($product && $product->price)
-                                  <span class="text-danger fw-bold">
-                                      ${{ $product->price->regular_price }}
-                                  </span>
-                                  <span class="text-muted text-decoration-line-through ms-1">
-                                      $990.00
-                                  </span>
-                              @else
-                                  <span class="text-muted">N/A</span>
+                              @if ($product && $product->images && $product->images->first())
+                                  <div class="product-img mb-3">
+                                      <img src="{{ asset($product->images->first()->public_path) }}"
+                                          alt="Product Image"
+                                          style="width: 100%; height: 180px; object-fit: contain;">
+                                  </div>
                               @endif
-                          </div>
 
-                          <div class="mb-2 text-warning">
-                              ★★★★★
-                          </div>
+                              <p class="text-muted mb-1" style="font-size: 12px;">
+                                  {{ $subcategory->subcategory_name ?? 'No Category' }}
+                              </p>
 
-                          <div class="d-flex justify-content-center gap-3 mt-2">
-                              <i class="fa fa-heart"></i>
-                              <i class="fa fa-random"></i>
-                              <i class="fa fa-eye"></i>
+                              <h6 class="fw-bold mb-2">
+                                  {{ $product ? $product->name : 'No Product' }}
+                              </h6>
+
+                              <div class="mb-2">
+                                  @if ($product && $product->price)
+                                      <span class="text-danger fw-bold">
+                                          ৳{{ $product->price->regular_price }}
+                                      </span>
+                                      <span class="text-muted text-decoration-line-through ms-1">
+                                          ৳990.00
+                                      </span>
+                                  @else
+                                      <span class="text-muted">N/A</span>
+                                  @endif
+                              </div>
+
+                              <div class="mb-2 text-warning">
+                                  ★★★★★
+                              </div>
+
+                              <div class="d-flex justify-content-center gap-3 mt-2">
+                                  <i class="fa fa-heart"></i>
+                                  <i class="fa fa-random"></i>
+                                  <i class="fa fa-eye"></i>
+                              </div>
                           </div>
                       </div>
-                  </div>
-              @endforeach
+                  @endforeach
+              @endif
           </div>
       </div>
   </section>
-  {{-- category products end here --}}
+  <!-- category products end -->
 
   <!-- our product section start here -->
   <section class="product_section layout_padding">
