@@ -340,6 +340,8 @@
   </section>
   <!-- category products end -->
 
+  <h2>subcategory <span>products</span></h2>
+
   <!-- our product section start here -->
   <section class="product_section layout_padding">
       <div class="container-fluid">
