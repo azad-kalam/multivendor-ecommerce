@@ -340,7 +340,10 @@
   </section>
   <!-- category products end -->
 
+  {{-- custom subcategory products and filter start here --}}
   <h2>subcategory <span>products</span></h2>
+  <h2>subcategory <span>products filter</span></h2>
+  {{-- custom subcategory products and filter end here --}}
 
   <!-- our product section start here -->
   <section class="product_section layout_padding">
