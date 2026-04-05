@@ -8,3 +8,7 @@ Route::get('/', [HomeController::class, 'index'])->name('homepage.index');
 
 Route::get('/category/{id}', [HomeController::class, 'category_wise_product_show'])
     ->name('homepage.category_wise_product_show');
+
+
+Route::get('/subcategory/{id}', [HomeController::class, 'subcategory_wise_product_show'])
+    ->name('homepage.subcategory_wise_product_show');
