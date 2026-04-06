@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Home;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
-use App\Models\Product;
 use App\Models\Subcategory;
+use App\Models\Product;
+
 
 class HomeController extends Controller
 {
@@ -41,6 +42,20 @@ class HomeController extends Controller
         return view('homepage.index', compact('categories', 'products', 'category'));
     }
     // category wise product show end here
+
+    public function subcategory_wise_product_show($id)
+    {
+        $subcategory = Subcategory::findOrFail($id);
+        $subcategory_wise_products = Product::with(['price', 'images'])
+            ->where('subcategory_id', $id)
+            ->where('status', 1)
+            ->latest()
+            ->limit(16)
+            ->get();
+
+        return view('homepage.index', compact('subcategory_wise_products', 'subcategory'));
+    }
+    // subcategory wise product show end here
 
 
 
