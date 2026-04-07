@@ -50,8 +50,7 @@
                                      style="width: 176px; max-height: 45vh; overflow-y: auto; scroll-behavior: smooth;">
                                      @forelse ($category->subcategories as $subcategory)
                                          <li class="text-start">
-                                             <a href="{{ route('homepage.subcategory_wise_product_show', $subcategory->id) }}"
-                                                 class="dropdown-item">
+                                             <a href="" class="dropdown-item">
                                                  {{ $subcategory->subcategory_name }}
                                              </a>
                                          </li>

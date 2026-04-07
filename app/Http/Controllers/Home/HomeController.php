@@ -43,20 +43,6 @@ class HomeController extends Controller
     }
     // category wise product show end here
 
-    public function subcategory_wise_product_show($id)
-    {
-        $subcategory = Subcategory::findOrFail($id);
-        $subcategory_wise_products = Product::with(['price', 'images'])
-            ->where('subcategory_id', $id)
-            ->where('status', 1)
-            ->latest()
-            ->limit(16)
-            ->get();
-
-        return view('homepage.index', compact('subcategory_wise_products', 'subcategory'));
-    }
-    // subcategory wise product show end here
-
 
 
 

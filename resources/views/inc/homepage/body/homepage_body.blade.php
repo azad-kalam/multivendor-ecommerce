@@ -267,7 +267,7 @@
   </section>
   <!-- latest products end here -->
 
-  <!-- category products start -->
+  <!-- category wise products start here -->
   <section class="product_section">
       <div class="container-fluid">
           <div class="heading_container heading_center">
@@ -341,12 +341,17 @@
           </div>
       </div>
   </section>
-  <!-- category products end -->
+  <!-- category wise products end here -->
 
-  {{-- custom subcategory products and filter start here --}}
-  <h2>subcategory <span>products</span></h2>
-  <h2>subcategory <span>products filter</span></h2>
-  {{-- custom subcategory products and filter end here --}}
+  <!-- sub category wise products start here -->
+  <section class="product_section">
+      <div class="container-fluid">
+          <div class="heading_container heading_center">
+              <h2> Sub-Category <span>products</span></h2>
+          </div>
+      </div>
+  </section>
+  <!-- sub category wise products end here -->
 
   <!-- our product section start here -->
   <section class="product_section layout_padding">
