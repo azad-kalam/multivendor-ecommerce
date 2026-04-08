@@ -181,6 +181,104 @@
             </div>
             <!-- Product thumbnail end here -->
 
+            {{-- releted product start here --}}
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="text-center">Related Products</h3>
+                </div>
+                @foreach ($relatedProducts as $relatedProduct)
+                    @php
+                        $price = $relatedProduct->price;
+
+                        if ($price !== null) {
+                            $old_price = $price->regular_price;
+                            $selling_price = $price->selling_price;
+                            $discount_value = $price->discount_value;
+                            $discount_type = $price->discount_type !== null ? $price->discount_type : 'none';
+                        } else {
+                            $old_price = 0;
+                            $selling_price = 0;
+                            $discount_value = 0;
+                            $discount_type = 'none';
+                        }
+
+                        $percent_price = $old_price - ($old_price * $discount_value) / 100;
+                        $image = $relatedProduct->images->first();
+                    @endphp
+
+                    <div class="col-md-3">
+                        <div class="product">
+                            <div class="product-img text-center" style="height: 200px;">
+                                @if ($image)
+                                    <img src="{{ asset($image->public_path) }}"
+                                        alt="{{ $image->alt_text ?? $relatedProduct->name }}"
+                                        class="w-100 h-100 object-fit-contain img-thumbnail">
+                                @else
+                                    <span class="text-danger w-100 h-100 d-flex justify-content-center align-items-center">
+                                        No Image
+                                    </span>
+                                @endif
+
+                                @if ($discount_type === 'percent' && $discount_value > 0)
+                                    <div class="product-label">
+                                        <span class="sale">{{ $discount_value }}%</span>
+                                    </div>
+                                @else
+                                    <div class="product-label">
+                                        <span class="sale">New</span>
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div class="product-body">
+                                <p class="product-category">
+                                    {{ $relatedProduct->subcategory->subcategory_name ?? 'subcategory unavailable' }}
+                                </p>
+
+                                <h3 class="product-name">
+                                    <a href="#">{{ $relatedProduct->name }}</a>
+                                </h3>
+
+                                <h4 class="product-price">
+                                    @if ($discount_type === 'none' && $discount_value == null)
+                                        ৳ {{ $old_price }}
+                                    @elseif ($discount_type === 'flat' && $discount_value > 0)
+                                        <del class="text-muted me-2">৳{{ $old_price }}</del>
+                                        <span>৳{{ $old_price - $discount_value }}</span>
+                                    @elseif ($discount_type === 'percent' && $discount_value > 0)
+                                        <del class="text-danger me-2">৳ {{ $old_price }}</del>
+                                        <span>৳ {{ $percent_price }}</span>
+                                    @endif
+                                </h4>
+
+                                {{-- Buttons --}}
+                                <div class="product-btns">
+                                    <button class="add-to-wishlist">
+                                        <i class="fa fa-heart-o"></i>
+                                    </button>
+
+                                    <button class="add-to-compare">
+                                        <i class="fa fa-exchange"></i>
+                                    </button>
+
+                                    <button class="quick-view">
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            {{-- Add to Cart --}}
+                            <div class="add-to-cart">
+                                <button class="add-to-cart-btn">
+                                    <i class="fa fa-shopping-cart"></i> add to cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            {{-- releted product end here --}}
+
             <!-- Product description + details + reviews starts here -->
             <div class="row">
                 <div class="col-md-12 mt-1">
@@ -451,167 +549,6 @@
                 </div>
             </div>
             <!-- Product description + details + reviews ends here -->
-
-            {{-- releted product start here --}}
-            <div class="row">
-                <div class="col-md-12">
-                    <h3 class="text-center">Related Products</h3>
-                </div>
-
-                {{-- @foreach ($relatedProducts as $reletedProduct)
-                    <div class="col-md-3">
-                        <div class="product">
-                            <div class="product-img text-center">
-                                @php
-                                    $image = $reletedProduct->images->first();
-                                @endphp
-
-                                @if ($image)
-                                    <img src="{{ asset($image->public_path) }}"
-                                        alt="{{ $image->alt_text ?? $reletedProduct->name }}" class="w-100 h-100">
-                                @else
-                                    <p class="text-danger p-3">Image no available</p>
-                                @endif
-
-                                <div class="product-label">
-                                    <span class="sale">-30%</span>
-                                </div>
-                            </div>
-
-                            <div class="product-body">
-                                <p class="product-category">
-                                    {{ $reletedProduct->subcategory->subcategory_name ?? 'subcategory unavailable' }}</p>
-                                <h3 class="product-name"><a href="#">{{ $reletedProduct->name }}</a></h3>
-                                <h4 class="product-price">
-                                    <i class="fa-solid fa-bangladeshi-taka-sign"></i>
-                                    {{ $reletedProduct->price->regular_price ?? 'regular price undefined' }}
-
-                                    <del class="product-old-price">
-                                        <i class="fa-solid fa-bangladeshi-taka-sign"></i>
-                                        {{ $reletedProduct->price->selling_price ?? 'selling price undefined' }}
-                                    </del>
-                                </h4>
-                                <div class="product-rating">
-                                </div>
-                                <div class="product-btns">
-                                    <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span
-                                            class="tooltipp">add
-                                            to wishlist</span></button>
-                                    <button class="add-to-compare"><i class="fa fa-exchange"></i><span
-                                            class="tooltipp">add
-                                            to compare</span></button>
-                                    <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick
-                                            view</span></button>
-                                </div>
-                            </div>
-                            <div class="add-to-cart">
-                                <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to
-                                    cart</button>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach --}}
-
-
-
-
-                @foreach ($relatedProducts as $relatedProduct)
-                    @php
-                        $price = $relatedProduct->price;
-
-                        if ($price !== null) {
-                            $old_price = $price->regular_price;
-                            $selling_price = $price->selling_price;
-                            $discount_value = $price->discount_value;
-                            $discount_type = $price->discount_type !== null ? $price->discount_type : 'none';
-                        } else {
-                            $old_price = 0;
-                            $selling_price = 0;
-                            $discount_value = 0;
-                            $discount_type = 'none';
-                        }
-
-                        $percent_price = $old_price - ($old_price * $discount_value) / 100;
-                        $image = $relatedProduct->images->first();
-                    @endphp
-
-                    <div class="col-md-3">
-                        <div class="product">
-                            <div class="product-img text-center" style="height: 200px;">
-                                @if ($image)
-                                    <img src="{{ asset($image->public_path) }}"
-                                        alt="{{ $image->alt_text ?? $relatedProduct->name }}"
-                                        class="w-100 h-100 object-fit-contain img-thumbnail">
-                                @else
-                                    <span class="text-danger w-100 h-100 d-flex justify-content-center align-items-center">
-                                        No Image
-                                    </span>
-                                @endif
-
-                                @if ($discount_type === 'percent' && $discount_value > 0)
-                                    <div class="product-label">
-                                        <span class="sale">{{ $discount_value }}%</span>
-                                    </div>
-                                @else
-                                    <div class="product-label">
-                                        <span class="sale">New</span>
-                                    </div>
-                                @endif
-                            </div>
-
-                            <div class="product-body">
-                                <p class="product-category">
-                                    {{ $relatedProduct->subcategory->subcategory_name ?? 'subcategory unavailable' }}
-                                </p>
-
-                                <h3 class="product-name">
-                                    <a href="#">{{ $relatedProduct->name }}</a>
-                                </h3>
-
-                                <h4 class="product-price">
-                                    @if ($discount_type === 'none' && $discount_value == null)
-                                        ৳ {{ $old_price }}
-                                    @elseif ($discount_type === 'flat' && $discount_value > 0)
-                                        <del class="text-muted me-2">৳{{ $old_price }}</del>
-                                        <span>৳{{ $old_price - $discount_value }}</span>
-                                    @elseif ($discount_type === 'percent' && $discount_value > 0)
-                                        <del class="text-danger me-2">৳ {{ $old_price }}</del>
-                                        <span>৳ {{ $percent_price }}</span>
-                                    @endif
-                                </h4>
-
-
-                                {{-- Buttons --}}
-                                <div class="product-btns">
-                                    <button class="add-to-wishlist">
-                                        <i class="fa fa-heart-o"></i>
-                                    </button>
-
-                                    <button class="add-to-compare">
-                                        <i class="fa fa-exchange"></i>
-                                    </button>
-
-                                    <button class="quick-view">
-                                        <i class="fa fa-eye"></i>
-                                    </button>
-                                </div>
-                            </div>
-
-                            {{-- Add to Cart --}}
-                            <div class="add-to-cart">
-                                <button class="add-to-cart-btn">
-                                    <i class="fa fa-shopping-cart"></i> add to cart
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-
-
-
-
-            </div>
-            {{-- releted product end here --}}
         </div>
     </section>
     @include('inc.footers.global.global_footer')
