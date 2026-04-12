@@ -354,6 +354,7 @@
   <h1>sub category products 1</h1>
   <h1>sub category products 2</h1>
   <h1>sub category products 3</h1>
+  <h1>sub category products 4</h1>
   <!-- sub category wise products end here -->
 
   <!-- our product section start here -->
