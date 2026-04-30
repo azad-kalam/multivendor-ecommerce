@@ -373,6 +373,8 @@
   <h1>sub category products 20</h1>
   <h1>sub category products 21</h1>
   <h1>sub category products 22</h1>
+  <h1>sub category products 23</h1>
+
   <!-- sub category wise products end here -->
 
   <!-- our product section start here -->
