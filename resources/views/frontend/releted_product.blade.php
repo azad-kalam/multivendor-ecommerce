@@ -251,6 +251,7 @@
                                     @endif
                                 </h4>
 
+
                                 {{-- Buttons --}}
                                 <div class="product-btns">
                                     <button class="add-to-wishlist">
@@ -552,7 +553,4 @@
         </div>
     </section>
     @include('inc.footers.global.global_footer')
-
-    @include('auth.login')
-    @include('auth.register')
 @endsection

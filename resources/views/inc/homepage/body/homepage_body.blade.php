@@ -208,7 +208,7 @@
           </div>
 
           <div class="row">
-              @foreach ($products as $product)
+              @foreach ($latestProducts ?? [] as $product)
                   <div class="col-md-3 mb-3">
                       <div class="card homepage_card" style="height: 360px;">
 
@@ -268,509 +268,610 @@
   <!-- latest products end here -->
 
   <!-- category wise products start here -->
-  <section class="product_section">
+  <section class="product_section mb-3">
       <div class="container-fluid">
           <div class="heading_container heading_center">
-              <h2>Category <span>products</span></h2>
+              <h2>
+                  Category <span>Products</span>
+              </h2>
           </div>
-          <ul class="list-unstyled d-flex">
+
+          <ul class="list-unstyled d-flex flex-wrap align-items-center bg-success p-2 rounded">
+
               @foreach ($categories as $cat)
-                  <li class="category_list me-4">
-                      <a href="{{ route('homepage.category_wise_product_show', $cat->id) }}">
+                  <li class="me-4">
+                      <a class="navbar_btn btn p-1 text-white text-decoration-none"
+                          href="{{ route('frontend.category_wise_product_show', ['id' => $cat->id, 'name' => $cat->name]) }}">
                           {{ $cat->name }}
                       </a>
                   </li>
               @endforeach
+
           </ul>
 
           <div class="row">
-              @if (isset($category))
+              @forelse ($category_products as $category)
                   @foreach ($category->subcategories as $subcategory)
                       @php
                           $product = $subcategory->firstProduct;
                       @endphp
 
-                      <div class="col-md-3 mb-3">
-                          <div class="card homepage_card" style="height: 360px;">
-                              <div class="card-header" style="width: 170px; height: 170px; margin:0 auto;">
-                                  @if ($product && $product->images && $product->images->first())
-                                      <div class="product-img mb-3">
-                                          <img src="{{ asset($product->images->first()->public_path) }}"
-                                              alt="Product Image" style="width: 150px; height: 150px;">
-                                      </div>
-                                  @endif
-                              </div>
+                      @if ($product)
+                          <div class="col-md-3 mb-4">
+                              <div class="product-card">
+                                  <div class="product-img">
 
-                              <div class="card-body">
-                                  <div class="text-center p-3">
-                                      <h6 class="fw-bold mb-2">
-                                          {{ $product ? $product->name : 'No Product' }}
-                                      </h6>
-                                      <p class="text-muted mb-1" style="font-size: 14px;">
-                                          {{ $subcategory->subcategory_name ?? 'No Category' }}
+                                      @if ($product->images->first())
+                                          <img src="{{ asset($product->images->first()->public_path) }}"
+                                              class="img-fluid" alt="{{ $product->name }}">
+                                      @else
+                                          <img src="{{ asset('frontend/no-image.png') }}" class="img-fluid"
+                                              alt="No Image">
+                                      @endif
+                                  </div>
+
+                                  <div class="product-body text-center">
+                                      <p class="product-category">
+                                          {{ $category->name }}
                                       </p>
 
-                                      <div class="mb-2">
-                                          @if ($product && $product->price)
-                                              <span class="text-danger fw-bold">
-                                                  ৳{{ $product->price->regular_price }}
-                                              </span>
-                                              <span class="text-muted text-decoration-line-through ms-1">
-                                                  ৳990.00
-                                              </span>
-                                          @else
-                                              <span class="text-muted">N/A</span>
-                                          @endif
+                                      <h5 class="product-name">
+                                          {{ $product->name }}
+                                      </h5>
+
+                                      <div class="product-price">
+
+                                          <span class="new-price">
+
+                                              ৳{{ $product->price->regular_price ?? '0' }}
+
+                                          </span>
+
+                                          <span class="old-price">
+
+                                              ৳{{ $product->price->selling_price ?? '0' }}
+
+                                          </span>
+
                                       </div>
 
-                                      <div class="mb-2 text-warning">
+                                      <div class="product-rating">
                                           ★★★★★
                                       </div>
 
-                                      <div class="d-flex justify-content-center gap-3 mt-2">
+                                      <div class="product-icons">
+
                                           <i class="fa fa-heart"></i>
+
                                           <i class="fa fa-random"></i>
+
                                           <i class="fa fa-eye"></i>
                                       </div>
+
                                   </div>
+
+                                  <div class="add-to-cart-area">
+                                      <button class="add-cart-btn">
+
+                                          <i class="fa fa-shopping-cart"></i>
+
+                                          ADD TO CART
+                                      </button>
+                                  </div>
+
                               </div>
+
                           </div>
-                      </div>
+                      @endif
                   @endforeach
-              @endif
+
+              @empty
+
+                  <div class="col-12 text-center">
+
+                      <h3>No Products Available</h3>
+
+                  </div>
+
+              @endforelse
           </div>
       </div>
   </section>
   <!-- category wise products end here -->
 
-  <!-- sub category wise products start here -->
-  <section class="product_section">
+  <!-- sub-category wise products start here -->
+  <section class="product_section mb-3">
       <div class="container-fluid">
           <div class="heading_container heading_center">
-              <h2> Sub-Category <span>products</span></h2>
+              <h2>Subcategory <span>Products</span></h2>
+          </div>
+
+          <div class="dropdown bg-success rounded mb-3">
+              <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                  Select Subcategory
+              </button>
+
+              <ul class="dropdown-menu bg-transparent mt-3">
+                  @foreach ($categories as $cat)
+                      @foreach ($cat->subcategories as $subcategory)
+                          <li>
+                              <a href="{{ route('frontend.subcategory_wise_product_show', [
+                                  'id' => $subcategory->id,
+                                  'name' => $subcategory->subcategory_name,
+                              ]) }}"
+                                  class="navbar_btn text-decoration-none text-dark dropdown-item {{ request()->segment(2) == $subcategory->id ? 'active' : '' }}">
+
+                                  {{ ucwords(strtolower($subcategory->subcategory_name ?? 'Subcategory Not Available')) }}
+                              </a>
+                          </li>
+                      @endforeach
+                  @endforeach
+              </ul>
+          </div>
+
+          <div class="row">
+
+              @forelse ($subcategory_products as $subcategory)
+                  @php
+                      $product = $subcategory->products->first();
+                  @endphp
+
+                  @if ($product)
+                      @php
+                          $image = $product?->images?->first();
+                          $price = $product->price;
+                      @endphp
+
+                      <div class="col-md-3 mb-4">
+
+                          <div class="product-card">
+                              <div class="product-img">
+                                  @if ($image)
+                                      <img src="{{ asset($image->public_path) }}" alt="{{ $product->name }}"
+                                          class="img-fluid">
+                                  @else
+                                      <img src="{{ asset('frontend/images/no-image.png') }}" alt="No Image"
+                                          class="img-fluid">
+                                  @endif
+                              </div>
+
+                              <div class="product-body text-center">
+                                  <p class="product-category">
+                                      {{ $subcategory->subcategory_name }}
+                                  </p>
+
+                                  <h5 class="product-name">
+                                      {{ $product->name }}
+                                  </h5>
+
+                                  <div class="product-price">
+                                      <span class="new-price">
+                                          ৳{{ $price->selling_price ?? 0 }}
+                                      </span>
+
+                                      <span class="old-price">
+                                          ৳{{ $price->regular_price ?? 0 }}
+                                      </span>
+                                  </div>
+
+                                  <div class="product-rating">
+                                      ★★★★★
+                                  </div>
+                              </div>
+
+                              <div class="product-icons">
+                                  <i class="fa fa-heart"></i>
+                                  <i class="fa fa-random"></i>
+                                  <i class="fa fa-eye"></i>
+                              </div>
+
+                              <div class="add-to-cart-area">
+                                  <button class="add-cart-btn">
+                                      <i class="fa fa-shopping-cart"></i>
+                                      ADD TO CART
+                                  </button>
+                              </div>
+                          </div>
+                      </div>
+                  @endif
+              @empty
+                  <div class="col-12 text-center">
+                      <h5>No products found</h5>
+                  </div>
+              @endforelse
           </div>
       </div>
   </section>
-  <h1>sub category products 1</h1>
-  <h1>sub category products 2</h1>
-  <h1>sub category products 3</h1>
-  <h1>sub category products 4</h1>
-  <h1>sub category products 5</h1>
-  <h1>sub category products 6</h1>
-  <h1>sub category products 7</h1>
-  <h1>sub category products 8</h1>
-  <h1>sub category products 9</h1>
-  <h1>sub category products 10</h1>
-  <h1>sub category products 11</h1>
-  <h1>sub category products 12</h1>
-  <h1>sub category products 13</h1>
-  <h1>sub category products 14</h1>
-  <h1>sub category products 15</h1>
-  <h1>sub category products 16</h1>
-  <h1>sub category products 17</h1>
-  <h1>sub category products 18</h1>
-  <h1>sub category products 19</h1>
-  <h1>sub category products 20</h1>
-  <h1>sub category products 21</h1>
-  <h1>sub category products 22</h1>
-  <h1>sub category products 23</h1>
-  <h1>sub category products 24</h1>
-  <h1>sub category products 25</h1>
-  <h1>sub category products 26</h1>
-  <h1>sub category products 27</h1>
-  <h1>sub category products 28</h1>
-  <h1>sub category products 29</h1>
-  <h1>sub category products 30</h1>
-  <h1>sub category products 31</h1>
-  <h1>sub category products 32</h1>
-  <h1>sub category products 33</h1>
-  <h1>sub category products 34</h1>
-  <h1>sub category products 35</h1>
-  <h1>sub category products 36</h1>
-  <h1>sub category products 37</h1>
-  <h1>sub category products 38</h1>
-  <h1>sub category products 39</h1>
-  <h1>sub category products 40</h1>
-  <h1>sub category products 41</h1>
-  <h1>sub category products 42</h1>
-  <h1>sub category products 43</h1>
-  <h1>sub category products 44</h1>
-  <h1>sub category products 45</h1>
-  <h1>sub category products 46</h1>
-  <h1>sub category products 47</h1>
-  <h1>sub category products 48</h1>
-  <h1>sub category products 49</h1>
-  <h1>sub category products 50</h1>
-  <h1>sub category products 51</h1>
-  <h1>sub category products 52</h1>
-  <h1>sub category products 53</h1>
-  <h1>sub category products 54</h1>
-  <h1>sub category products 55</h1>
-  <h1>sub category products 56</h1>
-  <h1>sub category products 57</h1>
-  <h1>sub category products 58</h1>
-  <h1>sub category products 59</h1>
-  <h1>sub category products 60</h1>
-  <h1>sub category products 61</h1>
-  <h1>sub category products 62</h1>
-  <h1>sub category products 63</h1>
-  <h1>sub category products 64</h1>
-  <h1>sub category products 65</h1>
-  <!-- sub category wise products end here -->
+  <!-- sub-category wise products end here -->
 
-  <!-- our product section start here -->
-  <section class="product_section layout_padding">
+  <!-- brand wise product start here -->
+  <section class="product_section mb-3">
+      <div class="container-fluid">
+          <div class="heading_container heading_center">
+              <h2>Brand <span>Products</span></h2>
+          </div>
+
+          <div class="dropdown bg-success rounded mb-3">
+              <button class="m-0 btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                  Select Brand
+              </button>
+
+              <ul class="dropdown-menu bg-transparent mt-3">
+                  @foreach ($brand_names as $brand)
+                      <li>
+                          <a href="{{ route('frontend.brand_wise_product_show', $brand) }}"
+                              class="navbar_btn text-decoration-none text-dark dropdown-item
+                           {{ request()->segment(2) == $brand ? 'active' : '' }}">
+                              {{ ucwords(strtolower($brand)) }}
+                          </a>
+                      </li>
+                  @endforeach
+              </ul>
+          </div>
+
+          <div class="row">
+              @forelse ($brand_products as $product)
+                  @php
+                      $image = $product->images->first();
+                      $price = $product->price;
+                  @endphp
+
+                  <div class="col-md-3 mb-4">
+                      <div class="product-card">
+                          <div class="product-img">
+                              @if ($image)
+                                  <img src="{{ asset($image->public_path) }}" alt="{{ $product->name }}"
+                                      class="img-fluid">
+                              @else
+                                  <img src="{{ asset('frontend/images/no-image.png') }}" alt="No Image"
+                                      class="img-fluid">
+                              @endif
+                          </div>
+
+                          <div class="product-body text-center">
+                              <p class="product-category">
+                                  {{ ucwords(strtolower($brand ?? 'Brand Not Available')) }}
+                              </p>
+
+                              <h5 class="product-name">
+                                  {{ $product->name }}
+                              </h5>
+
+                              <div class="product-price">
+                                  <span class="new-price">
+                                      ৳{{ $price->selling_price ?? 0 }}
+                                  </span>
+
+                                  <span class="old-price">
+                                      ৳{{ $price->regular_price ?? 0 }}
+                                  </span>
+                              </div>
+
+                              <div class="product-rating">
+                                  ★★★★★
+                              </div>
+
+                              <div class="product-icons">
+                                  <i class="fa fa-heart"></i>
+                                  <i class="fa fa-random"></i>
+                                  <i class="fa fa-eye"></i>
+                              </div>
+
+                          </div>
+
+                          <div class="add-to-cart-area">
+                              <button class="add-cart-btn">
+                                  <i class="fa fa-shopping-cart"></i>
+                                  ADD TO CART
+                              </button>
+                          </div>
+                      </div>
+                  </div>
+              @empty
+                  <div class="col-12 text-center">
+                      <h5>No Products Found</h5>
+                  </div>
+              @endforelse
+          </div>
+      </div>
+  </section>
+  <!-- brand wise product end here -->
+
+  <!-- view all product start here -->
+  {{-- <section class="product_section mb-3">
       <div class="container-fluid">
           <div class="heading_container heading_center">
               <h2>
-                  Our <span>products</span>
+                  View All <span>Products</span>
               </h2>
           </div>
-          <div class="row">
-              <!-- first shirt card start here -->
-              <div class="col-sm-6 col-md-4 col-lg-4">
-                  <div class="box">
-                      <div class="option_container">
-                          <div class="options">
-                              <a href="" class="option1">
-                                  Men's Shirt
-                              </a>
-                              <a href="" class="option2">
-                                  Buy Now
-                              </a>
-                          </div>
-                      </div>
-                      <div class="img-box">
-                          <img src="{{ asset('assets/images/homepage/img/p1.png') }}" alt="image">
-                      </div>
-                      <div class="detail-box">
-                          <h5>
-                              Men's Shirt
-                          </h5>
-                          <h6>
-                              $75
-                          </h6>
-                      </div>
-                  </div>
-              </div>
-              <!-- first shirt card end here -->
+          <div class="dropdown bg-success rounded mb-3">
+              <button class="m-0 btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  More view
+              </button>
 
-              <!-- second shirt card start here -->
-              <div class="col-sm-6 col-md-4 col-lg-4">
-                  <div class="box">
-                      <div class="option_container">
-                          <div class="options">
-                              <a href="" class="option1">
-                                  Add To Cart
-                              </a>
-                              <a href="" class="option2">
-                                  Buy Now
-                              </a>
-                          </div>
-                      </div>
-                      <div class="img-box">
-                          <img src="{{ asset('assets/images/homepage/img/p2.png') }}" alt="">
-                      </div>
-                      <div class="detail-box">
-                          <h5>
-                              Men's Shirt
-                          </h5>
-                          <h6>
-                              $80
-                          </h6>
-                      </div>
-                  </div>
-              </div>
-              <!-- second shirt card end here -->
+              <ul class="dropdown-menu bg-transparent mt-3">
 
-              <!-- third shirt card start here -->
-              <div class="col-sm-6 col-md-4 col-lg-4">
-                  <div class="box">
-                      <div class="option_container">
-                          <div class="options">
-                              <a href="" class="option1">
-                                  Add To Cart
-                              </a>
-                              <a href="" class="option2">
-                                  Buy Now
-                              </a>
-                          </div>
-                      </div>
-                      <div class="img-box">
-                          <img src="{{ asset('assets/images/homepage/img/p3.png') }}" alt="">
-                      </div>
-                      <div class="detail-box">
-                          <h5>
-                              Women's Dress
-                          </h5>
-                          <h6>
-                              $68
-                          </h6>
-                      </div>
-                  </div>
-              </div>
-              <!-- third shirt card end here -->
+                  <h5 class="text-center bg-dark text-white p-1">Categories</h5>
 
-              <!-- fourth shirt card start here -->
-              <div class="col-sm-6 col-md-4 col-lg-4">
-                  <div class="box">
-                      <div class="option_container">
-                          <div class="options">
-                              <a href="" class="option1">
-                                  Add To Cart
-                              </a>
-                              <a href="" class="option2">
-                                  Buy Now
-                              </a>
-                          </div>
-                      </div>
-                      <div class="img-box">
-                          <img src="assets/images/homepage/img/p4.png" alt="">
-                      </div>
-                      <div class="detail-box">
-                          <h5>
-                              Women's Dress
-                          </h5>
-                          <h6>
-                              $70
-                          </h6>
-                      </div>
-                  </div>
-              </div>
-              <!-- fourth shirt card end here -->
+                  @foreach ($categories as $cat)
+                      <li class="dropdown-item">
+                          <label class="d-flex align-items-center gap-2">
+                              <input type="radio" name="category" value="{{ $cat->id }}"
+                                  {{ request()->segment(2) == $cat->id ? 'checked' : '' }}>
 
-              <!-- fifth shirt card start here -->
-              <div class="col-sm-6 col-md-4 col-lg-4">
-                  <div class="box">
-                      <div class="option_container">
-                          <div class="options">
-                              <a href="" class="option1">
-                                  Add To Cart
-                              </a>
-                              <a href="" class="option2">
-                                  Buy Now
-                              </a>
-                          </div>
-                      </div>
-                      <div class="img-box">
-                          <img src="assets/images/homepage/img/p5.png" alt="">
-                      </div>
-                      <div class="detail-box">
-                          <h5>
-                              Women's Dress
-                          </h5>
-                          <h6>
-                              $75
-                          </h6>
-                      </div>
-                  </div>
-              </div>
-              <!-- fifth shirt card end here -->
+                              <span>
+                                  {{ ucwords(strtolower($cat->name ?? 'Category Not Available')) }}
+                              </span>
+                          </label>
+                      </li>
+                  @endforeach
 
-              <!-- sixth shirt card start here -->
-              <div class="col-sm-6 col-md-4 col-lg-4">
-                  <div class="box">
-                      <div class="option_container">
-                          <div class="options">
-                              <a href="" class="option1">
-                                  Add To Cart
-                              </a>
-                              <a href="" class="option2">
-                                  Buy Now
-                              </a>
-                          </div>
-                      </div>
-                      <div class="img-box">
-                          <img src="{{ asset('assets/images/homepage/img/p6.png') }}" alt="">
-                      </div>
-                      <div class="detail-box">
-                          <h5>
-                              Women's Dress
-                          </h5>
-                          <h6>
-                              $58
-                          </h6>
-                      </div>
-                  </div>
-              </div>
-              <!-- sixth shirt card end here -->
 
-              <!-- seventh shirt card start here -->
-              <div class="col-sm-6 col-md-4 col-lg-4">
-                  <div class="box">
-                      <div class="option_container">
-                          <div class="options">
-                              <a href="" class="option1">
-                                  Add To Cart
-                              </a>
-                              <a href="" class="option2">
-                                  Buy Now
-                              </a>
-                          </div>
-                      </div>
-                      <div class="img-box">
-                          <img src="assets/images/homepage/img/p7.png" alt="">
-                      </div>
-                      <div class="detail-box">
-                          <h5>
-                              Women's Dress
-                          </h5>
-                          <h6>
-                              $80
-                          </h6>
-                      </div>
-                  </div>
-              </div>
-              <!-- seventh shirt card end here -->
+                  <h5 class="text-center bg-dark text-white p-1">Subcategories</h5>
 
-              <!-- eighth shirt card start here -->
-              <div class="col-sm-6 col-md-4 col-lg-4">
-                  <div class="box">
-                      <div class="option_container">
-                          <div class="options">
-                              <a href="" class="option1">
-                                  Add To Cart
-                              </a>
-                              <a href="" class="option2">
-                                  Buy Now
-                              </a>
-                          </div>
-                      </div>
-                      <div class="img-box">
-                          <img src="{{ asset('assets/images/homepage/img/p8.png') }}" alt="">
-                      </div>
-                      <div class="detail-box">
-                          <h5>
-                              Men's Shirt
-                          </h5>
-                          <h6>
-                              $65
-                          </h6>
-                      </div>
-                  </div>
-              </div>
-              <!-- eighth shirt card end here -->
+                  @foreach ($categories as $cat)
+                      @foreach ($cat->subcategories as $sub)
+                          <li class="dropdown-item">
+                              <label class="d-flex align-items-center gap-2">
 
-              <!-- ninth shirt card start here -->
-              <div class="col-sm-6 col-md-4 col-lg-4">
-                  <div class="box">
-                      <div class="option_container">
-                          <div class="options">
-                              <a href="" class="option1">
-                                  Add To Cart
-                              </a>
-                              <a href="" class="option2">
-                                  Buy Now
-                              </a>
-                          </div>
-                      </div>
-                      <div class="img-box">
-                          <img src="{{ asset('assets/images/homepage/img/p9.png') }}" alt="">
-                      </div>
-                      <div class="detail-box">
-                          <h5>
-                              Men's Shirt
-                          </h5>
-                          <h6>
-                              $65
-                          </h6>
-                      </div>
-                  </div>
-              </div>
-              <!-- ninth shirt card end here -->
+                                  <input type="radio" name="subcategory" value="{{ $sub->id }}"
+                                      {{ request()->segment(2) == $sub->id ? 'checked' : '' }}>
 
-              <!-- tenth shirt card start here -->
-              <div class="col-sm-6 col-md-4 col-lg-4">
-                  <div class="box">
-                      <div class="option_container">
-                          <div class="options">
-                              <a href="" class="option1">
-                                  Add To Cart
-                              </a>
-                              <a href="" class="option2">
-                                  Buy Now
-                              </a>
-                          </div>
-                      </div>
-                      <div class="img-box">
-                          <img src="{{ asset('assets/images/homepage/img/p10.png') }}" alt="">
-                      </div>
-                      <div class="detail-box">
-                          <h5>
-                              Men's Shirt
-                          </h5>
-                          <h6>
-                              $65
-                          </h6>
-                      </div>
-                  </div>
-              </div>
-              <!-- tenth shirt card end here -->
+                                  <span>
+                                      {{ ucwords(strtolower($sub->subcategory_name ?? 'Subcategory Not Available')) }}
+                                  </span>
 
-              <!-- eleventh shirt card start here -->
-              <div class="col-sm-6 col-md-4 col-lg-4">
-                  <div class="box">
-                      <div class="option_container">
-                          <div class="options">
-                              <a href="" class="option1">
-                                  Add To Cart
-                              </a>
-                              <a href="" class="option2">
-                                  Buy Now
-                              </a>
-                          </div>
-                      </div>
-                      <div class="img-box">
-                          <img src="{{ asset('assets/images/homepage/img/p11.png') }}" alt="">
-                      </div>
-                      <div class="detail-box">
-                          <h5>
-                              Men's Shirt
-                          </h5>
-                          <h6>
-                              $65
-                          </h6>
-                      </div>
-                  </div>
-              </div>
-              <!-- eleventh shirt card end here -->
+                              </label>
+                          </li>
+                      @endforeach
+                  @endforeach
 
-              <!-- twelfth shirt card start here -->
-              <div class="col-sm-6 col-md-4 col-lg-4">
-                  <div class="box">
-                      <div class="option_container">
-                          <div class="options">
-                              <a href="" class="option1">
-                                  Add To Cart
-                              </a>
-                              <a href="" class="option2">
-                                  Buy Now
-                              </a>
-                          </div>
-                      </div>
-                      <div class="img-box">
-                          <img src="{{ asset('assets/images/homepage/img/p12.png') }}" alt="">
-                      </div>
-                      <div class="detail-box">
-                          <h5>
-                              Women's Dress
-                          </h5>
-                          <h6>
-                              $65
-                          </h6>
-                      </div>
-                  </div>
-              </div>
-              <!-- twelfth shirt card end here -->
+              </ul>
           </div>
-          <div class="btn-box">
-              <a href="">
-                  View All products
-              </a>
+
+          <div class="row">
+              @forelse ($products as $product)
+                  <div class="col-md-3 mb-4">
+
+                      <div class="product-card">
+                          <div class="product-img">
+                              @if ($product->images->first())
+                                  <img src="{{ asset($product->images->first()->public_path) }}" class="img-fluid">
+                              @endif
+                          </div>
+
+                          <div class="product-body text-center">
+
+                              <p class="product-category">
+                                  {{ $product->subcategory->category->name ?? 'Category name empty' }}
+                              </p>
+
+                              <h5 class="product-name">
+                                  {{ $product->name }}
+                              </h5>
+
+                              <div class="product-price">
+
+                                  <span class="new-price">
+                                      ৳{{ $product->price->regular_price ?? 'not available' }}
+                                  </span>
+
+                                  <span class="old-price">
+                                      ৳{{ $product->price->selling_price ?? 'not available' }}
+                                  </span>
+
+                              </div>
+
+                              <div class="product-rating">
+                                  ★★★★★
+                              </div>
+
+                              <div class="product-icons">
+                                  <i class="fa fa-heart"></i>
+                                  <i class="fa fa-random"></i>
+                                  <i class="fa fa-eye"></i>
+                              </div>
+
+                          </div>
+
+                          <div class="add-to-cart-area">
+
+                              <button class="add-cart-btn">
+                                  <i class="fa fa-shopping-cart"></i>
+                                  ADD TO CART
+                              </button>
+
+                          </div>
+
+                      </div>
+
+                  </div>
+
+              @empty
+
+                  <div class="col-12 text-center">
+                      <h4>No Products Found</h4>
+                  </div>
+              @endforelse
+
+              <div class="d-flex justify-content-end">
+                  {{ $products->links() }}
+              </div>
           </div>
       </div>
+      </div>
+
+  </section> --}}
+
+
+  <section class="product_section mb-3">
+      <div class="container-fluid">
+
+          <div class="heading_container heading_center">
+              <h2>All View <span>Products</span></h2>
+          </div>
+
+          <div class="dropdown bg-success rounded mb-3 d-flex justify-content-between">
+              <div>
+                  <button class="m-0 btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                      categories
+                  </button>
+
+                  <ul class="dropdown-menu bg-white mt-3">
+                      @foreach ($category_products as $category)
+                          <li>
+                              <a href=""
+                                  class="navbar_btn text-decoration-none text-dark dropdown-item
+                            {{ request()->segment(2) == $category->name ? 'active' : '' }}">
+
+                                  {{ $category->name }}
+                              </a>
+                          </li>
+                      @endforeach
+                  </ul>
+              </div>
+
+              <div>
+                  <button class="m-0 btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                      subcategories
+                  </button>
+
+                  <ul class="dropdown-menu bg-white mt-3">
+                      @foreach ($category_products as $category)
+                          @foreach ($category->subcategories as $subcategory)
+                              <li>
+                                  <a href=""
+                                      class="navbar_btn text-decoration-none text-dark dropdown-item
+                            {{ request()->segment(2) == $subcategory->subcategory_name ? 'active' : '' }}">
+
+                                      {{ $subcategory->subcategory_name }}
+                                  </a>
+                              </li>
+                          @endforeach
+                      @endforeach
+                  </ul>
+              </div>
+
+              <div>
+                  <button class="m-0 btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                      brands
+                  </button>
+
+                  <ul class="dropdown-menu bg-white mt-3">
+                      @foreach ($brand_names as $brand)
+                          <li>
+                              <a href=""
+                                  class="navbar_btn text-decoration-none text-dark dropdown-item
+                                {{ request()->segment(2) == $brand ? 'active' : '' }}">
+
+                                  {{ ucwords(strtolower($brand)) }}
+                              </a>
+                          </li>
+                      @endforeach
+                  </ul>
+              </div>
+          </div>
+
+
+          <div class="row">
+              @forelse ($category_products as $category)
+                  @foreach ($category->subcategories as $subcategory)
+                      @foreach ($subcategory->products as $product)
+                          @php
+                              $image = $product->images->first();
+                              $price = $product->price;
+                          @endphp
+
+                          <div class="col-md-3 mb-4">
+
+                              <div class="product-card">
+
+                                  {{-- Product Image --}}
+                                  <div class="product-img">
+
+                                      @if ($image)
+                                          <img src="{{ asset($image->public_path) }}" alt="{{ $product->name }}"
+                                              class="img-fluid">
+                                      @else
+                                          <img src="{{ asset('frontend/images/no-image.png') }}" alt="No Image"
+                                              class="img-fluid">
+                                      @endif
+
+                                  </div>
+
+                                  {{-- Product Body --}}
+                                  <div class="product-body text-center">
+
+                                      <p class="product-category">
+                                          {{ $category->name }}
+                                      </p>
+                                      <p class="product-category">
+                                          {{ $subcategory->subcategory_name }}
+                                      </p>
+
+                                      <h5 class="product-name">
+                                          {{ $product->name }}
+                                      </h5>
+
+                                      {{-- Price --}}
+                                      <div class="product-price">
+
+                                          <span class="new-price">
+                                              ৳{{ $price->selling_price ?? 0 }}
+                                          </span>
+
+                                          <span class="old-price">
+                                              ৳{{ $price->regular_price ?? 0 }}
+                                          </span>
+
+                                      </div>
+
+                                      {{-- Rating --}}
+                                      <div class="product-rating">
+                                          ★★★★★
+                                      </div>
+
+                                      {{-- Icons --}}
+                                      <div class="product-icons">
+                                          <i class="fa fa-heart"></i>
+                                          <i class="fa fa-random"></i>
+                                          <i class="fa fa-eye"></i>
+                                      </div>
+
+                                  </div>
+
+                                  {{-- Add To Cart --}}
+                                  <div class="add-to-cart-area">
+
+                                      <button class="add-cart-btn">
+                                          <i class="fa fa-shopping-cart"></i>
+                                          ADD TO CART
+                                      </button>
+
+                                  </div>
+
+                              </div>
+
+                          </div>
+                      @endforeach
+                  @endforeach
+
+              @empty
+
+                  <div class="col-12 text-center">
+                      <h5>No Products Found</h5>
+                  </div>
+
+              @endforelse
+
+          </div>
+          <div>
+              {{-- {{ $view_all_products_by_category->links() }} --}}
+          </div>
   </section>
-  <!-- our product section end here -->
+  <!-- view all product end here -->
 
   <!-- subscribe section start here -->
   <section class="subscribe_section">

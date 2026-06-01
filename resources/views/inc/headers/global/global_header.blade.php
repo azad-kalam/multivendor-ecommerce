@@ -32,38 +32,38 @@
                      </a>
                  </li>
 
+                 {{-- ------------------------- --}}
                  <li class="nav-item dropdown custom_dropdown">
-                     <a class="nav-link dropdown-toggle" href="#" id="productDropdown" role="button"
+                     <a class="navbar_btn nav-link dropdown-toggle" href="#" id="productDropdown" role="button"
                          data-bs-toggle="dropdown" aria-expanded="false">
                          All Categories
                      </a>
 
                      <ul class="dropdown-menu custom_dropdown_menu" aria-labelledby="productDropdown">
-                         @foreach ($categories as $category)
+                         @foreach ($global_categories as $category)
                              <li class="dropdown-submenu text-start">
-                                 <a class="dropdown-item dropdown-toggle" href="#" role="button"
-                                     data-bs-toggle="dropdown">
+
+                                 <a class="dropdown-item dropdown-toggle"
+                                     href="{{ route('frontend.category_wise_product_show', ['id' => $category->id, 'name' => $category->name]) }}">
                                      {{ $category->name }}
                                  </a>
 
                                  <ul class="dropdown-menu text-start"
-                                     style="width: 176px; max-height: 45vh; overflow-y: auto; scroll-behavior: smooth;">
-                                     @forelse ($category->subcategories as $subcategory)
-                                         <li class="text-start">
-                                             <a href="" class="dropdown-item">
+                                     style="width:176px; max-height:45vh; overflow-y:auto;">
+                                     @foreach ($category->subcategories as $subcategory)
+                                         <li>
+                                             <a class="dropdown-item"
+                                                 href="{{ route('frontend.subcategory_wise_product_show', ['id' => $subcategory->id, 'name' => $subcategory->subcategory_name]) }}">
                                                  {{ $subcategory->subcategory_name }}
                                              </a>
                                          </li>
-                                     @empty
-                                         <li class="text-start">
-                                             <a class="dropdown-item" href="#">No subcategories</a>
-                                         </li>
-                                     @endforelse
+                                     @endforeach
                                  </ul>
                              </li>
                          @endforeach
                      </ul>
                  </li>
+                 {{-- -------------------------- --}}
 
                  <li class="nav-item dropdown custom_dropdown">
                      <a class="nav-link dropdown-toggle" href="#" id="productDropdown" role="button"

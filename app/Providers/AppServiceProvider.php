@@ -1,35 +1,34 @@
 <?php
 
-// namespace App\Providers;
-// use Illuminate\Pagination\Paginator;
-// use Illuminate\Support\ServiceProvider;
-// class AppServiceProvider extends ServiceProvider
-// {
-
-//     public function register(): void {}
-
-
-//     public function boot(): void
-//     {
-//         Paginator::useBootstrapFive();
-//     }
-// }
-
-
 namespace App\Providers;
 
+use App\Models\Category;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Facades\View;
-use App\Models\Category;
 
 class AppServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
-        View::composer('*', function ($view) {
-            $categories = Category::with('subcategories')->get();
-            $view->with('categories', $categories);
+        // I using categories, sub-categories data in global views file
+        View::composer([
+            'inc.headers.admin.*',
+            'inc.headers.vendor.*',
+            'inc.headers.customer.*',
+            'inc.headers.global.*',
+            'inc.homepage.body.*'
+        ], function ($view) {
+
+            $gcategories_data = Cache::remember('categories_store_one_hour', 3600, function () {
+
+                return Category::select('id', 'name')
+                    ->with(['subcategories:id,category_id,subcategory_name'])
+                    ->get();
+            });
+
+            $view->with('global_categories', $gcategories_data);
         });
 
         Paginator::useBootstrapFive();
