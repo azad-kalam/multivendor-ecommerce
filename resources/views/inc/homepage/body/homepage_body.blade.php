@@ -999,5 +999,6 @@
 
     <!-- my client section start here -->
     <h1>home page product 1</h1>
+    <h1>home page product 2</h1>
     <!-- my client section end here -->
 
