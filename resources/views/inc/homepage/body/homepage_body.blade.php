@@ -1004,4 +1004,5 @@
   <h1>home page product 4</h1>
   <h1>home page product 5</h1>
   <h1>home page product 6</h1>
+  <h1>home page product 7</h1>
   <!-- my client section end here -->
