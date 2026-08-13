@@ -15,20 +15,72 @@ use Illuminate\Support\Facades\Auth;
 
 class FrontendController extends Controller
 {
-    public function reletedProductsBySubcategory(int $id)
+    public function show_product_detailsWith_subcategory_related(int $id)
     {
-        $product = Product::with(['images', 'price', 'subcategory'])
-            ->findOrFail($id); // Get related products based on a subcategories id
+        $product = Product::with([
+            'images',
+            'brand',
+            'category',
+            'subcategory',
+            'productModel',
+            'variants' => function ($query) {
+                $query->where('stock_status', 'in_stock')
+                    ->with([
+                        'size',
+                        'color',
+                        'images',
+                    ]);
+            },
+        ])
+            ->where('status', 1)
+            ->findOrFail($id);
 
-        $relatedProducts = Product::with(['images', 'price', 'subcategory'])
+        $relatedProducts = Product::with([
+            'images',
+            'subcategory',
+            'variants' => function ($query) {
+
+                $query->where('stock_status', 'in_stock')
+                    ->select([
+                        'id',
+                        'product_id',
+                        'color_id',
+                        'size_id',
+                        'regular_price',
+                        'selling_price',
+                        'discount_type',
+                        'discount_value',
+                        'discount_start',
+                        'discount_end',
+                        'stock_quantity',
+                        'stock_status'
+                    ]);
+            },
+        ])
             ->where('subcategory_id', $product->subcategory_id)
-            ->where('id', '!=', $product->id)
-            ->orderBy('created_at', 'desc') // newest first
-            ->limit(12)
+            ->where('status', 1)
+            ->whereKeyNot($product->id)
+            ->latest()
             ->get();
 
-        return view('frontend.releted_product', compact('product', 'relatedProducts'));
+        return view(
+            'frontend.product_details.product_detailsWith_subcategory_related',
+            compact(
+                'product',
+                'relatedProducts'
+            )
+        );
     }
+
+
+
+
+
+
+
+
+
+
 
     public function category_wise_product_show(int $id)
     {
@@ -119,11 +171,11 @@ class FrontendController extends Controller
         //     ->where('status', 1)
         //     ->latest()
         //     ->get();
-            $categories = Category::with('subcategories')
-                ->select('id', 'name')
-                ->where('status', 1)
-                ->latest()
-                ->get();
+        $categories = Category::with('subcategories')
+            ->select('id', 'name')
+            ->where('status', 1)
+            ->latest()
+            ->get();
 
         $brand_names = Product::whereNotNull('brand')
             ->where('brand', '!=', '')
@@ -209,4 +261,19 @@ class FrontendController extends Controller
 
 
 
+
+    public function edit(string $id)
+    {
+        //
+    }
+
+    public function update(Request $request, string $id)
+    {
+        //
+    }
+
+    public function destroy(string $id)
+    {
+        //
+    }
 }

@@ -3,7 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Frontend\FrontendController;
 
-Route::get('/product/{id}', [FrontendController::class, 'reletedProductsBySubcategory'])->name('frontend.show');
+// Route::get('/product/{id}', [FrontendController::class, 'reletedProductsBySubcategory'])->name('frontend.show');
+Route::get('/product/{id}', [FrontendController::class, 'show_product_detailsWith_subcategory_related'])
+    ->name('frontend.product_details.product_detailsWith_subcategory_related');
 
 Route::get('/category/{id}/{name}', [FrontendController::class, 'category_wise_product_show'])
     ->name('frontend.category_wise_product_show');

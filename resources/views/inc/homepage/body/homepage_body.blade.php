@@ -201,21 +201,28 @@
   <!-- new arrival section end here -->
 
   <!-- latest products start here-->
-  <section class="product_section">
+  <section class="product_section mb-3">
       <div class="container-fluid">
           <div class="heading_container heading_center">
-              <h2>Latest <span>products</span></h2>
+              <h2>
+                  Latest <span>Products</span>
+              </h2>
           </div>
-
           <div class="row">
               @foreach ($latestProducts ?? [] as $product)
-                  <div class="col-md-3 mb-3">
-                      <div class="card homepage_card" style="height: 360px;">
+                  @php
+                      $image = $product->images->first();
+                      $variant = $product->variants->first();
+                  @endphp
 
-                          <div class="card-header" style="width: 170px; height: 170px; margin:0 auto;">
-                              @php $image = $product->images->first(); @endphp
+                  <div class="col-md-3 mb-3">
+                      <div class="card homepage_card" style="height: 360px; width: 275px;">
+                          {{-- <div class="card-header d-flex justify-content-center align-items-center"
+                              style="width: 170px; height: 170px; margin: 0 auto;">
+
                               @if ($image)
-                                  <a href="{{ route('frontend.show', $product->id) }}">
+                                  <a
+                                      href="{{ route('frontend.product_details.product_detailsWith_subcategory_related', $product->id) }}">
                                       <img src="{{ asset($image->public_path) }}"
                                           style="width: 150px; height: 150px;">
                                   </a>
@@ -225,33 +232,93 @@
                                       <span class="text-danger">No Image</span>
                                   </a>
                               @endif
+                              <span class="ms-auto">offer</span>
+                          </div> --}}
+
+                          <div class="card-header position-relative d-flex justify-content-center align-items-center"
+                              style="width: 170px; height: 170px; margin: 0 auto;">
+
+                              @if ($image)
+                                  <a
+                                      href="{{ route('frontend.product_details.product_detailsWith_subcategory_related', $product->id) }}">
+                                      <img src="{{ asset($image->public_path) }}" style="width:150px; height:150px;">
+                                  </a>
+                              @else
+                                  <span class="text-danger">No Image</span>
+                              @endif
+
+                              <span class="badge bg-danger position-absolute" style="top: 4px; right:-47px;">
+                                  @if ($variant->discount_type == 'none')
+                                      New
+                                  @elseif ($variant->discount_type == 'fixed')
+                                      Offer
+                                  @elseif ($variant->discount_type == 'percent')
+                                      {{ $variant->discount_value }}%
+                                  @endif
+                              </span>
                           </div>
 
+
                           <div class="card-body">
-                              <div class="d-flex justify-content-between align-items-center mx-2 mb-1">
+                              <div class="d-flex justify-content-between align-items-center mx-2 mt-2">
                                   <span class="fw-bold">Name:</span>
                                   <span>{{ $product->name ?? 'N/A' }}</span>
                               </div>
 
-                              <div class="d-flex justify-content-between align-items-center mx-2 mb-1">
-                                  <span class="fw-bold">Price:</span>
-                                  @if ($product->price)
-                                      <span>{{ $product->price->regular_price }}</span>
-                                  @else
-                                      <span class="text-danger">N/A</span>
-                                  @endif
+                              <div class="d-flex justify-content-between align-items-center mx-2 mt-1">
+                                  @php
+                                      $variant = $product->variants->first();
+                                  @endphp
+                                  <strong>Price</strong>
+
+                                  <div>
+                                      @if ($variant)
+                                          @if ($variant->discount_type == 'none')
+                                              <span class="text-dark fw-bold">
+                                                  <i class="fa-solid fa-bangladeshi-taka-sign"></i>
+                                                  {{ $variant->regular_price }}
+                                              </span>
+                                          @endif
+
+                                          @if ($variant->discount_type == 'fixed')
+                                              <span class="text-dark fw-bold">
+                                                  <i class="fa-solid fa-bangladeshi-taka-sign"></i>
+                                                  {{ $variant->selling_price }}
+                                              </span>
+                                              <del class="text-danger ms-2">
+                                                  <i class="fa-solid fa-bangladeshi-taka-sign"></i>
+                                                  {{ $variant->regular_price }}
+                                              </del>
+                                          @endif
+
+                                          @if ($variant->discount_type == 'percent')
+                                              <span class="text-dark fw-bold">
+                                                  <i class="fa-solid fa-bangladeshi-taka-sign"></i>
+                                                  {{ $variant->selling_price }}
+                                              </span>
+                                              <del class="text-danger ms-2">
+                                                  <i class="fa-solid fa-bangladeshi-taka-sign"></i>
+                                                  {{ $variant->regular_price }}
+                                              </del>
+                                          @endif
+                                      @else
+                                          <span class="text-danger">
+                                              Price not available
+                                          </span>
+                                      @endif
+                                  </div>
                               </div>
 
-                              <div class="d-flex justify-content-between align-items-center mx-1 mb-1">
-                                  <span class="fw-bold">Category:</span>
+                              <div class="d-flex justify-content-between mx-1 mt-1">
+                                  <strong>Subcategory</strong>
                                   <span>
-                                      {{ $product->subcategory && $product->subcategory->category ? $product->subcategory->category->name : 'N/A' }}
+                                      {{ optional($product->subcategory)->subcategory_name ?? 'N/A' }}
                                   </span>
                               </div>
 
-                              <div>
-                                  <span class="fw-bold ms-1">Short Description:</span>
-                                  @if ($product->short_description)
+                              <div class="mt-3">
+                                  <strong class="ms-1">Short Description:</strong>
+                                  @if ($product)
                                       <textarea class="form-control border border-1 border-dark bg-transparent" rows="2" readonly
                                           style="resize: none; overflow-y: scroll;">{{ $product->short_description }}</textarea>
                                   @else
@@ -374,8 +441,11 @@
                   </div>
 
               @endforelse
+
           </div>
+
       </div>
+
   </section>
   <!-- category wise products end here -->
 
@@ -485,7 +555,7 @@
   <!-- sub-category wise products end here -->
 
   <!-- brand wise product start here -->
-  <section class="product_section mb-3">
+  {{-- <section class="product_section mb-3">
       <div class="container-fluid">
           <div class="heading_container heading_center">
               <h2>Brand <span>Products</span></h2>
@@ -574,7 +644,7 @@
               @endforelse
           </div>
       </div>
-  </section>
+  </section> --}}
   <!-- brand wise product end here -->
 
   <!-- view all product start here -->
@@ -706,7 +776,7 @@
   </section> --}}
 
 
-  <section class="product_section mb-3">
+  {{-- <section class="product_section mb-3">
       <div class="container-fluid">
 
           <div class="heading_container heading_center">
@@ -788,7 +858,6 @@
 
                               <div class="product-card">
 
-                                  {{-- Product Image --}}
                                   <div class="product-img">
 
                                       @if ($image)
@@ -800,8 +869,6 @@
                                       @endif
 
                                   </div>
-
-                                  {{-- Product Body --}}
                                   <div class="product-body text-center">
 
                                       <p class="product-category">
@@ -815,7 +882,6 @@
                                           {{ $product->name }}
                                       </h5>
 
-                                      {{-- Price --}}
                                       <div class="product-price">
 
                                           <span class="new-price">
@@ -828,12 +894,10 @@
 
                                       </div>
 
-                                      {{-- Rating --}}
                                       <div class="product-rating">
                                           ★★★★★
                                       </div>
 
-                                      {{-- Icons --}}
                                       <div class="product-icons">
                                           <i class="fa fa-heart"></i>
                                           <i class="fa fa-random"></i>
@@ -842,7 +906,6 @@
 
                                   </div>
 
-                                  {{-- Add To Cart --}}
                                   <div class="add-to-cart-area">
 
                                       <button class="add-cart-btn">
@@ -868,9 +931,9 @@
 
           </div>
           <div>
-              {{-- {{ $view_all_products_by_category->links() }} --}}
+              {{ $view_all_products_by_category->links() }}
           </div>
-  </section>
+  </section> --}}
   <!-- view all product end here -->
 
   <!-- subscribe section start here -->
@@ -994,83 +1057,3 @@
       </div>
   </section>
   <!-- customers testimonial section end here -->
-
-
-
-  <!-- my client section start here -->
-  <h1>home page product 1</h1>
-  <h1>home page product 2</h1>
-  <h1>home page product 3</h1>
-  <h1>home page product 4</h1>
-  <h1>home page product 5</h1>
-  <h1>home page product 6</h1>
-  <h1>home page product 7</h1>
-  <h1>home page product 8</h1>
-  <h1>home page product 9</h1>
-  <h1>home page product 10</h1>
-  <h1>home page product 20</h1>
-  <h1>home page product 21</h1>
-  <h1>home page product 22</h1>
-  <h1>home page product 23</h1>
-  <h1>home page product 24</h1>
-  <h1>home page product 25</h1>
-  <h1>home page product 26</h1>
-  <h1>home page product 27</h1>
-  <h1>home page product 28</h1>
-  <h1>home page product 29</h1>
-  <h1>home page product 30</h1>
-  <h1>home page product 31</h1>
-  <h1>home page product 32</h1>
-  <h1>home page product 33</h1>
-  <h1>home page product 34</h1>
-  <h1>home page product 35</h1>
-  <h1>home page product 36</h1>
-  <h1>home page product 37</h1>
-  <h1>home page product 38</h1>
-  <h1>home page product 39</h1>
-  <h1>home page product 40</h1>
-  <h1>home page product 41</h1>
-  <h1>home page product 42</h1>
-  <h1>home page product 43</h1>
-  <h1>home page product 44</h1>
-  <h1>home page product 45</h1>
-  <h1>home page product 46</h1>
-  <h1>home page product 47</h1>
-  <h1>home page product 48</h1>
-  <h1>home page product 49</h1>
-  <h1>home page product 50</h1>
-  <h1>home page product 51</h1>
-  <h1>home page product 52</h1>
-  <h1>home page product 53</h1>
-  <h1>home page product 54</h1>
-  <h1>home page product 55</h1>
-  <h1>home page product 56</h1>
-  <h1>home page product 57</h1>
-  <h1>home page product 58</h1>
-  <h1>home page product 59</h1>
-  <h1>home page product 60</h1>
-  <h1>home page product 61</h1>
-  <h1>home page product 62</h1>
-  <h1>home page product 63</h1>
-  <h1>home page product 64</h1>
-  <h1>home page product 65</h1>
-  <h1>home page product 66</h1>
-  <h1>home page product 67</h1>
-  <h1>home page product 68</h1>
-  <h1>home page product 69</h1>
-  <h1>home page product 70</h1>
-  <h1>home page product 71</h1>
-  <h1>home page product 72</h1>
-  <h1>home page product 73</h1>
-  <h1>home page product 74</h1>
-  <h1>home page product 75</h1>
-  <h1>home page product 76</h1>
-  <h1>home page product 77</h1>
-  <h1>home page product 78</h1>
-  <h1>home page product 79</h1>
-  <h1>home page product 80</h1>
-  <h1>home page product 81</h1>
-  <h1>home page product 82</h1>
-  <h1>home page product 83</h1>
-  <h1>home page product 84</h1>
-  <!-- my client section end here -->

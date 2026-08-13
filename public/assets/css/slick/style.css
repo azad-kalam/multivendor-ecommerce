@@ -1,5 +1,5 @@
 /* Thumbnail Slider start here */
-#product-thumbnails .slide-item {
+/* #product-thumbnails .slide-item {
     display: flex;
 }
 
@@ -18,7 +18,7 @@
     transform: scale(1.01);
 }
 
-/* Vertical arrows */
+
 .vertical-slider .slick-prev,
 .vertical-slider .slick-next {
     color: white;
@@ -47,8 +47,86 @@
 .vertical-slider .slick-prev:before,
 .vertical-slider .slick-next:before {
     transform: rotate(-88deg);
+} */
+
+
+#product-thumbnails .slide-item {
+    display: flex;
 }
 
+#product-thumbnails .slide-item .thumb-img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border: 1px solid black;
+    cursor: pointer;
+    margin: 1px 0;
+    border-radius: 2px;
+}
+
+#product-thumbnails .slide-item .thumb-img:hover {
+    border-color: red;
+    transform: scale(1.01);
+}
+
+#thumbnailPrev {
+    color: white;
+    width: 15px;
+    height: 15px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    margin-left: auto;
+    margin-right: auto;
+    background: #333;
+    border: none;
+    position: relative;
+    z-index: 1;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+#thumbnailNext {
+    color: white;
+    width: 15px;
+    height: 15px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    margin-left: auto;
+    margin-right: auto;
+    background: #333;
+    border: none;
+    position: relative;
+    z-index: 1;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+#thumbnailPrev {
+    margin-bottom: 5px;
+}
+
+#thumbnailNext {
+    margin-top: 5px;
+}
+
+#thumbnailPrev:hover:not(:disabled),
+#thumbnailNext:hover:not(:disabled) {
+    background: red;
+    color: white;
+}
+
+#thumbnailPrev:disabled,
+#thumbnailNext:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+}
 /* thumbnail slider end here */
 
 /* Main Image Slider start here */
@@ -82,3 +160,4 @@
 }
 
 /* main image slider end here */
+
