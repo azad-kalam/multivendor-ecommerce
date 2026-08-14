@@ -71,7 +71,7 @@ class ProfileController extends Controller
             $extension = $file->getClientOriginalExtension();
             $fileName = time() . '_' . uniqid() . '.' . $extension;
 
-            $path = public_path('uploads/profile/');
+            $path = public_path('uploads/profiles/');
             if (!File::exists($path)) {
                 File::makeDirectory($path, 0755, true);
             }
@@ -86,6 +86,7 @@ class ProfileController extends Controller
                     ->with('toastr_error', 'Duplicate image detected ! Please choose a different image.');
             }
 
+            // Optional: delete old profile image
             $oldImage = Image::where('profile_id', $profile->id)->first();
             if ($oldImage && File::exists(public_path($oldImage->public_path))) {
                 File::delete(public_path($oldImage->public_path));
@@ -95,7 +96,7 @@ class ProfileController extends Controller
             Image::create([
                 'profile_id' => $profile->id,
                 'file_name' => $originalFileName,
-                'public_path' => 'uploads/profile/' . $fileName,
+                'public_path' => 'uploads/profiles/' . $fileName,
                 'file_hash' => $hash,
                 'alt_text' => $profile->user->name . ' profile image',
             ]);

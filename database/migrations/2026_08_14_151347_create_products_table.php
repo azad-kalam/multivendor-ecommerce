@@ -4,7 +4,11 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
@@ -15,22 +19,34 @@ return new class extends Migration {
                 ->constrained()
                 ->onDelete('cascade');
 
-            // Basic Info
-            $table->string('name')->unique();
-            $table->text('full_description')->nullable();
-            $table->string('short_description', 255)->nullable();
-
             // Categorization
+            $table->foreignId('category_id')
+                ->constrained('categories')
+                ->cascadeOnDelete();
+
             $table->foreignId('subcategory_id')
-                ->constrained()
-                ->onDelete('cascade');
+                ->nullable()
+                ->constrained('subcategories')
+                ->nullOnDelete();
+
+            $table->foreignId('brand_id')
+                ->nullable()
+                ->constrained('brands')
+                ->cascadeOnDelete();
+
+            $table->foreignId('product_model_id')
+                ->nullable()
+                ->constrained('product_models')
+                ->nullOnDelete();
+
+
+            // Basic Info
+            $table->string('name');
+            $table->text('short_description')->nullable();
+            $table->longText('full_description')->nullable();
 
             // Inventory
-            $table->string('slug')->unique(); // Slug (SEO-friendly URL)
-            $table->string('sku')->unique()->nullable();
-            $table->integer('stock_quantity')->nullable();
-            $table->enum('stock_status', ['in_stock', 'out_of_stock'])->default('in_stock');
-            $table->boolean('manage_stock')->default(false);
+            $table->string('slug')->unique();
 
             // Status & Visibility
             $table->integer('status')->default(1); // 1 = active, 0 = inactive
@@ -38,10 +54,6 @@ return new class extends Migration {
             $table->boolean('featured')->default(false);
 
             // Specifications
-            $table->string('brand', 100)->nullable();
-            $table->string('model', 100)->nullable();
-            $table->string('size', 100)->nullable();
-            $table->string('color', 100)->nullable();
             $table->decimal('product_weight', 8, 3)->nullable();
             $table->string('warranty', 100)->nullable();
 
@@ -49,10 +61,14 @@ return new class extends Migration {
             $table->string('meta_title', 255)->nullable();
             $table->string('meta_description', 500)->nullable();
             $table->string('meta_keywords', 255)->nullable();
+
             $table->timestamps();
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::dropIfExists('products');
