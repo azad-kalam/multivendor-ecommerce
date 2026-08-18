@@ -55,7 +55,8 @@ return new class extends Migration
             $table->id();
 
             $table->string('session_id')
-                ->nullable();
+                ->nullable()
+                ->index();
 
             $table->foreignId('user_id')
                 ->nullable()
@@ -69,9 +70,6 @@ return new class extends Migration
             $table->foreignId('product_variant_id')
                 ->constrained('product_variants')
                 ->cascadeOnDelete();
-
-            $table->unsignedBigInteger('product_size');
-            $table->unsignedBigInteger('product_color');
 
             $table->unsignedInteger('product_quantity')
                 ->default(1);

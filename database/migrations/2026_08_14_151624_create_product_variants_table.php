@@ -19,14 +19,12 @@ return new class extends Migration
                 ->cascadeOnDelete();
 
             $table->foreignId('color_id')
-                ->nullable()
                 ->constrained('colors')
-                ->nullOnDelete();
+                ->restrictOnDelete();
 
             $table->foreignId('size_id')
-                ->nullable()
                 ->constrained('sizes')
-                ->nullOnDelete();
+                ->restrictOnDelete();
 
             $table->decimal('regular_price', 10, 2)->nullable();
             $table->decimal('selling_price', 10, 2)->nullable();

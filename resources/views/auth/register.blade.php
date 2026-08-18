@@ -16,7 +16,7 @@
 
             <div class="modal-body pt-0" style="scroll-behavior: smooth; scrollbar-width: thin;">
                 <!-- REGISTER FORM -->
-                <form action="{{ route('register') }}" method="POST" enctype="multipart/form-data">
+                <form id="registerForm" action="{{ route('register') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <!-- Name -->
@@ -30,8 +30,7 @@
                         <x-input-error :messages="$errors->get('name')" class="text-danger mt-1" />
                     </div>
 
-                    {{-- Profile Image --}}
-                    @include('partials.global_file.register_file')
+                    @include('partials.global_file.create_single_file')
 
                     <!-- Email -->
                     <div class="mb-3">
@@ -168,15 +167,16 @@
     </div>
 </div>
 
-<script>
-    document.getElementById('registerForm').addEventListener('submit', function() {
-        const icon = document.getElementById('registerKeyholeIcon');
-        if (icon.classList.contains('fa-lock')) {
-            icon.classList.remove('fa-lock', 'locked');
-            icon.classList.add('fa-unlock', 'unlocked');
-        } else {
-            icon.classList.remove('fa-unlock', 'unlocked');
-            icon.classList.add('fa-lock', 'locked');
-        }
-    });
-</script>
+@push('scripts')
+    <script>
+        $(document).on('submit', '#registerForm', function() {
+            const $icon = $('#registerKeyholeIcon');
+
+            if ($icon.hasClass('fa-lock')) {
+                $icon.removeClass('fa-lock locked').addClass('fa-unlock unlocked');
+            } else {
+                $icon.removeClass('fa-unlock unlocked').addClass('fa-lock locked');
+            }
+        });
+    </script>
+@endpush

@@ -29,29 +29,20 @@ class CartService
 
 
         if (!$variant) {
-
             return [
                 'status' => false,
                 'message' => 'Variant not found for this product.',
             ];
         }
 
-        if (
-            (int) $variant->size_id !==
-            (int) $data['product_size']
-        ) {
-
+        if (is_null($variant->size_id)) {
             return [
                 'status' => false,
                 'message' => 'Selected size does not match the variant.',
             ];
         }
 
-        if (
-            (int) $variant->color_id !==
-            (int) $data['product_color']
-        ) {
-
+        if (is_null($variant->color_id)) {
             return [
                 'status' => false,
                 'message' => 'Selected color does not match the variant.',
@@ -59,18 +50,13 @@ class CartService
         }
 
         if ($variant->stock_status !== 'in_stock') {
-
             return [
                 'status' => false,
                 'message' => 'Product is out of stock.',
             ];
         }
 
-        if (
-            $variant->manage_stock &&
-            $variant->stock_quantity < $data['product_quantity']
-        ) {
-
+        if ($variant->manage_stock && $variant->stock_quantity < $data['product_quantity']) {
             return [
                 'status' => false,
                 'message' => 'Not enough stock available.',
@@ -80,25 +66,18 @@ class CartService
         $sessionId = Session::get('session_id');
 
         if (!$sessionId) {
-
             $sessionId = Session::getId();
-
-            Session::put(
-                'session_id',
-                $sessionId
-            );
+            Session::put('session_id', $sessionId);
         }
 
-        if (Auth::check()) {
 
+        if (Auth::check()) {
             $userId = Auth::id();
 
             $exists = Cart::where([
                 'user_id' => $userId,
                 'product_id' => $data['product_id'],
                 'product_variant_id' => $variant->id,
-                'product_size' => $data['product_size'],
-                'product_color' => $data['product_color'],
             ])->exists();
         } else {
 
@@ -108,49 +87,30 @@ class CartService
                 'session_id' => $sessionId,
                 'product_id' => $data['product_id'],
                 'product_variant_id' => $variant->id,
-                'product_size' => $data['product_size'],
-                'product_color' => $data['product_color'],
             ])->exists();
         }
 
 
         if ($exists) {
-
             return [
                 'status' => false,
                 'message' => 'Product already exists in cart.',
             ];
         }
 
-       $cart = Cart::create([
-
+        $cart = Cart::create([
             'session_id' => $sessionId,
-
             'user_id' => $userId,
-
             'product_id' => $data['product_id'],
-
             'product_variant_id' => $variant->id,
-
-            'product_size' => $data['product_size'],
-
-            'product_color' => $data['product_color'],
-
             'product_quantity' => $data['product_quantity'],
-
         ]);
 
-        if (Auth::check()) {
-            $cartCount = Cart::where(
-                'user_id',
-                Auth::id()
-            )->count();
-        } else {
 
-            $cartCount = Cart::where(
-                'session_id',
-                $sessionId
-            )->count();
+        if (Auth::check()) {
+            $cartCount = Cart::where('user_id', Auth::id())->count();
+        } else {
+            $cartCount = Cart::where('session_id', $sessionId)->count();
         }
 
         return [

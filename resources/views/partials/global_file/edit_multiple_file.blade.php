@@ -1,5 +1,7 @@
-<div class="form-group mb-3">
-    <label for="image" class="form-label ms-1">Image Choose:</label>
+<div class="form-group mb-5">
+    <label for="image" class="form-label ms-1">
+        Image Choose: <span class="text-danger" aria-hidden="true">*</span>
+    </label>
 
     <input type="file" class="form-control" id="product_image" name="image[]" accept="image/*" capture="camera" multiple>
 
@@ -7,7 +9,7 @@
         <small class="text-success mx-1">
             <span class="text-danger" style="font-size: 14px;">Allowed:</span>
             <b class="text-danger">[</b>
-            <span style="font-size: 13px;">JPG, JPEG, PNG, GIF, WEBP
+            <span style="font-size: 13px;">JPG, JPEG, PNG, WEBP
             </span>
             <b class="text-danger">].</b>
             Maximum: 2 MB.
@@ -18,7 +20,7 @@
         <div>
             <span class="text-danger" style="font-size: 15px;">File name:</span>
             <span>[</span>
-            <span id="fileNameText" class="text-primary" style="font-size: 15px;">
+            <span id="fileNameText" class="text-primary" style="font-size: 14px;">
                 {{ $productFind->images->pluck('file_name')->implode(', ') ?: 'No file' }}
             </span>
             <span>]</span>
@@ -44,7 +46,7 @@
     @enderror
 </div>
 
-<script>
+{{-- <script>
     document.getElementById('product_image').addEventListener('change', function(event) {
         const imageDisplay = document.getElementById('imageDisplay');
         const fileNameText = document.getElementById('fileNameText');
@@ -57,12 +59,10 @@
         if (files.length > 0) {
             let names = [];
 
-            // সব file name collect
             for (let i = 0; i < files.length; i++) {
                 names.push(files[i].name);
             }
 
-            // শুধু প্রথম image preview
             const firstFile = files[0];
 
             const reader = new FileReader();
@@ -79,11 +79,10 @@
 
             reader.readAsDataURL(firstFile);
 
-            // সব file name show
             fileNameText.innerHTML = names.join(', ');
         } else {
             imageDisplay.innerHTML = "<small class='text-danger'>No Image</small>";
             fileNameText.innerHTML = "No file";
         }
     });
-</script>
+</script> --}}

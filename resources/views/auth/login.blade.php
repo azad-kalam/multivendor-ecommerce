@@ -65,15 +65,16 @@
     </div>
 </div>
 
-<script>
-    document.getElementById('loginForm').addEventListener('submit', function() {
-        const icon = document.getElementById('loginKeyholeIcon');
-        if (icon.classList.contains('fa-lock')) {
-            icon.classList.remove('fa-lock', 'locked');
-            icon.classList.add('fa-unlock', 'unlocked');
-        } else {
-            icon.classList.remove('fa-unlock', 'unlocked');
-            icon.classList.add('fa-lock', 'locked');
-        }
-    });
-</script>
+@push('scripts')
+    <script>
+        $('#loginForm').on('submit', function() {
+            const icon = $('#loginKeyholeIcon');
+
+            if (icon.hasClass('fa-lock')) {
+                icon.removeClass('fa-lock locked').addClass('fa-unlock unlocked');
+            } else {
+                icon.removeClass('fa-unlock unlocked').addClass('fa-lock locked');
+            }
+        });
+    </script>
+@endpush
