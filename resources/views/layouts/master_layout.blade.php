@@ -28,7 +28,7 @@
     <!-- AJAX includes (role‑aware) -->
     @include('partials.AJAX.Ajax')
 
-    <!-- Custom scripts -->
+    <!-- Slick + Custom + Homepage + Frontend AJAX + Admin + Main scripts -->
     @include('partials.scripts.custom_script')
 
     <!-- All message -->

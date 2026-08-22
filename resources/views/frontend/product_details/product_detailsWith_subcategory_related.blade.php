@@ -34,25 +34,16 @@
                 <!--Left thumbnail images start here -->
                 <div class="col-md-2">
                     <div class="thumbnail-wrapper">
-                        <button type="button" class="thumbnail-arrow mb-2 thumbnail-arrow-up" id="thumbnailPrev"
-                            aria-label="Previous thumbnail">
-                            <i class="fa fa-chevron-up"></i>
-                        </button>
-
-                        <div id="product-thumbnails" class="thumb-slider vertical-slider">
+                        <div id="product-thumbnails">
                             @foreach ($product->images as $index => $image)
                                 <div class="slide-item" data-index="{{ $index }}"
                                     data-image="{{ asset($image->public_path) }}">
-                                    <img src="{{ asset($image->public_path) }}" class="img-fluid thumb-img m-0 p-0"
+
+                                    <img src="{{ asset($image->public_path) }}" class="img-fluid thumb-img"
                                         alt="{{ $image->alt_text ?? 'Thumb image' }}">
                                 </div>
                             @endforeach
                         </div>
-
-                        <button type="button" class="thumbnail-arrow mt-0 thumbnail-arrow-down" id="thumbnailNext"
-                            aria-label="Next thumbnail">
-                            <i class="fa fa-chevron-down"></i>
-                        </button>
                     </div>
                 </div>
                 <!-- Left thumbnail images end here -->
@@ -71,6 +62,214 @@
                 <!-- Right main Image end here -->
 
                 <div class="col-md-5">
+                    {{-- <div class="product-details">
+                        <div class="d-flex">
+                            <h2 class="product-name">Product Name:</h2>
+                            <h2 class="product-name text-success ms-2">{{ $product->name }}</h2>
+                        </div>
+
+                        <div>
+                            <div class="product-rating text-warning">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-o"></i>
+                            </div>
+                            <a class="review-link" href="#">10 Review(s) | Add your review</a>
+                        </div>
+
+                        @php
+                            $variant = $product->variants->first();
+                        @endphp
+
+                        <div class="d-flex align-items-center">
+                            <h3 class="product-price w-50">
+                                @if ($variant)
+                                    @switch($variant->discount_type)
+                                        @case('none')
+                                            <span class="text-dark fw-bold">
+                                                <i class="fa-solid fa-bangladeshi-taka-sign"></i>
+                                                {{ number_format($variant->regular_price, 2) }}
+                                            </span>
+                                        @break
+
+                                        @case('fixed')
+                                        @case('percent')
+                                            <span class="text-dark fw-bold">
+                                                <i class="fa-solid fa-bangladeshi-taka-sign"></i>
+                                                {{ number_format($variant->selling_price, 2) }}
+                                            </span>
+
+                                            <del class="text-danger ms-2">
+                                                <i class="fa-solid fa-bangladeshi-taka-sign"></i>
+                                                {{ number_format($variant->regular_price, 2) }}
+                                            </del>
+                                        @break
+
+                                        @default
+                                            <span class="text-danger">
+                                                Price not available
+                                            </span>
+                                    @endswitch
+                                @else
+                                    <span class="text-danger">
+                                        Price not found
+                                    </span>
+                                @endif
+                            </h3>
+
+                            <p class="product-badge w-25 ps-2 mt-2">
+                                @if ($variant)
+                                    @switch($variant->discount_type)
+                                        @case('none')
+                                            <span class="badge bg-danger">NEW</span>
+                                        @break
+
+                                        @case('fixed')
+                                            <span class="badge bg-danger">OFFER</span>
+                                        @break
+
+                                        @case('percent')
+                                            <span class="badge bg-danger">{{ $variant->discount_value }}% OFF</span>
+                                        @break
+                                    @endswitch
+                                @endif
+                            </p>
+                            <p class="w-25 mt-2">
+                                @if ($variant)
+                                    @if ($variant->stock_status === 'in_stock')
+                                        <span class="text-success product-available justify-content-center">
+                                            In stock
+                                        </span>
+                                    @else
+                                        <span class="text-danger product-available justify-content-center">
+                                            Out of stock
+                                        </span>
+                                    @endif
+                                @endif
+                            </p>
+                        </div>
+
+                        <p>
+                            <strong>Available:</strong>
+                            <span id="availableQty">{{ $variant->stock_quantity }}</span>
+                        </p>
+
+                        <div class="row product-options mb-1 mt-0">
+                            <div class="col-md-6">
+                                <label for="sizeSelect" class="fw-bold d-block mb-1">
+                                    Size:
+                                </label>
+
+                                <select id="sizeSelect" class="form-select">
+                                    @foreach ($product->variants->unique('size_id') as $variant)
+                                        <option value="{{ $variant->size_id }}">
+                                            {{ $variant->size?->name ?? 'N/A' }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="colorSelect" class="fw-bold d-block mb-1">
+                                    Color:
+                                </label>
+
+                                <select id="colorSelect" class="form-select">
+                                    @foreach ($product->variants->unique('color_id') as $variant)
+                                        <option value="{{ $variant->color_id }}">
+                                            {{ $variant->color?->name ?? 'N/A' }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <label class="fw-bold mb-1">
+                                    Quantity:
+                                </label>
+
+                                <div class="input-number">
+                                    <input type="number" min="1"
+                                        max="{{ $product->variants->max('stock_quantity') }}" value="1"
+                                        class="form-control">
+
+                                    <span class="quantity_up">+</span>
+                                    <span class="quantity_down">-</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="add-to-cart mt-4">
+                                    <button type="button" class="add-to-cart-btn mt-4">
+                                        <i class="fa fa-shopping-cart"></i>
+                                        Add to cart
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="fw-bold d-block mb-1">Short Description:</label>
+
+                            @if (!empty($product->short_description))
+                                <textarea class="form-control border border-dark bg-transparent" rows="2" readonly
+                                    style="resize: none; overflow-y: scroll;">{{ $product->short_description }}</textarea>
+                            @else
+                                <div class="text-danger">Product short description not found</div>
+                            @endif
+                        </div>
+
+                        <ul class="product-links list-unstyled">
+                            <li>Category:</li>
+                            <li><a href="#">{{ $product->subcategory->category->name }}</a></li>
+
+                            <li>Sub-category:</li>
+                            <li><a href="#">{{ $product->subcategory->subcategory_name }}</a></li>
+                        </ul>
+
+                        <div class="d-flex">
+                            <ul class="product-btns list-unstyled align-items-center d-flex flex-wrap p-0 m-0">
+                                <li>
+                                    <a href="#" class="text-decoration-none">
+                                        <i class="fa fa-heart-o"></i> Add to wishlist
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="text-decoration-none">
+                                        <i class="fa fa-exchange"></i> Add to compare
+                                    </a>
+                                </li>
+                            </ul>
+
+                            <ul class="product-links list-unstyled align-items-center d-flex flex-wrap gap-2 p-0 m-0 ms-4">
+                                <li>Share:</li>
+                                <li>
+                                    <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">
+                                        <i class="fa-brands fa-facebook"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+                                        <i class="fa-brands fa-twitter"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="https://www.google.com" target="_blank" rel="noopener noreferrer">
+                                        <i class="fa-brands fa-google-plus-g"></i>
+                                    </a>
+                                </li>
+                                <li><a href="https://envelope.com" target="_blank" rel="noopener noreferrer">
+                                        <i class="fa-solid fa-envelope"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div> --}}
+
                     <form action="{{ route('frontend.carts.store') }}" id="add_to_cart" method="POST">
                         @csrf
                         <input type="hidden" name="product_id" id="productId" value="{{ $product->id }}">
@@ -228,7 +427,6 @@
 
                                 {{-- COLOR --}}
                                 <div class="col-md-6">
-
                                     <label for="colorSelect" class="fw-bold d-block mb-1">
                                         Color:
                                     </label>
@@ -258,15 +456,12 @@
                                     </label>
 
                                     <div class="input-number">
-
                                         <input type="number" name="product_quantity" id="productQuantity" min="1"
                                             value="1" class="form-control">
 
                                         <span class="quantity_up">+</span>
                                         <span class="quantity_down">-</span>
-
                                     </div>
-
                                 </div>
 
 
@@ -759,845 +954,6 @@
     @include('inc.footers.global.global_footer')
 @endsection
 
-
-@push('scripts')
-    <script>
-        $(document).ready(function() {
-
-            const variants = @json($variantData);
-
-            function getSelectedVariant() {
-
-                let size_id = Number($('#sizeSelect').val());
-
-                let color_id = Number($('#colorSelect').val());
-
-                return variants.find(function(variant) {
-                    return (
-                        Number(variant.size_id) === size_id &&
-                        Number(variant.color_id) === color_id
-                    );
-
-                }) || null;
-            }
-
-
-            function destroySliders() {
-
-                if (
-                    $('#product-main-img')
-                    .hasClass('slick-initialized')
-                ) {
-
-                    $('#product-main-img')
-                        .slick('unslick');
-                }
-
-
-                if (
-                    $('#product-thumbnails')
-                    .hasClass('slick-initialized')
-                ) {
-
-                    $('#product-thumbnails')
-                        .slick('unslick');
-                }
-
-                $('#thumbnailPrev')
-                    .prop('disabled', true)
-                    .addClass('disabled');
-
-                $('#thumbnailNext')
-                    .prop('disabled', true)
-                    .addClass('disabled');
-            }
-
-            function activeThumb(index) {
-
-                $('#product-thumbnails .slide-item')
-                    .removeClass(
-                        'border border-danger rounded'
-                    );
-
-                $('#product-thumbnails .slide-item')
-                    .eq(index)
-                    .addClass(
-                        'border border-danger rounded'
-                    );
-            }
-
-            function updateThumbnailArrows() {
-
-                const $slider = $('#product-thumbnails');
-
-                const $up = $('#thumbnailPrev');
-
-                const $down = $('#thumbnailNext');
-
-                if (
-                    !$slider.hasClass('slick-initialized')
-                ) {
-
-                    $up
-                        .prop('disabled', true)
-                        .addClass('disabled');
-
-                    $down
-                        .prop('disabled', true)
-                        .addClass('disabled');
-
-                    return;
-                }
-
-
-                const slick =
-                    $slider.slick('getSlick');
-
-
-                const totalItems =
-                    slick.slideCount;
-
-
-                const visibleItems =
-                    Math.min(
-                        3,
-                        totalItems
-                    );
-
-                const currentPosition =
-                    slick.currentSlide;
-
-                const lastPosition =
-                    Math.max(
-                        0,
-                        totalItems - visibleItems
-                    );
-
-                if (
-                    currentPosition <= 0
-                ) {
-
-                    $up
-                        .prop('disabled', true)
-                        .addClass('disabled');
-
-                } else {
-
-                    $up
-                        .prop('disabled', false)
-                        .removeClass('disabled');
-                }
-
-                if (
-                    currentPosition >= lastPosition
-                ) {
-
-                    $down
-                        .prop('disabled', true)
-                        .addClass('disabled');
-
-                } else {
-
-                    $down
-                        .prop('disabled', false)
-                        .removeClass('disabled');
-                }
-            }
-
-            function initSliders() {
-
-                destroySliders();
-
-                $('#product-main-img').slick({
-
-                    slidesToShow: 1,
-
-                    slidesToScroll: 1,
-
-                    arrows: true,
-
-                    infinite: false,
-
-                    speed: 300
-                });
-
-                const $thumbnailSlider =
-                    $('#product-thumbnails');
-
-
-                const thumbnailCount =
-                    $thumbnailSlider
-                    .children('.slide-item')
-                    .length;
-
-
-                if (thumbnailCount > 0) {
-
-                    $thumbnailSlider.slick({
-
-                        slidesToShow: Math.min(
-                            3,
-                            thumbnailCount
-                        ),
-
-                        slidesToScroll: 1,
-
-                        vertical: true,
-
-                        verticalSwiping: true,
-
-
-                        arrows: false,
-
-                        focusOnSelect: true,
-
-
-                        infinite: false,
-
-                        swipeToSlide: false,
-
-                        speed: 300,
-
-                        adaptiveHeight: false
-                    });
-                }
-
-                if (thumbnailCount > 0) {
-
-                    activeThumb(0);
-                }
-
-
-                updateThumbnailArrows();
-
-                $('#product-main-img')
-                    .off('afterChange.productThumbnailSync')
-                    .on(
-                        'afterChange.productThumbnailSync',
-                        function(
-                            event,
-                            slick,
-                            current
-                        ) {
-
-                            activeThumb(current);
-                        }
-                    );
-
-                $thumbnailSlider
-                    .off('afterChange.thumbnailArrow')
-                    .on(
-                        'afterChange.thumbnailArrow',
-                        function() {
-
-                            updateThumbnailArrows();
-                        }
-                    );
-
-                $('#thumbnailPrev')
-                    .off('click.thumbnailPrev')
-                    .on(
-                        'click.thumbnailPrev',
-                        function(e) {
-
-                            e.preventDefault();
-
-                            if (
-                                $(this).prop('disabled')
-                            ) {
-                                return;
-                            }
-
-                            if (
-                                !$thumbnailSlider
-                                .hasClass(
-                                    'slick-initialized'
-                                )
-                            ) {
-                                return;
-                            }
-
-
-                            const slick =
-                                $thumbnailSlider
-                                .slick('getSlick');
-
-
-                            const currentPosition =
-                                slick.currentSlide;
-
-                            if (
-                                currentPosition <= 0
-                            ) {
-
-                                updateThumbnailArrows();
-
-                                return;
-                            }
-
-                            $thumbnailSlider.slick(
-                                'slickGoTo',
-                                currentPosition - 1
-                            );
-                        }
-                    );
-
-                $('#thumbnailNext')
-                    .off('click.thumbnailNext')
-                    .on(
-                        'click.thumbnailNext',
-                        function(e) {
-
-                            e.preventDefault();
-
-                            if (
-                                $(this).prop('disabled')
-                            ) {
-                                return;
-                            }
-
-                            if (
-                                !$thumbnailSlider
-                                .hasClass(
-                                    'slick-initialized'
-                                )
-                            ) {
-                                return;
-                            }
-
-
-                            const slick =
-                                $thumbnailSlider
-                                .slick('getSlick');
-
-
-                            const totalItems =
-                                slick.slideCount;
-
-
-                            const visibleItems =
-                                Math.min(
-                                    3,
-                                    totalItems
-                                );
-
-
-                            const currentPosition =
-                                slick.currentSlide;
-
-                            const lastPosition =
-                                Math.max(
-                                    0,
-                                    totalItems -
-                                    visibleItems
-                                );
-
-                            if (
-                                currentPosition >=
-                                lastPosition
-                            ) {
-
-                                updateThumbnailArrows();
-
-                                return;
-                            }
-
-                            $thumbnailSlider.slick(
-                                'slickGoTo',
-                                currentPosition + 1
-                            );
-                        }
-                    );
-
-                initZoom();
-            }
-
-            $(document).off('click.productThumbnail', '.slide-item').on('click.productThumbnail', '.slide-item',
-                function() {
-
-                    let index = $(this).data('index');
-
-                    if ($('#product-main-img').hasClass('slick-initialized')) {
-                        $('#product-main-img').slick('slickGoTo', index);
-                    }
-                });
-
-            function initZoom() {
-
-                $('.zoomImg').remove();
-
-                $('.zoom').remove();
-
-
-                $('#product-main-img .main-img')
-                    .each(function() {
-
-                        $(this)
-                            .wrap(
-                                '<div class="zoom"></div>'
-                            );
-
-
-                        $(this)
-                            .parent()
-                            .zoom({
-
-                                url: $(this).attr('src'),
-
-                                magnify: 1.5
-                            });
-                    });
-            }
-
-            function getAllVariantImages() {
-
-                let images = [];
-
-
-                variants.forEach(function(variant) {
-
-                    variant.images.forEach(
-                        function(img) {
-
-                            if (
-                                !images.includes(img)
-                            ) {
-
-                                images.push(img);
-                            }
-                        }
-                    );
-                });
-
-
-                return images;
-            }
-
-            function updateGallery(selectedImages) {
-
-                let images =
-                    getAllVariantImages();
-
-
-                let thumbs = '';
-
-                let main = '';
-
-
-                images.forEach(function(img, index) {
-
-                    thumbs += `
-                                <div
-                                    class="slide-item mb-2"
-                                    data-index="${index}"
-                                    data-image="${img}"
-                                >
-                                    <img
-                                        src="${img}"
-                                        class="img-fluid thumb-img"
-                                    >
-                                </div>
-                            `;
-
-
-                    main += `
-                                <div class="product-preview">
-
-                                    <img
-                                        src="${img}"
-                                        class="main-img img-fluid"
-                                    >
-
-                                </div>
-                            `;
-                });
-
-                destroySliders();
-
-
-                $('#product-thumbnails')
-                    .html(thumbs);
-
-
-                $('#product-main-img')
-                    .html(main);
-
-
-                initSliders();
-
-                if (
-                    selectedImages.length
-                ) {
-
-                    let index =
-                        images.indexOf(
-                            selectedImages[0]
-                        );
-
-
-                    if (
-                        index >= 0 &&
-                        $('#product-main-img')
-                        .hasClass(
-                            'slick-initialized'
-                        )
-                    ) {
-
-                        $('#product-main-img')
-                            .slick(
-                                'slickGoTo',
-                                index
-                            );
-
-
-                        activeThumb(index);
-                    }
-                }
-
-                updateThumbnailArrows();
-            }
-
-            function updateProduct(variant) {
-
-                if (!variant) {
-                    $('#productVariantId').val('');
-
-                    $('.product-price').html('<span class="text-danger">' +
-                        'Price not available' +
-                        '</span>');
-
-                    $('.product-badge').html('');
-
-                    $('.product-available')
-                        .removeClass('text-success text-danger')
-                        .addClass('text-danger')
-                        .text('Out Of Stock');
-
-                    $('#availableQty')
-                        .text(0);
-
-                    $('#productQuantity')
-                        .attr('max', 0).val(1);
-
-                    return;
-                }
-                $('#productVariantId').val(variant.id);
-                $('#productId').val(variant.product_id);
-
-
-                let priceHtml = '';
-
-                let badgeHtml = '';
-
-
-                switch (variant.discount_type) {
-
-                    case 'none':
-
-                        priceHtml = `
-                        <span class="text-dark fw-bold">
-
-                            <i class="fa-solid fa-bangladeshi-taka-sign"></i>
-
-                            ${Number(
-                                variant.regular_price
-                            ).toFixed(2)}
-
-                                </span>
-                            `;
-
-
-                        badgeHtml = `
-                            <span class="badge bg-danger">
-                                NEW
-                            </span>
-                        `;
-
-                        break;
-
-                    case 'fixed':
-
-                        priceHtml = `
-                            <span class="text-dark fw-bold">
-
-                                <i class="fa-solid fa-bangladeshi-taka-sign"></i>
-
-                                ${Number(
-                                    variant.selling_price
-                                ).toFixed(2)}
-
-                            </span>
-
-                            <del class="text-danger ms-2">
-
-                                <i class="fa-solid fa-bangladeshi-taka-sign"></i>
-
-                                ${Number(
-                                    variant.regular_price
-                                ).toFixed(2)}
-
-                            </del>
-                        `;
-
-
-                        badgeHtml = `
-                            <span class="badge bg-danger">
-                                OFFER
-                            </span>
-                        `;
-
-                        break;
-
-
-                    case 'percent':
-
-                        priceHtml = `
-                            <span class="text-dark fw-bold">
-
-                                <i class="fa-solid fa-bangladeshi-taka-sign"></i>
-
-                                ${Number(
-                                    variant.selling_price
-                                ).toFixed(2)}
-
-                            </span>
-
-                            <del class="text-danger ms-2">
-
-                                <i class="fa-solid fa-bangladeshi-taka-sign"></i>
-
-                                ${Number(
-                                    variant.regular_price
-                                ).toFixed(2)}
-
-                            </del>
-                        `;
-
-
-                        badgeHtml = `
-                            <span class="badge bg-danger">
-                                ${variant.discount_value}% OFF
-                            </span>
-                        `;
-
-                        break;
-
-
-                    default:
-
-                        priceHtml = `
-                            <span class="text-danger">
-                                Price not available
-                            </span>
-                        `;
-
-
-                        badgeHtml = `
-                            <span class="text-danger">
-                                No Offer
-                            </span>
-                        `;
-
-                        break;
-                }
-
-                $('.product-price')
-                    .html(priceHtml);
-
-                $('.product-badge')
-                    .html(badgeHtml);
-
-                $('.product-available')
-                    .removeClass(
-                        'text-success text-danger'
-                    )
-                    .addClass(
-                        variant.stock_status === 'in_stock' ?
-                        'text-success' :
-                        'text-danger'
-                    )
-                    .text(
-                        variant.stock_status === 'in_stock' ?
-                        'In Stock' :
-                        'Out Of Stock'
-                    );
-
-                $('#availableQty')
-                    .text(
-                        variant.stock_quantity
-                    );
-
-
-                $('.input-number input')
-                    .attr(
-                        'max',
-                        variant.stock_quantity
-                    )
-                    .val(1);
-
-                if (
-                    variant.images &&
-                    variant.images.length
-                ) {
-
-                    updateGallery(
-                        variant.images
-                    );
-                }
-            }
-
-            let firstVariant = getSelectedVariant();
-
-
-            if (firstVariant) {
-
-                updateProduct(firstVariant);
-
-            } else {
-                $('#productVariantId').val('');
-            }
-
-            $('#sizeSelect, #colorSelect')
-                .on('change', function() {
-                    const variant = getSelectedVariant();
-                    updateProduct(variant);
-                });
-
-
-            $(document)
-                .off(
-                    'click.productQuantityUp',
-                    '.quantity_up'
-                )
-                .on(
-                    'click.productQuantityUp',
-                    '.quantity_up',
-                    function() {
-
-                        let input =
-                            $(this).siblings('input');
-
-
-                        let value =
-                            parseInt(
-                                input.val()
-                            ) || 1;
-
-
-                        let max =
-                            parseInt(
-                                input.attr('max')
-                            );
-
-
-                        if (value < max) {
-
-                            input.val(
-                                value + 1
-                            );
-                        }
-                    });
-
-            $(document)
-                .off(
-                    'click.productQuantityDown',
-                    '.quantity_down'
-                )
-                .on(
-                    'click.productQuantityDown',
-                    '.quantity_down',
-                    function() {
-
-                        let input =
-                            $(this).siblings('input');
-
-
-                        let value =
-                            parseInt(
-                                input.val()
-                            ) || 1;
-
-
-                        let min =
-                            parseInt(
-                                input.attr('min')
-                            ) || 1;
-
-
-                        if (value > min) {
-
-                            input.val(
-                                value - 1
-                            );
-                        }
-                    });
-
-        });
-    </script>
-@endpush
-
-
-@push('scripts')
-    <script>
-        @include('partials.toastr_options.toastr_option')
-        @include('partials.error_options.errorHandler')
-
-
-        $(document).ready(function() {
-            $('#add_to_cart').on('submit', function(e) {
-
-                e.preventDefault();
-
-                const form = $(this);
-                const productId = $('#productId').val();
-                const variantId = $('#productVariantId').val();
-                const quantity = Number($('#productQuantity').val());
-
-                if (!productId) {
-                    toastr.error('Product ID is required.');
-                    return;
-                }
-
-                if (!variantId) {
-                    toastr.error('Product variant is required.');
-                    return;
-                }
-
-                if (!quantity || quantity < 1) {
-                    toastr.error('Quantity must be at least 1.');
-                    return;
-                }
-
-                const url = form.attr('action');
-
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-
-                    url: url,
-                    method: 'POST',
-                    dataType: 'json',
-                    data: form.serialize(),
-                    success: function(response) {
-
-                        if (response.cart_status === 'success') {
-                            toastr.success(response.message);
-
-                            if (response.cart_count !== undefined) {
-                                $('.cart-count').text(response.cart_count);
-                            }
-
-                        } else {
-                            toastr.error(response.message || 'Something went wrong!');
-                        }
-                    },
-
-                    error: function(xhr) {
-                        customErrorHandler(xhr);
-                    }
-                });
-            });
-        });
-    </script>
-@endpush
+<script>
+    window.variantData = @json($variantData);
+</script>
