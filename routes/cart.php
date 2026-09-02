@@ -9,5 +9,6 @@ Route::post('shopping-cart', [CartController::class, 'show'])->name('frontend.ca
 Route::post('{cart_id}', [CartController::class, 'delete'])->name('frontend.carts.update');
 Route::post('{cart_id}', [CartController::class, 'delete'])->name('frontend.carts.delete');
 Route::post('{cart_id}', [CartController::class, 'delete'])->name('frontend.carts.ajax');
+Route::post('{cart_id}', [CartController::class, 'delete'])->name('frontend.carts.ajax-frontend');
 
 
