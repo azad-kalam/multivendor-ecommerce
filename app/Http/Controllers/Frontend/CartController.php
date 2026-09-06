@@ -6,39 +6,33 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\FrontEnd\CartRequest;
 use App\Services\FrontEnd\CartService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
 
 class CartController extends Controller
 {
-    protected CartService $cart_service;
+    protected CartService $cartService;
 
-    public function __construct(CartService $service)
+    public function __construct(CartService $cartService)
     {
-        $this->cart_service = $service;
+        $this->cartService = $cartService;
     }
 
-    public function store(CartRequest $request): JsonResponse
+
+    public function index()
     {
-        $result = $this->cart_service->addToCart(
-            $request->validated()
-        );
+        $get_cart = $this->cartService->index_cart();
+        return view('frontend.carts.index', [
+            'cart_items' => $get_cart['items'],
+            'subtotal' => $get_cart['subtotal'],
+            'discount' => $get_cart['discount'],
+            'grand_total' => $get_cart['grand_total'],
+        ]);
+    }
 
-        if (!$result['status']) {
-
-            return response()->json(
-                [
-                    'cart_status' => 'error',
-                    ...$result,
-                ],
-                422
-            );
-        }
-
-        return response()->json(
-            [
-                'cart_status' => 'success',
-                ...$result,
-            ],
-            200
-        );
+    public function store(CartRequest $request)
+    {
+        $validated_data = $request->validated();
+        $result_data = $this->cartService->addToCart($validated_data);
+        return response()->json($result_data);
     }
 }
