@@ -189,7 +189,7 @@ class CartService
             $cartQuery->where('session_id', $sessionId);
         }
 
-        $cartRows = $cartQuery->orderByDesc('id')->get();
+       $cartRows = $cartQuery->orderBy('id', 'asc')->get();
 
         $items = [];
         $subtotal = 0;
