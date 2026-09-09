@@ -1,7 +1,7 @@
 $(document).ready(function () {
     // variant start here
-    // const variants = @json($variantData);
-    const variants = window.variantData;
+    const $form = $("#add_to_cart");
+    let variants = JSON.parse($form.attr("data-variants") || "[]");
 
     const productId = $("#productId");
     const variantId = $("#productVariantId");
@@ -13,10 +13,19 @@ $(document).ready(function () {
     const productBadge = $(".product-badge");
     const productAvailable = $(".product-available");
 
+    if (
+        !$("#productId").length ||
+        !$("#productVariantId").length ||
+        !$("#sizeSelect").length ||
+        !$("#colorSelect").length ||
+        !$("#productQuantity").length
+    ) {
+        return;
+    }
+
     function getSelectedVariant() {
         const sizeId = Number(sizeSelect.val());
         const colorId = Number(colorSelect.val());
-
         return variants.find(function (variant) {
             return (
                 Number(variant.size_id) === sizeId &&
@@ -30,62 +39,69 @@ $(document).ready(function () {
         productId.val(variant.product_id);
         const regularPrice = Number(variant.regular_price).toFixed(2);
         const sellingPrice = Number(variant.selling_price).toFixed(2);
-
         if (variant.discount_type === "none") {
-            productPrice.html(` <span class="text-dark fw-bold">
-                                            <i class="fa-solid fa-bangladeshi-taka-sign"></i>
-                                            ${regularPrice}
-                                        </span>`);
-        } else if (
-            variant.discount_type === "fixed" ||
-            variant.discount_type === "percent"
-        ) {
-            productPrice.html(` <span class="text-dark fw-bold">
-                                            <i class="fa-solid fa-bangladeshi-taka-sign"></i>
-                                            ${sellingPrice}
-                                        </span>
-
-                                        <del class="text-danger ms-2">
-                                            <i class="fa-solid fa-bangladeshi-taka-sign"></i>
-                                            ${regularPrice}
-                                        </del>`);
-        } else {
-            productPrice.html(`<span class="text-danger">
-                                            Price not available
-                                        </span>`);
-        }
-
-        if (variant.discount_type === "none") {
-            productBadge.html(`<span class="badge bg-danger"> NEW </span>`);
+            productPrice.html(`
+                <span class="text-dark fw-bold">
+                    <i class="fa-solid fa-bangladeshi-taka-sign"></i>
+                    ${regularPrice}
+                </span>
+            `);
+            productBadge.html(`
+                <span class="badge bg-danger">
+                    NEW
+                </span>
+            `);
         } else if (variant.discount_type === "fixed") {
-            productBadge.html(`<span class="badge bg-danger"> OFFER </span>`);
+            productPrice.html(`
+                <span class="text-dark fw-bold">
+                    <i class="fa-solid fa-bangladeshi-taka-sign"></i>
+                    ${sellingPrice}
+                </span>
+                <del class="text-danger ms-2">
+                    <i class="fa-solid fa-bangladeshi-taka-sign"></i>
+                    ${regularPrice}
+                </del>
+            `);
+            productBadge.html(`
+                <span class="badge bg-danger">
+                    OFFER
+                </span>
+            `);
         } else if (variant.discount_type === "percent") {
-            productBadge.html(`<span class="badge bg-danger">
-                        ${variant.discount_value}% OFF
-                    </span>`);
+            productPrice.html(`
+                <span class="text-dark fw-bold">
+                    <i class="fa-solid fa-bangladeshi-taka-sign"></i>
+                    ${sellingPrice}
+                </span>
+                <del class="text-danger ms-2">
+                    <i class="fa-solid fa-bangladeshi-taka-sign"></i>
+                    ${regularPrice}
+                </del>
+            `);
+            productBadge.html(`
+                <span class="badge bg-danger">
+                    ${variant.discount_value}% OFF
+                </span>
+            `);
         } else {
-            productBadge.html(`<span class="text-danger"> No Offer </span>`);
+            productPrice.html(`
+                <span class="text-danger">
+                    Price not available
+                </span>
+            `);
         }
 
         const stock = Number(variant.stock_quantity) || 0;
-        const inStock = variant.stock_status === "in_stock" && stock > 0;
-
-        if (inStock) {
-            productAvailable
-                .removeClass("text-danger")
-                .addClass("text-success")
-                .text("In Stock");
-        } else {
-            productAvailable
-                .removeClass("text-success")
-                .addClass("text-danger")
-                .text("Out Of Stock");
-        }
-
+        const inStock =
+            variant.stock_status === "in_stock" &&
+            (Number(variant.manage_stock) !== 1 || stock > 0);
+        productAvailable
+            .removeClass("text-success text-danger")
+            .addClass(inStock ? "text-success" : "text-danger")
+            .text(inStock ? "In Stock" : "Out Of Stock");
         availableQty.text(stock);
         quantityInput.attr("max", stock);
         quantityInput.val(inStock ? 1 : 0);
-
         if (variant.images && variant.images.length > 0) {
             const mainSlider = $("#product-main-img");
             if (mainSlider.hasClass("slick-initialized")) {
@@ -98,7 +114,6 @@ $(document).ready(function () {
                         return false;
                     }
                 });
-
                 if (imageIndex >= 0) {
                     mainSlider.slick("slickGoTo", imageIndex);
                 } else {
@@ -115,10 +130,16 @@ $(document).ready(function () {
 
     function resetProduct() {
         variantId.val("");
-        productPrice.html(
-            `<span class="text-danger"> Price not available </span> `,
-        );
-        productBadge.empty();
+        productPrice.html(`
+            <span class="text-danger">
+                Price not available
+            </span>
+        `);
+        productBadge.html(`
+            <span class="text-danger">
+                No Offer
+            </span>
+        `);
         productAvailable
             .removeClass("text-success")
             .addClass("text-danger")
@@ -169,7 +190,6 @@ $(document).ready(function () {
 
     sizeSelect.on("change", updateSelectedVariant);
     colorSelect.on("change", updateSelectedVariant);
-
     $(".quantity_up").on("click", function (e) {
         e.preventDefault();
         increaseQuantity();
@@ -178,9 +198,7 @@ $(document).ready(function () {
         e.preventDefault();
         decreaseQuantity();
     });
-
     quantityInput.on("input", handleQuantityInput);
-
     const initialVariant = getSelectedVariant();
     if (initialVariant) {
         updateProduct(initialVariant);
