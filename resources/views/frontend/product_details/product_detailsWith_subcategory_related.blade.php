@@ -5,30 +5,6 @@
 
     <section class="section" style="margin-top: 80px;">
         <div class="container-fluid pt-3">
-            @php
-                $variantData = $product->variants->map(function ($variant) {
-                    return [
-                        'id' => $variant->id,
-                        'product_id' => $variant->product_id,
-                        'size_id' => $variant->size_id,
-                        'color_id' => $variant->color_id,
-                        'regular_price' => $variant->regular_price,
-                        'selling_price' => $variant->selling_price,
-                        'discount_type' => $variant->discount_type,
-                        'discount_value' => $variant->discount_value,
-                        'discount_start' => $variant->discount_start,
-                        'discount_end' => $variant->discount_end,
-                        'stock_quantity' => $variant->stock_quantity,
-                        'stock_status' => $variant->stock_status,
-                        'images' => $variant->images
-                            ->map(function ($img) {
-                                return asset($img->public_path);
-                            })
-                            ->values(),
-                    ];
-                });
-            @endphp
-
             {{-- product details start here --}}
             <div class="row bg-info">
                 <!--Left thumbnail images start here -->
