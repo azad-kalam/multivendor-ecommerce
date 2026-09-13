@@ -1,5 +1,5 @@
-$(document).ready(function () {
-    const url = "/Ecommerce/public/cart/shopping-cart";
+$(function () {
+    const url = route("frontend.carts.shopping-cart");
 
     $.ajax({
         type: "GET",
@@ -7,28 +7,35 @@ $(document).ready(function () {
         dataType: "html",
 
         beforeSend: function () {
-            $("#shoppingCartContainer").html(`
-                <div class="text-center p-4">
-                    <span class="spinner-border text-primary"></span>
-                    <p class="mt-2">Loading cart...</p>
-                </div>
+            $("#cartItemsContainer").html(`
+                <tr class="cart-loading-row">
+                    <td colspan="9">
+                        <div class="cart-loading-content">
+                            <span class="spinner-border text-primary" role="status"aria-hidden="true"></span>
+                            <span class="cart-loading-text"> Loading cart... </span>
+                        </div>
+                    </td>
+                </tr>
             `);
         },
 
         success: function (response) {
-            $("#shoppingCartContainer").html(response);
+            $("#cartItemsContainer").html(response);
         },
 
-        error: function (xhr, status, error) {
-            console.error("Shopping Cart Error:", error);
-            console.error("Status:", xhr.status);
-            console.error("HTTP Status:", xhr.status);
-            console.error("Response:", xhr.responseText);
+        error: function (error) {
+            customErrorHandler(error);
 
-            $("#shoppingCartContainer").html(`
-                <div class="text-center alert alert-danger m-2">
-                    Unable to load shopping cart.
-                </div>
+            $("#cartItemsContainer").html(`
+                <tr class="cart-error-row">
+                    <td colspan="9">
+                        <div class="cart-error-content">
+                            <div class="alert alert-danger m-0">
+                                Unable to load shopping cart.
+                            </div>
+                        </div>
+                    </td>
+                </tr>
             `);
         },
     });

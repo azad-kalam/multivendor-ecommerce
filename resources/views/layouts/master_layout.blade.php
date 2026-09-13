@@ -16,6 +16,9 @@
 
     <!-- All styles link -->
     @include('partials.stylesheet.style_link')
+    @stack('styles')
+
+    @routes
 </head>
 
 <body>
@@ -25,7 +28,17 @@
     <!-- All scripts link -->
     @include('partials.scripts.script_link')
 
-    <!-- AJAX includes (role‑aware) -->
+    <!-- Global CSRF-TOKEN -->
+    @include('partials.CSRF-token.csrf-token')
+
+    <!-- toastr configuration -->
+    @include('partials.toastr_options.toastr_option')
+
+    <!-- toastr errorHandler -->
+    @include('partials.error_options.errorHandler')
+
+
+    <!-- AJAX role includes (only role‑aware) -->
     @include('partials.AJAX.Ajax')
 
     <!-- Slick + Custom + Homepage + Frontend AJAX + Admin + Main scripts -->
@@ -33,6 +46,8 @@
 
     <!-- All message -->
     @include('partials.alerts.all_alert')
+
+    @stack('scripts')
 </body>
 
 </html>

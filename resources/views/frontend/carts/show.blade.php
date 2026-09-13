@@ -1,4 +1,5 @@
 @extends('layouts.master_layout', ['title' => 'Shopping Cart'])
+@include('inc.headers.global.global_header')
 
 @section('content')
     <section class="page-header container-fluid">
@@ -127,12 +128,14 @@
 
             <aside class="col-12 col-md-4">
                 <div class="coupon-details border border-1 border-danger rounded-2">
-                    <div class="coupon-box">
-                        <input type="text" class="form-control" id="couponCode" placeholder="Coupon Code">
-                        <button type="button" id="applyCoupon">
-                            Apply Coupon
-                        </button>
-                    </div>
+                    <form action="" method="post">
+                        <div class="coupon-box">
+                            <input type="text" class="form-control" id="couponCode" placeholder="Coupon Code">
+                            <button type="button" id="applyCoupon">
+                                Apply Coupon
+                            </button>
+                        </div>
+                    </form>
 
                     <div class="cart-summary">
                         <div class="summary-title">
