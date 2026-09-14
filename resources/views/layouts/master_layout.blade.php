@@ -30,6 +30,7 @@
 
     <!-- Global CSRF-TOKEN -->
     @include('partials.CSRF-token.csrf-token')
+    @include('CSRF.csrf_token')
 
     <!-- toastr configuration -->
     @include('partials.toastr_options.toastr_option')
