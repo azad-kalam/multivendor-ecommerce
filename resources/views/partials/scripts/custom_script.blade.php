@@ -7,10 +7,7 @@
 <script src="{{ asset('assets/js/frontend/carts/cart-summary.js') }}"></script>
 <script src="{{ asset('assets/js/frontend/carts/cart-delete.js') }}"></script>
 
-{{-- <script src="{{ asset('assets/js/frontend/cart.js') }}"></script> --}}
-
-{{-- <script src="{{ asset('assets/js/frontend/variant.js') }}"></script> --}}
-{{-- <script src="{{ asset('assets/js/frontend/add_to_cart.js') }}"></script> --}}
+<script src="{{ asset('assets/js/frontend/cart.js') }}"></script>
 
 <script src="{{ asset('assets/js/admin/miscellaneous.js') }}"></script>
 <script src="{{ asset('assets/js/admin/toastr_validation.js') }}"></script>
