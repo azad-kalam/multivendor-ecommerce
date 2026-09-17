@@ -46,14 +46,6 @@
     overflow-y: hidden;
 }
 
-/* .cart-table-inner {
-                                                width: 100%;
-                                                min-width: 900px;
-                                                border-collapse: collapse;
-                                                border-spacing: 0;
-                                                table-layout: fixed;
-                                            } */
-
 .cart-table-inner thead tr {
     height: 51px;
     background: lavender;
