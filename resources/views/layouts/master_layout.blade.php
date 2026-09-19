@@ -29,7 +29,7 @@
     @include('partials.scripts.script_link')
 
     <!-- Global CSRF-TOKEN -->
-    @include('partials.CSRF-token.csrf-token')
+    {{-- @include('partials.CSRF-token.csrf-token') --}}
     @include('CSRF.csrf_token')
 
     <!-- toastr configuration -->

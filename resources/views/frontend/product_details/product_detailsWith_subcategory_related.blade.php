@@ -532,33 +532,7 @@
                     <h3 class="text-center">Related Products</h3>
                 </div>
                 @foreach ($relatedProducts as $relatedProduct)
-                    {{-- @php
-                        $variant = $relatedProduct->variants->first();
-
-                        if ($variant) {
-                            $old_price = $variant->regular_price ?? 0;
-                            $selling_price = $variant->selling_price ?? 0;
-                            $discount_value = $variant->discount_value ?? 0;
-                            $discount_type = $variant->discount_type ?? 'none';
-                        } else {
-                            $old_price = 0;
-                            $selling_price = 0;
-                            $discount_value = 0;
-                            $discount_type = 'none';
-                        }
-
-                        if ($discount_type == 'percent' && $discount_value > 0) {
-                            $discount_price = $old_price - ($old_price * $discount_value) / 100;
-                        } elseif ($discount_type == 'fixed' && $discount_value > 0) {
-                            $discount_price = $old_price - $discount_value;
-                        } else {
-                            $discount_price = $selling_price;
-                        }
-
-                        $image = $relatedProduct->images->first();
-
-                    @endphp --}}
-
+            
                     <div class="col-md-3">
                         <div class="product">
                             <div class="product-img text-center" style="height: 200px;">
@@ -929,7 +903,3 @@
     </section>
     @include('inc.footers.global.global_footer')
 @endsection
-
-<script>
-    window.variantData = @json($variantData);
-</script>
