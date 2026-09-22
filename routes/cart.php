@@ -11,7 +11,5 @@ Route::prefix('cart')->name('frontend.carts.')->group(function () {
 
     Route::delete('/{id}', [CartController::class, 'destroy'])->name('destroy');
 
-    Route::get('/shopping-cart', [CartController::class, 'ajax_shopping_cart'])->name('shopping-cart');
-
-    Route::get('/cart-summary', [CartController::class, 'ajax_cart_summary'])->name('cart-summary');
+    Route::get('/shopping-cart', [CartController::class, 'ajax_cart_and_summary'])->name('shopping-cart');
 });
