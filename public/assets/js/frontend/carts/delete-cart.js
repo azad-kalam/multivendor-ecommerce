@@ -31,6 +31,7 @@ $(function () {
                     $(this).remove();
                     updateCartSerialNumbers();
                     checkEmptyCart();
+                    reloadCartSummary();
                 });
 
                 toastr.success(response.message);
@@ -78,4 +79,22 @@ $(function () {
         }
     }
     // check empty cart end here
+
+    function reloadCartSummary() {
+        $.ajax({
+            type: "GET",
+            url: cartUrl,
+            dataType: "json",
+
+            success: function (response) {
+                $("#cart-details").html(response.cartSummary);
+            },
+
+            error: function (error) {
+                customErrorHandler(error);
+
+                toastr.error("Failed to update cart summary.");
+            },
+        });
+    }
 });

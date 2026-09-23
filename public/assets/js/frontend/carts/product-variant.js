@@ -190,6 +190,7 @@ $(document).ready(function () {
 
     sizeSelect.on("change", updateSelectedVariant);
     colorSelect.on("change", updateSelectedVariant);
+
     $(".quantity_up").on("click", function (e) {
         e.preventDefault();
         increaseQuantity();
@@ -199,6 +200,7 @@ $(document).ready(function () {
         decreaseQuantity();
     });
     quantityInput.on("input", handleQuantityInput);
+
     const initialVariant = getSelectedVariant();
     if (initialVariant) {
         updateProduct(initialVariant);

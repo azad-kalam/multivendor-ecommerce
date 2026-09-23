@@ -7,22 +7,18 @@ $(function () {
         dataType: "json",
 
         beforeSend: function () {
-            $("#cartItemsContainer").html(`
+            $("#cartItemsBody").html(`
                 <tr class="cart-loading-row">
                     <td colspan="9">
                         <div class="cart-loading-content">
-                            <span class="spinner-border text-primary"
-                                  role="status"
-                                  aria-hidden="true"></span>
-                            <span class="cart-loading-text">
-                                Loading cart...
-                            </span>
+                            <span class="spinner-border text-primary"role="status"aria-hidden="true"></span>
+                            <span class="cart-loading-text">Loading cart...</span>
                         </div>
                     </td>
                 </tr>
             `);
 
-            $("#cart-details").html(`
+            $("#cartSummaryBody").html(`
                <div class="cart-loading-content">
                     <span class="spinner-border text-primary" role="status"aria-hidden="true"></span>
                     <span class="cart-loading-text"> Loading cart... </span>
@@ -31,14 +27,14 @@ $(function () {
         },
 
         success: function (response) {
-            $("#cartItemsContainer").html(response.cartTable);
-            $("#cart-details").html(response.cartSummary);
+            $("#cartItemsBody").html(response.cartTable);
+            $("#cartSummaryBody").html(response.cartSummary);
         },
 
         error: function (error) {
             customErrorHandler(error);
 
-            $("#cartItemsContainer").html(`
+            $("#cartItemsBody").html(`
                 <tr class="cart-error-row">
                     <td colspan="9">
                         <div class="cart-error-content">
@@ -50,7 +46,7 @@ $(function () {
                 </tr>
             `);
 
-            $("#cart-details").html(`
+            $("#cartSummaryBody").html(`
                 <div class="alert alert-danger m-2">
                     Failed to load cart summary.
                 </div>
