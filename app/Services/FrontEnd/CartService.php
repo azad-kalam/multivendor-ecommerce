@@ -11,1019 +11,304 @@ use Illuminate\Support\Facades\Session;
 
 class CartService
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Cart Index
-    |--------------------------------------------------------------------------
-    */
-
     public function index_cart(): array
     {
         $sessionId = Session::get('session_id');
 
         if (!$sessionId) {
-
             $sessionId = Session::getId();
-
-            Session::put(
-                'session_id',
-                $sessionId
-            );
+            Session::put('session_id', $sessionId);
         }
 
         $userId = Auth::id();
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Cart Query
-        |--------------------------------------------------------------------------
-        */
-
-        $cartQuery = Cart::query()
-            ->with([
-                'product',
-                'variant.images',
-                'variant.color',
-                'variant.size',
-            ]);
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | User / Guest Cart
-        |--------------------------------------------------------------------------
-        */
+        $cartQuery = Cart::query()->with(['product', 'variant.images', 'variant.color', 'variant.size',]);
 
         if ($userId) {
-
-            $cartQuery->where(
-                'user_id',
-                $userId
-            );
+            $cartQuery->where('user_id', $userId);
         } else {
-
-            $cartQuery->where(
-                'session_id',
-                $sessionId
-            );
+            $cartQuery->where('session_id', $sessionId);
         }
 
-
-        $cartRows = $cartQuery
-            ->orderBy('id', 'asc')
-            ->get();
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Initialize
-        |--------------------------------------------------------------------------
-        */
+        $cartRows = $cartQuery->orderBy('id', 'asc')->get();
 
         $items = [];
-
         $subtotal = 0;
-
         $productDiscount = 0;
-
         $couponDiscount = 0;
-
         $grandTotal = 0;
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Cart Items
-        |--------------------------------------------------------------------------
-        */
-
         foreach ($cartRows as $cartRow) {
-
             $product = $cartRow->product;
-
             $variant = $cartRow->variant;
-
-
             if (!$product || !$variant) {
                 continue;
             }
 
+            $priceData = $this->getVariantPrice($variant);
+            $regularPrice = (float) $priceData['regular_price'];
+            $sellingPrice = (float) $priceData['selling_price'];
+            $discountValue = (float) $priceData['discount_value'];
+            $productQuantity = max(1, (int) $cartRow->product_quantity);
 
-            /*
-            |--------------------------------------------------------------------------
-            | Price Data
-            |--------------------------------------------------------------------------
-            */
-
-            $priceData =
-                $this->getVariantPrice($variant);
-
-
-            $regularPrice =
-                (float) $priceData['regular_price'];
-
-
-            $sellingPrice =
-                (float) $priceData['selling_price'];
-
-
-            $discountValue =
-                (float) $priceData['discount_value'];
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | Quantity
-            |--------------------------------------------------------------------------
-            */
-
-            $productQuantity =
-                max(
-                    1,
-                    (int) $cartRow->product_quantity
-                );
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | Calculations
-            |--------------------------------------------------------------------------
-            |
-            | Price = Regular Price × Quantity
-            |
-            */
-
-            $itemPrice =
-                round(
-                    $regularPrice * $productQuantity,
-                    2
-                );
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | Discount
-            |--------------------------------------------------------------------------
-            |
-            | Discount = Discount × Quantity
-            |
-            */
-
-            $itemDiscount =
-                round(
-                    $discountValue * $productQuantity,
-                    2
-                );
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | Total
-            |--------------------------------------------------------------------------
-            |
-            | Total = Selling Price × Quantity
-            |
-            */
-
-            $itemTotal =
-                round(
-                    $sellingPrice * $productQuantity,
-                    2
-                );
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | Summary
-            |--------------------------------------------------------------------------
-            */
+            $itemPrice = round($regularPrice * $productQuantity, 2);
+            $itemDiscount = round($discountValue * $productQuantity, 2);
+            $itemTotal = round($sellingPrice * $productQuantity, 2);
 
             $subtotal += $itemPrice;
-
             $productDiscount += $itemDiscount;
-
             $grandTotal += $itemTotal;
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | Image
-            |--------------------------------------------------------------------------
-            */
-
-            $image =
-                $variant->images
-                ->first()?->public_path;
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | Item Data
-            |--------------------------------------------------------------------------
-            */
+            $image = $variant->images->first()?->public_path;
 
             $items[] = [
-
-                'id' =>
-                $cartRow->id,
-
-                'product_id' =>
-                $product->id,
-
-                'variant_id' =>
-                $variant->id,
-
-                'image' =>
-                $image,
-
-                'product_name' =>
-                $product->name,
-
-                'color_name' =>
-                $variant->color?->name,
-
-                'size_name' =>
-                $variant->size?->name,
-
-                'product_quantity' =>
-                $productQuantity,
-
-                /*
-                |--------------------------------------------------------------------------
-                | Price = Regular Price × Quantity
-                |--------------------------------------------------------------------------
-                */
-
-                'item_price' =>
-                $itemPrice,
-
-                /*
-                |--------------------------------------------------------------------------
-                | Discount = Discount × Quantity
-                |--------------------------------------------------------------------------
-                */
-
-                'discount' =>
-                $itemDiscount,
-
-                /*
-                |--------------------------------------------------------------------------
-                | Total = Selling Price × Quantity
-                |--------------------------------------------------------------------------
-                */
-
-                'cart_quantity_price' =>
-                $itemTotal,
+                'id' => $cartRow->id,
+                'product_id' => $product->id,
+                'variant_id' => $variant->id,
+                'image' => $image,
+                'product_name' => $product->name,
+                'color_name' => $variant->color?->name,
+                'size_name' => $variant->size?->name,
+                'product_quantity' => $productQuantity,
+                'item_price' => $itemPrice,
+                'item_discount' => $itemDiscount,
+                'item_total' => $itemTotal,
             ];
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Final Summary
-        |--------------------------------------------------------------------------
-        */
-
-        $finalSubtotal =
-            round(
-                $subtotal,
-                2
-            );
-
-
-        $totalProductDiscount =
-            round(
-                $productDiscount,
-                2
-            );
-
-
-        $grandTotal =
-            round(
-                $grandTotal,
-                2
-            );
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Return
-        |--------------------------------------------------------------------------
-        */
+        $finalSubtotal = round($subtotal, 2);
+        $totalProductDiscount = round($productDiscount, 2);
+        $grandTotal = round($grandTotal, 2);
 
         return [
-
-            'items' =>
-            $items,
-
-            'subtotal' =>
-            $finalSubtotal,
-
-            'product_discount' =>
-            $totalProductDiscount,
-
-            'coupon_discount' =>
-            $couponDiscount,
-
-            'grand_total' =>
-            $grandTotal,
+            'items' => $items,
+            'subtotal' => $finalSubtotal,
+            'product_discount' => $totalProductDiscount,
+            'coupon_discount' => $couponDiscount,
+            'grand_total' => $grandTotal,
         ];
     }
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | Create Cart
-    |--------------------------------------------------------------------------
-    */
-
     public function create_cart(array $data): array
     {
-        $productId =
-            (int) (
-                $data['product_id'] ?? 0
-            );
-
-
-        $variantId =
-            (int) (
-                $data['product_variant_id'] ?? 0
-            );
-
-
-        $quantity =
-            (int) (
-                $data['product_quantity'] ?? 0
-            );
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Product ID
-        |--------------------------------------------------------------------------
-        */
+        $productId = (int) ($data['product_id'] ?? 0);
+        $variantId = (int) ($data['product_variant_id'] ?? 0);
+        $quantity = (int) ($data['product_quantity'] ?? 0);
 
         if ($productId < 1) {
-
             return [
-
                 'status' => false,
-
-                'message' =>
-                'Product ID is not valid.',
+                'message' => 'Product ID is not valid.',
             ];
         }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Variant ID
-        |--------------------------------------------------------------------------
-        */
 
         if ($variantId < 1) {
-
             return [
-
                 'status' => false,
-
-                'message' =>
-                'Product variant ID is not valid.',
+                'message' => 'Product variant ID is not valid.',
             ];
         }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Quantity
-        |--------------------------------------------------------------------------
-        */
 
         if ($quantity < 1) {
-
             return [
-
                 'status' => false,
-
-                'message' =>
-                'Quantity must be at least 1.',
+                'message' => 'Quantity must be at least 1.',
             ];
         }
 
-
-        $userId =
-            Auth::id();
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Session
-        |--------------------------------------------------------------------------
-        */
-
-        $sessionId =
-            Session::get('session_id');
-
+        $userId = Auth::id();
+        $sessionId = Session::get('session_id');
 
         if (!$sessionId) {
-
-            $sessionId =
-                Session::getId();
-
-            Session::put(
-                'session_id',
-                $sessionId
-            );
+            $sessionId = Session::getId();
+            Session::put('session_id', $sessionId);
         }
 
-
         try {
-
-            /*
-            |--------------------------------------------------------------------------
-            | Product
-            |--------------------------------------------------------------------------
-            */
-
-            $product =
-                Product::query()
-                ->where(
-                    'id',
-                    $productId
-                )
-                ->where(
-                    'status',
-                    1
-                )
-                ->first();
-
-
+            $product = Product::query()->where('id', $productId)->where('status', 1)->first();
             if (!$product) {
-
                 return [
-
                     'status' => false,
-
-                    'message' =>
-                    'Product is not available.',
+                    'message' => 'Product is not available.',
                 ];
             }
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | Variant
-            |--------------------------------------------------------------------------
-            */
-
-            $variant =
-                ProductVariant::query()
-                ->where(
-                    'id',
-                    $variantId
-                )
-                ->where(
-                    'product_id',
-                    $productId
-                )
-                ->first();
-
-
+            $variant = ProductVariant::query()->where('id', $variantId)->where('product_id', $productId)->first();
             if (!$variant) {
-
                 return [
-
                     'status' => false,
-
-                    'message' =>
-                    'Product variant was not found.',
+                    'message' => 'Product variant was not found.',
                 ];
             }
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | Stock Status
-            |--------------------------------------------------------------------------
-            */
-
-            if (
-                $variant->stock_status !==
-                'in_stock'
-            ) {
-
+            if ($variant->stock_status !== 'in_stock') {
                 return [
-
                     'status' => false,
-
-                    'message' =>
-                    'Product variant is out of stock.',
+                    'message' => 'Product variant is out of stock.',
                 ];
             }
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | Manage Stock
-            |--------------------------------------------------------------------------
-            */
-
-            if (
-                $variant->manage_stock &&
-                (int) $variant->stock_quantity < $quantity
-            ) {
-
+            if ($variant->manage_stock && (int) $variant->stock_quantity < $quantity) {
                 return [
-
                     'status' => false,
-
-                    'message' =>
-                    'Only ' .
-                        $variant->stock_quantity .
-                        ' items are available.',
+                    'message' => 'Only ' . $variant->stock_quantity . ' items are available.',
                 ];
             }
 
+            $cart = DB::transaction(
+                function () use ($productId, $variantId, $quantity, $userId, $sessionId) {
+                    $cartQuery = Cart::query()
+                        ->where('product_id', $productId)
+                        ->where('product_variant_id', $variantId);
 
-            /*
-            |--------------------------------------------------------------------------
-            | Create Cart
-            |--------------------------------------------------------------------------
-            */
+                    if ($userId) {
+                        $cartQuery->where('user_id', $userId);
+                    } else {
+                        $cartQuery->where('session_id', $sessionId);
+                    }
 
-            $cart =
-                DB::transaction(
-                    function () use (
-                        $productId,
-                        $variantId,
-                        $quantity,
-                        $userId,
-                        $sessionId
-                    ) {
-
-                        $cartQuery =
-                            Cart::query()
-                            ->where(
-                                'product_id',
-                                $productId
-                            )
-                            ->where(
-                                'product_variant_id',
-                                $variantId
-                            );
-
-
-                        if ($userId) {
-
-                            $cartQuery->where(
-                                'user_id',
-                                $userId
-                            );
-                        } else {
-
-                            $cartQuery->where(
-                                'session_id',
-                                $sessionId
-                            );
-                        }
-
-
-                        $existingCart =
-                            $cartQuery
-                            ->lockForUpdate()
-                            ->first();
-
-
-                        if ($existingCart) {
-
-                            return [
-
-                                'status' =>
-                                false,
-
-                                'message' =>
-                                'Product already exists in cart.',
-
-                                'cart' =>
-                                null,
-                            ];
-                        }
-
-
-                        $newCart =
-                            Cart::create([
-
-                                'user_id' =>
-                                $userId,
-
-                                'session_id' =>
-                                $sessionId,
-
-                                'product_id' =>
-                                $productId,
-
-                                'product_variant_id' =>
-                                $variantId,
-
-                                'product_quantity' =>
-                                $quantity,
-                            ]);
-
-
+                    $existingCart = $cartQuery->lockForUpdate()->first();
+                    if ($existingCart) {
                         return [
-
-                            'status' =>
-                            true,
-
-                            'message' =>
-                            'Product added successfully to cart.',
-
-                            'cart' =>
-                            $newCart,
+                            'status' => false,
+                            'message' => 'Product already exists in cart.',
+                            'cart' => null,
                         ];
                     }
-                );
 
+                    $newCart = Cart::create([
+                        'user_id' => $userId,
+                        'session_id' => $sessionId,
+                        'product_id' => $productId,
+                        'product_variant_id' => $variantId,
+                        'product_quantity' => $quantity,
+                    ]);
+
+                    return [
+                        'status' => true,
+                        'message' => 'Product added to cart successfully.',
+                        'cart' => $newCart,
+                    ];
+                }
+            );
 
             if (!$cart['status']) {
-
                 return [
-
-                    'status' =>
-                    false,
-
-                    'message' =>
-                    $cart['message'],
+                    'status' => false,
+                    'message' => $cart['message'],
                 ];
             }
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | Cart Count
-            |--------------------------------------------------------------------------
-            */
-
-            $cartCountQuery =
-                Cart::query();
-
+            $cartCountQuery = Cart::query();
 
             if ($userId) {
-
-                $cartCountQuery->where(
-                    'user_id',
-                    $userId
-                );
+                $cartCountQuery->where('user_id', $userId);
             } else {
-
-                $cartCountQuery->where(
-                    'session_id',
-                    $sessionId
-                );
+                $cartCountQuery->where('session_id', $sessionId);
             }
 
-
-            $cartCount =
-                $cartCountQuery->count();
-
+            $cartCount = $cartCountQuery->count();
 
             return [
-
-                'status' =>
-                true,
-
-                'message' =>
-                'Product added successfully to cart.',
-
-                'cart_id' =>
-                $cart['cart']->id,
-
-                'cart_count' =>
-                $cartCount,
+                'status' => true,
+                'message' => 'Product added successfully to cart.',
+                'cart_id' => $cart['cart']->id,
+                'cart_count' => $cartCount,
             ];
-        } catch (\Throwable $e) {
-
-            report($e);
-
+        } catch (\Throwable $error) {
+            report($error);
             return [
-
-                'status' =>
-                false,
-
-                'message' =>
-                'Sorry, product could not be added to cart.',
+                'status' => false,
+                'message' => 'Sorry, product could not be added to cart.',
             ];
         }
     }
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | Update Cart Quantity
-    |--------------------------------------------------------------------------
-    */
-
-    public function update(
-        int $cart_id,
-        int $product_quantity
-    ): array {
-
-        /*
-        |--------------------------------------------------------------------------
-        | Session
-        |--------------------------------------------------------------------------
-        */
-
-        $sessionId =
-            Session::get('session_id');
-
+    public function update_cart(int $cartId, int $product_quantity): array
+    {
+        $sessionId = Session::get('session_id');
 
         if (!$sessionId) {
-
-            $sessionId =
-                Session::getId();
-
-            Session::put(
-                'session_id',
-                $sessionId
-            );
+            $sessionId = Session::getId();
+            Session::put('session_id', $sessionId);
         }
 
+        $userId = Auth::id();
 
-        $userId =
-            Auth::id();
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Find Cart
-        |--------------------------------------------------------------------------
-        */
-
-        $cart_row =
-            Cart::with([
-                'product',
-                'variant.images',
-                'variant.color',
-                'variant.size',
-            ])
-            ->where(
-                'id',
-                $cart_id
-            )
-            ->when(
-                $userId,
-                function ($query) use ($userId) {
-
-                    $query->where(
-                        'user_id',
-                        $userId
-                    );
-                }
-            )
-            ->when(
-                !$userId,
-                function ($query) use ($sessionId) {
-
-                    $query->where(
-                        'session_id',
-                        $sessionId
-                    );
-                }
-            )
-            ->first();
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Cart Not Found
-        |--------------------------------------------------------------------------
-        */
+        $cart_row = Cart::with([
+            'product',
+            'variant.images',
+            'variant.color',
+            'variant.size',
+        ])
+            ->where('id', $cartId)
+            ->when($userId, function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })
+            ->when(!$userId, function ($query) use ($sessionId) {
+                $query->where('session_id', $sessionId);
+            })->first();
 
         if (!$cart_row) {
-
             return [
-
                 'status' => false,
-
-                'message' =>
-                'Cart item not found.',
+                'message' => 'Cart item not found.',
             ];
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Variant
-        |--------------------------------------------------------------------------
-        */
-
-        $variant =
-            $cart_row->variant;
-
+        $variant = $cart_row->variant;
 
         if (!$variant) {
-
             return [
-
                 'status' => false,
-
-                'message' =>
-                'Product variant not found.',
+                'message' => 'Product variant not found.',
             ];
         }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Quantity Validation
-        |--------------------------------------------------------------------------
-        */
 
         if ($product_quantity < 1) {
-
             return [
-
                 'status' => false,
-
-                'message' =>
-                'Quantity must be at least 1.',
+                'message' => 'Quantity must be at least 1.',
             ];
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Stock Validation
-        |--------------------------------------------------------------------------
-        */
-
-        if (
-            $variant->manage_stock &&
-            $product_quantity >
-            (int) $variant->stock_quantity
-        ) {
-
+        if ($variant->manage_stock && $product_quantity > (int) $variant->stock_quantity) {
             return [
-
                 'status' => false,
-
-                'message' =>
-                'Maximum available stock is ' .
-                    $variant->stock_quantity .
-                    '.',
+                'message' => 'Maximum available stock is ' . $variant->stock_quantity . '.',
             ];
         }
 
+        $priceData = $this->getVariantPrice($variant);
+        $regularPrice = (float) ($priceData['regular_price'] ?? 0);
+        $sellingPrice = (float) ($priceData['selling_price'] ?? 0);
+        $discountValue = (float) ($priceData['discount_value'] ?? 0);
 
-        /*
-        |--------------------------------------------------------------------------
-        | Get Price
-        |--------------------------------------------------------------------------
-        */
-
-        $priceData =
-            $this->getVariantPrice(
-                $variant
-            );
-
-
-        $regularPrice =
-            (float) (
-                $priceData['regular_price'] ?? 0
-            );
-
-
-        $sellingPrice =
-            (float) (
-                $priceData['selling_price'] ?? 0
-            );
-
-
-        $discountValue =
-            (float) (
-                $priceData['discount_value'] ?? 0
-            );
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Update Database Quantity
-        |--------------------------------------------------------------------------
-        */
-
-        $cart_row->product_quantity =
-            $product_quantity;
-
+        $cart_row->product_quantity = $product_quantity;
         $cart_row->save();
 
+        $itemPrice = round($regularPrice * $product_quantity, 2);
+        $itemDiscount = round($discountValue * $product_quantity, 2);
+        $itemTotal = round($sellingPrice * $product_quantity, 2);
 
-        /*
-        |--------------------------------------------------------------------------
-        | Current Item Calculations
-        |--------------------------------------------------------------------------
-        |
-        | Price = Regular Price × Quantity
-        |
-        */
-
-        $itemPrice =
-            round(
-                $regularPrice *
-                    $product_quantity,
-                2
-            );
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Discount
-        |--------------------------------------------------------------------------
-        */
-
-        $itemDiscount =
-            round(
-                $discountValue *
-                    $product_quantity,
-                2
-            );
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Total
-        |--------------------------------------------------------------------------
-        |
-        | Total = Selling Price × Quantity
-        |
-        */
-
-        $itemTotal =
-            round(
-                $sellingPrice *
-                    $product_quantity,
-                2
-            );
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Get All Cart Items
-        |--------------------------------------------------------------------------
-        */
-
-        $cart_items =
-            Cart::with('variant')
-            ->when(
-                $userId,
-                function ($query) use ($userId) {
-
-                    $query->where(
-                        'user_id',
-                        $userId
-                    );
-                }
-            )
-            ->when(
-                !$userId,
-                function ($query) use ($sessionId) {
-
-                    $query->where(
-                        'session_id',
-                        $sessionId
-                    );
-                }
-            )
-            ->get();
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Summary Initialize
-        |--------------------------------------------------------------------------
-        */
+        $cart_items = Cart::with('variant')
+            ->when($userId, function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })
+            ->when(!$userId, function ($query) use ($sessionId) {
+                $query->where('session_id', $sessionId);
+            })->get();
 
         $subtotal = 0;
-
         $totalDiscount = 0;
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Calculate Summary
-        |--------------------------------------------------------------------------
-        */
-
         foreach ($cart_items as $cart_item) {
-
             if (!$cart_item->variant) {
                 continue;
             }
 
-
             $itemPriceData = $this->getVariantPrice($cart_item->variant);
-
             $itemRegularPrice = (float) ($itemPriceData['regular_price'] ?? 0);
             $itemDiscountPrice = (float) ($itemPriceData['discount_value'] ?? 0);
             $quantity = max(1, (int) $cart_item->product_quantity);
@@ -1045,8 +330,6 @@ class CartService
                 'cart_id' => $cart_row->id,
                 'quantity' => $product_quantity,
                 'item_price' => $itemPrice,
-                'regular_price' => $regularPrice,
-                'selling_price' => $sellingPrice,
                 'item_discount' => $itemDiscount,
                 'item_total' => $itemTotal,
             ],
@@ -1061,29 +344,25 @@ class CartService
     }
 
 
-    public function delete_cart(int $id)
+    public function delete_cart(int $cartId)
     {
-        $query = Cart::where('id', $id);
+        $cartQuery = Cart::where('id', $cartId);
 
         $authenticatedUser = Auth::check();
 
         if ($authenticatedUser) {
-
             $authId = Auth::id();
-            $query->where('user_id', $authId);
+            $cartQuery->where('user_id', $authId);
         } else {
-
             $sessionId = Session::get('session_id');
-
             if (!$sessionId) {
                 $sessionId = Session::getId();
                 Session::put('session_id', $sessionId);
             }
-
-            $query->where('session_id', $sessionId);
+            $cartQuery->where('session_id', $sessionId);
         }
 
-        $cart = $query->firstOrFail();
+        $cart = $cartQuery->firstOrFail();
 
         $cart->delete();
         return $cart;
@@ -1103,7 +382,6 @@ class CartService
         $discountActive = $discountStarted && $discountNotExpired;
 
         if (!$discountActive) {
-
             return [
                 'regular_price' => $regularPrice,
                 'selling_price' => $regularPrice,
@@ -1112,7 +390,6 @@ class CartService
         }
 
         if ($discountType === 'none') {
-
             return [
                 'regular_price' => $regularPrice,
                 'selling_price' => $regularPrice,
@@ -1122,7 +399,6 @@ class CartService
 
         if ($discountType === 'fixed') {
             $sellingPrice = max(0, $regularPrice - $discountValue);
-
             return [
                 'regular_price' => $regularPrice,
                 'selling_price' => $sellingPrice,
@@ -1133,7 +409,6 @@ class CartService
         if ($discountType === 'percent') {
             $discount = ($regularPrice * $discountValue) / 100;
             $sellingPrice = max(0, $regularPrice - $discount);
-
             return [
                 'regular_price' => $regularPrice,
                 'selling_price' => $sellingPrice,

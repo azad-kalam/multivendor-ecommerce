@@ -17,10 +17,12 @@ class CartController extends Controller
         $this->cartService = $cartService;
     }
 
+
     public function index()
     {
         return view('frontend.carts.index');
     }
+
 
     public function store(CartRequest $request)
     {
@@ -29,26 +31,24 @@ class CartController extends Controller
         return response()->json($resultData);
     }
 
-    public function update(CartRequest $request)
+
+    public function update(CartRequest $request, int $cartId)
     {
         $validatedData = $request->validated();
-        $result = $this->cartService->update((int)$validatedData['cart_id'], (int)$validatedData['product_quantity']);
+        $result = $this->cartService->update_cart($cartId, $validatedData['product_quantity']);
 
         return response()->json($result);
     }
 
-    public function destroy(int $id)
-    {
-        $this->cartService->delete_cart($id);
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Cart item deleted successfully.',
-        ]);
+    public function destroy(int $cartId)
+    {
+        $this->cartService->delete_cart($cartId);
+        return $this->render_cart_and_summary();
     }
 
 
-    public function ajax_cart_and_summary()
+    public function render_cart_and_summary()
     {
         $cartData = $this->cartService->index_cart();
 
@@ -64,6 +64,8 @@ class CartController extends Controller
         ])->render();
 
         return response()->json([
+            'status' => true,
+            'message' => 'Cart item deleted successfully.',
             'cartTable' => $cartTable,
             'cartSummary' => $cartSummary,
         ]);
