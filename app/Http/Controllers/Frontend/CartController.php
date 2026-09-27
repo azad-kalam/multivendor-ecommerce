@@ -8,6 +8,7 @@ use App\Services\FrontEnd\CartService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 
+
 class CartController extends Controller
 {
     protected CartService $cartService;
@@ -17,17 +18,19 @@ class CartController extends Controller
         $this->cartService = $cartService;
     }
 
-
     public function index()
     {
         return view('frontend.carts.index');
     }
 
-
     public function store(CartRequest $request)
     {
         $validatedData = $request->validated();
         $resultData = $this->cartService->create_cart($validatedData);
+
+        if (!$resultData['status']) {
+            return response()->json($resultData);
+        }
         return response()->json($resultData);
     }
 
@@ -37,18 +40,24 @@ class CartController extends Controller
         $validatedData = $request->validated();
         $result = $this->cartService->update_cart($cartId, $validatedData['product_quantity']);
 
-        return response()->json($result);
+        if (!$result['status']) {
+          return response()->json($result);
+        }
+        return $this->render_cart_and_summary($result['message']);
     }
 
 
     public function destroy(int $cartId)
     {
-        $this->cartService->delete_cart($cartId);
-        return $this->render_cart_and_summary();
+        $result = $this->cartService->delete_cart($cartId);
+        if (!$result['status']) {
+          return response()->json($result, 422);
+        }
+        return $this->render_cart_and_summary($result['message']);
     }
 
 
-    public function render_cart_and_summary()
+    public function render_cart_and_summary(string $message = 'cart refresh.')
     {
         $cartData = $this->cartService->index_cart();
 
@@ -65,9 +74,10 @@ class CartController extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'Cart item deleted successfully.',
-            'cartTable' => $cartTable,
-            'cartSummary' => $cartSummary,
+            'message' => $message,
+            'cart_item_quantity' => cart_item_quantity(),
+            'cart_table' => $cartTable,
+            'cart_summary' => $cartSummary,
         ]);
     }
 }
