@@ -1,11 +1,9 @@
 $(document).ready(function () {
-    // add-to-cart start here
     $(document).on("submit", "#add_to_cart", function (e) {
         e.preventDefault();
 
         const form = $(this);
         const button = $("#addToCartBtn");
-
         button.prop("disabled", true);
 
         $.ajax({
@@ -17,15 +15,12 @@ $(document).ready(function () {
                 if (response.status) {
                     const quantity = parseInt(response.cart_item_quantity) || 0;
                     const badge = $(".cart-item-quantity");
-
                     badge.text(quantity);
-
                     if (quantity > 0) {
                         badge.show();
                     } else {
                         badge.hide();
                     }
-
                     toastr.success(response.message);
                 } else {
                     toastr.warning(response.message);
@@ -51,5 +46,4 @@ $(document).ready(function () {
             },
         });
     });
-    // add-to-cart end here
 });
