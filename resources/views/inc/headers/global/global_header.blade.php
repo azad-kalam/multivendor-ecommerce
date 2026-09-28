@@ -78,14 +78,10 @@
                  <li class="nav-item position-relative">
                      <a class="navbar_btn nav-link position-relative" href="{{ route('frontend.carts.index') }}">
                          <i class="fas fa-cart-shopping" style="font-size: 23px; color: #333;"></i>
-
-                         @if (cart_item_quantity())
-                             @if (cart_item_quantity() > 0)
-                                 <span class="cart-count cart_badge">
-                                     {{ cart_item_quantity() }}
-                                 </span>
-                             @endif
-                         @endif
+                         <span class="cart_badge cart-item-quantity"
+                             style="{{ cart_item_quantity() > 0 ? '' : 'display: none;' }}">
+                             {{ cart_item_quantity() }}
+                         </span>
                      </a>
                  </li>
 

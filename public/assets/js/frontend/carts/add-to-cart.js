@@ -15,6 +15,17 @@ $(document).ready(function () {
 
             success: function (response) {
                 if (response.status) {
+                    const quantity = parseInt(response.cart_item_quantity) || 0;
+                    const badge = $(".cart-item-quantity");
+
+                    badge.text(quantity);
+
+                    if (quantity > 0) {
+                        badge.show();
+                    } else {
+                        badge.hide();
+                    }
+
                     toastr.success(response.message);
                 } else {
                     toastr.warning(response.message);
