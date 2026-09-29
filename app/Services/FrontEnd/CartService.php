@@ -227,37 +227,44 @@ class CartService
 
     public function update_cart(int $cartId, int $product_quantity): array
     {
-        $sessionId = Session::get('session_id');
+        $userId = Auth::id();
+        $sessionId = null;
 
-        if (!$sessionId) {
-            $sessionId = Session::getId();
-            Session::put('session_id', $sessionId);
+        if (!$userId) {
+            $sessionId = Session::get('session_id');
+
+            if (!$sessionId) {
+                $sessionId = Session::getId();
+                Session::put('session_id', $sessionId);
+            }
         }
 
-        $userId = Auth::id();
-
-        $cart_row = Cart::with([
-            'product',
-            'variant.images',
-            'variant.color',
-            'variant.size',
-        ])
+        $cartRow = Cart::query()
             ->where('id', $cartId)
             ->when($userId, function ($query) use ($userId) {
                 $query->where('user_id', $userId);
             })
             ->when(!$userId, function ($query) use ($sessionId) {
                 $query->where('session_id', $sessionId);
-            })->first();
+            })
+            ->first();
 
-        if (!$cart_row) {
+        if (!$cartRow) {
             return [
                 'status' => false,
                 'message' => 'Cart item not found.',
             ];
         }
 
-        $variant = $cart_row->variant;
+        if ($product_quantity < 1) {
+            return [
+                'status' => false,
+                'message' => 'Minimum quantity must be 1.',
+            ];
+        }
+        $variant = ProductVariant::query()
+            ->where('id', $cartRow->product_variant_id)
+            ->first();
 
         if (!$variant) {
             return [
@@ -265,81 +272,24 @@ class CartService
                 'message' => 'Product variant not found.',
             ];
         }
-
-        if ($product_quantity < 1) {
+        if ($variant->stock_status !== 'in_stock') {
             return [
                 'status' => false,
-                'message' => 'Quantity must be at least 1.',
+                'message' => 'Product variant is out of stock.',
             ];
         }
-
         if ($variant->manage_stock && $product_quantity > (int) $variant->stock_quantity) {
             return [
                 'status' => false,
-                'message' => 'Maximum available stock is ' . $variant->stock_quantity . '.',
+                'message' => "Maximum quantity is available {$variant->stock_quantity}.",
             ];
         }
 
-        $priceData = $this->getVariantPrice($variant);
-        $regularPrice = (float) ($priceData['regular_price'] ?? 0);
-        $sellingPrice = (float) ($priceData['selling_price'] ?? 0);
-        $discountValue = (float) ($priceData['discount_value'] ?? 0);
-
-        $cart_row->product_quantity = $product_quantity;
-        $cart_row->save();
-
-        $itemPrice = round($regularPrice * $product_quantity, 2);
-        $itemDiscount = round($discountValue * $product_quantity, 2);
-        $itemTotal = round($sellingPrice * $product_quantity, 2);
-
-        $cart_items = Cart::with('variant')
-            ->when($userId, function ($query) use ($userId) {
-                $query->where('user_id', $userId);
-            })
-            ->when(!$userId, function ($query) use ($sessionId) {
-                $query->where('session_id', $sessionId);
-            })->get();
-
-        $subtotal = 0;
-        $totalDiscount = 0;
-
-        foreach ($cart_items as $cart_item) {
-            if (!$cart_item->variant) {
-                continue;
-            }
-
-            $itemPriceData = $this->getVariantPrice($cart_item->variant);
-            $itemRegularPrice = (float) ($itemPriceData['regular_price'] ?? 0);
-            $itemDiscountPrice = (float) ($itemPriceData['discount_value'] ?? 0);
-            $quantity = max(1, (int) $cart_item->product_quantity);
-
-            $subtotal += $itemRegularPrice * $quantity;
-            $totalDiscount += $itemDiscountPrice * $quantity;
-        }
-
-        $couponDiscount = 0;
-        $subtotal = round($subtotal, 2);
-        $totalDiscount = round($totalDiscount, 2);
-        $grandTotal = round($subtotal - $totalDiscount - $couponDiscount, 2);
-
+        $cartRow->product_quantity = $product_quantity;
+        $cartRow->save();
         return [
             'status' => true,
-            'message' => 'Cart quantity updated successfully.',
-
-            'cart' => [
-                'cart_id' => $cart_row->id,
-                'quantity' => $product_quantity,
-                'item_price' => $itemPrice,
-                'item_discount' => $itemDiscount,
-                'item_total' => $itemTotal,
-            ],
-
-            'summary' => [
-                'subtotal' => $subtotal,
-                'product_discount' => $totalDiscount,
-                'coupon_discount' => $couponDiscount,
-                'grand_total' => $grandTotal,
-            ],
+            'message' => 'Cart item updated successfully.',
         ];
     }
 
