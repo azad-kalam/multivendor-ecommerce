@@ -41,7 +41,7 @@ class CartController extends Controller
         $result = $this->cartService->update_cart($cartId, $validatedData['product_quantity']);
 
         if (!$result['status']) {
-          return response()->json($result);
+          return response()->json($result, 422);
         }
         return $this->render_cart_and_summary($result['message']);
     }
