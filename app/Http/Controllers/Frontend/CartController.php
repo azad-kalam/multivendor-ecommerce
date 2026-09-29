@@ -29,9 +29,9 @@ class CartController extends Controller
         $resultData = $this->cartService->create_cart($validatedData);
 
         if (!$resultData['status']) {
-            return response()->json($resultData);
+            return response()->json($resultData, 422);
         }
-        return response()->json($resultData);
+        return response()->json($resultData, 200);
     }
 
 
