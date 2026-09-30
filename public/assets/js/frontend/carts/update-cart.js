@@ -1,119 +1,93 @@
-$(document).ready(function () {
-    $(document).on("click", ".update_quantity_up", function () {
-        let button = $(this);
+$(function () {
+    // Quantity Up
+    $(document).on("click", ".quantity-box .quantity_up", function (e) {
+        e.preventDefault();
 
-        let cartId = button.data("cart-id");
+        const button = $(this);
 
-        let row = button.closest(".cart-row");
-
-        let quantityElement = row.find(".quantity");
-
-        let currentQuantity = parseInt(quantityElement.text()) || 0;
-
-        let newQuantity = currentQuantity + 1;
-
-        updateCartQuantity(cartId, newQuantity, row);
-    });
-
-    $(document).on("click", ".update_quantity_down", function () {
-        let button = $(this);
-
-        let cartId = button.data("cart-id");
-
-        let row = button.closest(".cart-row");
-
-        let quantityElement = row.find(".quantity");
-
-        let currentQuantity = parseInt(quantityElement.text()) || 0;
-
-        let newQuantity = currentQuantity - 1;
-
-        if (newQuantity < 1) {
-            toastr.warning("Quantity must be at least 1.");
-
+        if (button.prop("disabled")) {
             return;
         }
 
-        updateCartQuantity(cartId, newQuantity, row);
+        const url = button.data("url");
+
+        const quantityBox = button.closest(".quantity-box");
+        const quantityFind = quantityBox.find(".quantity");
+
+        let quantity = parseInt(quantityFind.text(), 10) || 1;
+
+        quantity++;
+
+        updateCart(url, quantity);
     });
 
-    function updateCartQuantity(cartId, productQuantity, row) {
-        let buttons = row.find(".update_quantity_up, .update_quantity_down");
+    // Quantity Down
+    $(document).on("click", ".quantity-box .quantity_down", function (e) {
+        e.preventDefault();
 
-        let quantityElement = row.find(".quantity");
+        const button = $(this);
 
-        buttons.prop("disabled", true);
+        if (button.prop("disabled")) {
+            return;
+        }
 
-        const url = route("frontend.carts.update");
+        const url = button.data("url");
+
+        const quantityBox = button.closest(".quantity-box");
+        const quantityFind = quantityBox.find(".quantity");
+
+        let quantity = parseInt(quantityFind.text(), 10) || 1;
+
+        // Minimum quantity = 1
+        if (quantity <= 1) {
+            toastr.warning("Minimum quantity must be 1.");
+            return;
+        }
+
+        quantity--;
+
+        updateCart(url, quantity);
+    });
+
+    function updateCart(url, quantity) {
+        $(".quantity_up, .quantity_down").prop("disabled", true);
 
         $.ajax({
+            type: "PATCH",
             url: url,
 
-            type: "PATCH",
-
             data: {
-                cart_id: cartId,
-
-                product_quantity: productQuantity,
+                product_quantity: quantity,
             },
 
             success: function (response) {
-                if (response.status !== true) {
-                    toastr.warning(
-                        response.message || "Unable to update cart.",
-                    );
-
+                if (!response.status) {
+                    toastr.warning(response.message);
                     return;
                 }
 
-                let cart = response.cart;
+                $("#cartItemsBody").html(response.cart_table);
 
-                quantityElement.text(cart.quantity);
+                $("#cartSummaryBody").html(response.cart_summary);
 
-                row.find(".product-price .amount").text(
-                    formatMoney(cart.item_price),
-                );
-
-                row.find(".product-price-less .amount").text(
-                    formatMoney(cart.item_discount),
-                );
-
-                row.find(".product-total .amount").text(
-                    formatMoney(cart.item_total),
-                );
-
-                let summary = response.summary;
-
-                $("#cart-subtotal").text(formatMoney(summary.subtotal));
-
-                $("#cart-product-discount").text(
-                    formatMoney(summary.product_discount),
-                );
-
-                $("#cart-coupon-discount").text(
-                    formatMoney(summary.coupon_discount),
-                );
-
-                $("#cart-grand-total").text(formatMoney(summary.grand_total));
+                if (response.cart_item_quantity > 0) {
+                    $(".cart-item-quantity")
+                        .text(response.cart_item_quantity)
+                        .show();
+                } else {
+                    $(".cart-item-quantity").hide();
+                }
 
                 toastr.success(response.message);
             },
 
-            error: function (err) {
-                customErrorHandler(err);
+            error: function (xhr) {
+                customErrorHandler(xhr);
             },
 
             complete: function () {
-                buttons.prop("disabled", false);
+                $(".quantity_up, .quantity_down").prop("disabled", false);
             },
-        });
-    }
-
-    function formatMoney(value) {
-        value = parseFloat(value) || 0;
-        return value.toLocaleString("en-BD", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
         });
     }
 });

@@ -1,5 +1,4 @@
 $(document).ready(function () {
-    // variant start here
     const $form = $("#add_to_cart");
     let variants = JSON.parse($form.attr("data-variants") || "[]");
 
@@ -47,9 +46,7 @@ $(document).ready(function () {
                 </span>
             `);
             productBadge.html(`
-                <span class="badge bg-danger">
-                    NEW
-                </span>
+                <span class="badge bg-danger"> NEW</span>
             `);
         } else if (variant.discount_type === "fixed") {
             productPrice.html(`
@@ -63,9 +60,7 @@ $(document).ready(function () {
                 </del>
             `);
             productBadge.html(`
-                <span class="badge bg-danger">
-                    OFFER
-                </span>
+                <span class="badge bg-danger">OFFER</span>
             `);
         } else if (variant.discount_type === "percent") {
             productPrice.html(`
@@ -79,15 +74,11 @@ $(document).ready(function () {
                 </del>
             `);
             productBadge.html(`
-                <span class="badge bg-danger">
-                    ${variant.discount_value}% OFF
-                </span>
+                <span class="badge bg-danger">${variant.discount_value}% OFF </span>
             `);
         } else {
             productPrice.html(`
-                <span class="text-danger">
-                    Price not available
-                </span>
+                <span class="text-danger"> Price not available</span>
             `);
         }
 
@@ -130,16 +121,10 @@ $(document).ready(function () {
 
     function resetProduct() {
         variantId.val("");
-        productPrice.html(`
-            <span class="text-danger">
-                Price not available
-            </span>
-        `);
-        productBadge.html(`
-            <span class="text-danger">
-                No Offer
-            </span>
-        `);
+        productPrice.html(
+            `<span class="text-danger">Price not available</span>`,
+        );
+        productBadge.html(`<span class="text-danger">No Offer </span> `);
         productAvailable
             .removeClass("text-success")
             .addClass("text-danger")
@@ -158,48 +143,40 @@ $(document).ready(function () {
         }
     }
 
-    function increaseQuantity() {
-        const quantity = Number(quantityInput.val()) || 0;
-        const max = Number(quantityInput.attr("max")) || 0;
-        if (quantity < max) {
-            quantityInput.val(quantity + 1);
-        }
-    }
-
-    function decreaseQuantity() {
-        const quantity = Number(quantityInput.val()) || 1;
-        const min = Number(quantityInput.attr("min")) || 1;
-        if (quantity > min) {
-            quantityInput.val(quantity - 1);
-        }
-    }
-
-    function handleQuantityInput() {
-        let quantity = Number(quantityInput.val()) || 1;
-        const min = Number(quantityInput.attr("min")) || 1;
-        const max = Number(quantityInput.attr("max")) || 0;
-        if (quantity < min) {
-            quantity = min;
-        }
-        if (max > 0 && quantity > max) {
-            quantity = max;
-            toastr.warning("Available stock is only " + max + ".");
-        }
-        quantityInput.val(quantity);
-    }
-
     sizeSelect.on("change", updateSelectedVariant);
     colorSelect.on("change", updateSelectedVariant);
 
-    $(".quantity_up").on("click", function (e) {
+    $(".input-number .quantity_up").on("click", function (e) {
         e.preventDefault();
-        increaseQuantity();
+        const quantityInput = $(this).siblings(
+            'input[name="product_quantity"]',
+        );
+
+        const quantity = Number(quantityInput.val());
+        const max = Number(quantityInput.attr("max"));
+
+        if (quantity < max) {
+            quantityInput.val(quantity + 1);
+        } else {
+            toastr.warning(`Maximum quantity is available ${max}.`);
+        }
     });
-    $(".quantity_down").on("click", function (e) {
+
+    $(".input-number .quantity_down").on("click", function (e) {
         e.preventDefault();
-        decreaseQuantity();
+        const quantityInput = $(this).siblings(
+            'input[name="product_quantity"]',
+        );
+
+        const quantity = Number(quantityInput.val());
+        const min = Number(quantityInput.attr("min"));
+
+        if (quantity > min) {
+            quantityInput.val(quantity - 1);
+        } else {
+            toastr.warning(`Minimum quantity must be ${min}.`);
+        }
     });
-    quantityInput.on("input", handleQuantityInput);
 
     const initialVariant = getSelectedVariant();
     if (initialVariant) {
@@ -207,5 +184,4 @@ $(document).ready(function () {
     } else {
         resetProduct();
     }
-    // variant end here
 });

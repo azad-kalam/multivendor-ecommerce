@@ -9,7 +9,9 @@ $(function () {
             toastr.error("Delete URL not found.");
             return;
         }
-
+        if ($button.prop("disabled")) {
+            return;
+        }
         $button.prop("disabled", true);
 
         $.ajax({
@@ -17,32 +19,40 @@ $(function () {
             type: "DELETE",
 
             beforeSend: function () {
-                $button
-                    .prop("disabled", true)
-                    .html(
-                        '<span class="spinner-border spinner-border-sm"></span>',
-                    );
-            },
-
-            success: function (response) {
-                $("#cartItemsBody").html(response.cartTable);
-                $("#cartSummaryBody").html(response.cartSummary);
-
-                toastr.success(
-                    response.message || "Cart item deleted successfully.",
+                $button.html(
+                    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>',
                 );
             },
 
-            error: function (error) {
-                customErrorHandler(error);
+            success: function (response) {
+                if (!response.status) {
+                    toastr.warning(
+                        response.message || "Unable to remove item.",
+                    );
+                    return;
+                }
+                if (response.cart_table !== undefined) {
+                    $("#cartItemsBody").html(response.cart_table);
+                }
+                if (response.cart_summary !== undefined) {
+                    $("#cartSummaryBody").html(response.cart_summary);
+                }
+                const quantity = Number(response.cart_item_quantity);
+                if (quantity > 0) {
+                    $(".cart-item-quantity").text(quantity).show();
+                } else {
+                    $(".cart-item-quantity").hide();
+                }
+                toastr.success(response.message);
+            },
 
+            error: function (xhr) {
+                customErrorHandler(xhr);
+            },
+            complete: function () {
                 $button
                     .prop("disabled", false)
                     .html('<i class="bi bi-trash"></i>');
-            },
-
-            complete: function () {
-                $button.prop("disabled", false);
             },
         });
     });
