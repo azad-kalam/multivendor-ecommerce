@@ -1,38 +1,39 @@
-<div class="summary-title">
-    <h2>Cart Summary</h2>
+<div class="summary-row">
+    <span>Sub - Total</span>
+    <span>
+        <i class="fa-solid fa-bangladeshi-taka-sign"></i>
+        <span id="cart-subtotal">
+            {{ number_format($subtotal ?? 0, 2) }}
+        </span>
+    </span>
 </div>
 
-<div class="summary-content">
-    <div class="summary-row">
-        <span>Sub - Total</span>
-        <strong id="subtotal">
-            <i class="fa-solid fa-bangladeshi-taka-sign"></i>{{ $subtotal }}
-        </strong>
-    </div>
+<div class="summary-row">
+    <span>Product Discount</span>
+    <span>
+        <i class="fa-solid fa-bangladeshi-taka-sign"></i>
+        <span id="cart-product-discount">
+            {{ number_format($product_discount ?? 0, 2) }}
+        </span>
+    </span>
+</div>
 
-    <div class="summary-row">
-        <span>Product Discount</span>
-        <strong id="discount">
-            <i class="fa-solid fa-bangladeshi-taka-sign"></i>{{ $discount }}
-        </strong>
-    </div>
-
-    <div class="summary-row">
-        <span>Coupon Discount</span>
-        <strong id="couponDiscount">
-            <i class="fa-solid fa-bangladeshi-taka-sign"></i>
-        </strong>
-    </div>
+<div class="summary-row">
+    <span>Coupon Discount</span>
+    <span>
+        <i class="fa-solid fa-bangladeshi-taka-sign"></i>
+        <span id="cart-coupon-discount">
+            {{ number_format($coupon_discount ?? 0, 2) }}
+        </span>
+    </span>
 </div>
 
 <div class="summary-total">
-    <span>Grand Total</span>
-    <i class="fa-solid fa-equals"></i>
-    <strong id="grandTotal">
-        <i class="fa-solid fa-bangladeshi-taka-sign"></i>{{ $grand_total }}
+    <strong>Grand Total</strong>
+    <strong>
+        <i class="fa-solid fa-bangladeshi-taka-sign"></i>
+        <span id="cart-grand-total">
+            {{ number_format($grand_total ?? 0, 2) }}
+        </span>
     </strong>
 </div>
-
-<button type="button" class="checkout-btn btn btn-outline-success w-100 p-3">
-    Proceed To Checkout
-</button>
