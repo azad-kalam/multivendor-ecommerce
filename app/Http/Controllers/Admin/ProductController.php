@@ -414,7 +414,7 @@ class ProductController extends Controller
                         $filePath = $publicFolder . $uniqueName;
 
                         save_resize_image($data, $filePath);
-
+                        
                         $variant->images()->create([
                             'product_id' => $product->id,
                             'product_variant_id' => $variant->id,

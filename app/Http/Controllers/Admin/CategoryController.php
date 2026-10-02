@@ -57,7 +57,7 @@ class CategoryController extends Controller
     }
     // store end here
     // show start here
-    public function show($id)
+    public function show(int $id)
     {
         $category = Category::findOrFail($id);
         return response()->json([
@@ -69,7 +69,7 @@ class CategoryController extends Controller
     // show end here
 
     // edit start here
-    public function edit($id)
+    public function edit(int $id)
     {
         $category = Category::findOrFail($id);
         return response()->json([
@@ -116,7 +116,7 @@ class CategoryController extends Controller
     }
     // update end here
     // delete start here
-    public function destroy($id)
+    public function destroy(int $id)
     {
         $category = Category::findOrFail($id);
         $category->delete();

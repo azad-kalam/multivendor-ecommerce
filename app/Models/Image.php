@@ -53,7 +53,6 @@ class Image extends Model
         return $this->belongsTo(Profile::class, 'profile_id', 'id');
     }
 
-
     public function variant(): BelongsTo
     {
         return $this->belongsTo(ProductVariant::class, 'product_variant_id', 'id');

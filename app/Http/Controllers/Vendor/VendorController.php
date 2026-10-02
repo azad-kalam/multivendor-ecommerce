@@ -29,7 +29,6 @@ class VendorController extends Controller
 
         abort(403);
     }
-
     // Update vendor info
     public function update(Request $request, string $id)
     {

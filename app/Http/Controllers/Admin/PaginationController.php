@@ -14,10 +14,7 @@ class PaginationController extends Controller
     public function categoryPagination(Request $request)
     {
         $allCategories = Category::paginate(5);
-        return response()->json([
-            'categoryPaginationStatus' => 'success',
-            'categoriesPaginationProperty' => view('admin.categories.pagination.category_table', compact('allCategories'))->render(),
-        ]);
+        return view('admin.categories.pagination.category_table', compact('allCategories'))->render();
     }
     // category pagination end here
 

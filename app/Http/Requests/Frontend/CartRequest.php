@@ -13,22 +13,15 @@ class CartRequest extends FormRequest
         return true;
     }
 
-
     public function rules(): array
     {
         $routeName = $this->route()?->getName();
-
         $method = $this->method();
-
         $validation_rules = [];
 
-
         if ($routeName === 'frontend.carts.store' && $method === 'POST') {
-
             $validation_rules = [
-
                 'product_id' => ['bail', 'required', 'integer', 'exists:products,id',],
-
                 'product_variant_id' => [
                     'bail',
                     'required',
@@ -38,28 +31,24 @@ class CartRequest extends FormRequest
                             $query->where('product_id', $this->product_id);
                         }),
                 ],
-
                 'product_quantity' => ['bail', 'required', 'integer', 'min:1', 'max:999',],
-
             ];
         }
+
 
         if ($routeName === 'frontend.carts.update' && $method === 'PATCH') {
             $validation_rules = [
-
                 'product_quantity' => ['bail', 'required', 'integer', 'min:1', 'max:999',],
-
             ];
         }
 
-        if ($routeName === 'frontend.carts.destroy' && $method === 'DELETE') {
 
+        if ($routeName === 'frontend.carts.destroy' && $method === 'DELETE') {
             $validation_rules = [];
         }
 
         return $validation_rules;
     }
-
 
     public function messages(): array
     {

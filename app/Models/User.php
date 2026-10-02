@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Cart;
+use App\Models\Product;
+use App\Models\Profile;
+use App\Models\EmailNotification;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
-
-use App\Models\Profile;
-use App\Models\Product;
 
 /**
  * @property string $role
@@ -47,18 +50,28 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    // A User has many Products
-    public function products()
+
+    // User has many carts
+    public function carts(): HasMany
     {
-        return $this->hasMany(Product::class);
-    }
-    public function profile()
-    {
-        return $this->hasOne(Profile::class, 'user_id','id');
+        return $this->hasMany(Cart::class, 'user_id', 'id');
     }
 
-     public function emailNotification()
+    // User has many Products
+    public function products(): HasMany
     {
-        return $this->hasOne(EmailNotification::class);
+        return $this->hasMany(Product::class, 'user_id', 'id');
+    }
+
+    // User has one profile
+    public function profile(): HasOne
+    {
+        return $this->hasOne(Profile::class, 'user_id', 'id');
+    }
+
+    // User has one email notification
+    public function emailNotification(): HasOne
+    {
+        return $this->hasOne(EmailNotification::class, 'user_id', 'id');
     }
 }

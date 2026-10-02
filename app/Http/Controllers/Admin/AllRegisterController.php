@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Image;
+use App\Models\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
@@ -13,7 +15,14 @@ class AllRegisterController extends Controller
 {
     public function index()
     {
-        $all_register = User::paginate(5);
+        $all_register = User::select('*')
+            ->with([
+                'profile:id,user_id,address',
+                'profile.image:id,profile_id,public_path',
+            ])
+            ->latest()
+            ->paginate(10);
+
         return view('admin.all_register_info.index', compact('all_register'));
     }
 
@@ -84,7 +93,7 @@ class AllRegisterController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         $user = User::findOrFail($id);
         $user->delete();
@@ -98,13 +107,14 @@ class AllRegisterController extends Controller
     public function user_status(string $id)
     {
         $user = User::findOrFail($id);
+        $user_name = ucfirst($user->name);
         if ($user->status == 1) {
             $user->update(['status' => 0]);
-            $message = 'User inactivated successfully !';
+            $message = "[ $user_name ] inactivated successfully !";
         } else {
             $user->status == 0;
             $user->update(['status' => 1]);
-            $message = 'User activated successfully !';
+            $message = "[ $user_name ] activated successfully !";
         }
         $user->save();
         return back()->with('toastr_success', $message);

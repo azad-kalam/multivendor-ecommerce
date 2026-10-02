@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -6,6 +7,11 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Category;
 use App\Models\Subcategory;
+use App\Models\Banner;
+use App\Models\Brand;
+use App\Models\Color;
+use App\Models\ProductModel;
+use App\Models\Size;
 use App\Models\Product;
 
 class LiveSearchController extends Controller
@@ -18,6 +24,7 @@ class LiveSearchController extends Controller
 
         $all_register = User::where('name', 'like', "%$searchValue%")
             ->orWhere('phone', 'like', "%$searchValue%")
+            ->latest()
             ->paginate(5);
 
         if ($request->ajax()) {
@@ -44,6 +51,7 @@ class LiveSearchController extends Controller
                 $q->where('name', 'like', "%{$search}%")
                     ->orWhere('phone', 'like', "%{$search}%");
             })
+            ->latest()
             ->paginate(5);
 
         if ($request->ajax()) {
@@ -56,7 +64,6 @@ class LiveSearchController extends Controller
             ]);
         }
     }
-
     //admin live search end here
 
     //vendor live search start here
@@ -69,6 +76,7 @@ class LiveSearchController extends Controller
                 $query->where('name', 'like', "%$vendor_search%")
                     ->orWhere('phone', 'like', "%$vendor_search%");
             })
+            ->latest()
             ->paginate(5);
 
         if ($request->ajax()) {
@@ -91,6 +99,7 @@ class LiveSearchController extends Controller
                 $query->where('name', 'like', "%$user_search%")
                     ->orWhere('phone', 'like', "%$user_search%");
             })
+            ->latest()
             ->paginate(5);
 
         if ($request->ajax()) {
@@ -146,6 +155,7 @@ class LiveSearchController extends Controller
 
         $allProducts = Product::where('id', 'like', "%{$productSearchData}%")
             ->orWhere('name', 'like', "%{$productSearchData}%")
+            ->latest()
             ->paginate(5);
 
         if ($request->ajax()) {
@@ -156,6 +166,99 @@ class LiveSearchController extends Controller
         }
     }
     // product live search end here
+
+    //banner live search start here
+    public function bannerSearch(Request $request)
+    {
+        $bannerSearchData = $request->banner_search; // banner_search এটা request য়ের field name না এটা হচ্ছে AJAX য়ের key name.  data: { key: value }
+
+        $allBanners = Banner::where('type', 'like', "%{$bannerSearchData}%")
+            ->orWhere('id', $bannerSearchData)
+            ->latest()
+            ->paginate(5);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'bannerSearchStatus' => 'success',
+                'bannerSearchProperty' => view('admin.banners.search.banner_table', compact('allBanners'))->render(),
+            ]);
+        }
+    }
+    //banner live search end here
+
+    //brand live search start here
+    public function brandSearch(Request $request)
+    {
+        $brandSearchData = $request->brand_search; // brand_search এটা field name না এটা হচ্ছে AJAX য়ের key name.  data: { key: value }
+
+        $allBrands = Brand::where('id', 'like', "%{$brandSearchData}%")
+            ->orWhere('name', 'like', "%{$brandSearchData}%")
+            ->latest()
+            ->paginate(5);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'brandSearchStatus' => 'success',
+                'brandSearchProperty' => view('admin.brands.search.brand_table', compact('allBrands'))->render(),
+            ]);
+        }
+    }
+    //brand live search end here
+
+    //color live search start here
+    public function colorSearch(Request $request)
+    {
+        $colorSearchData = $request->color_search;  // color_search এটা field name না এটা হচ্ছে AJAX য়ের key name.  data: { key: value }
+        $all_colors = Color::where('id', 'like', "%{$colorSearchData}%")
+            ->orWhere('name', 'like', "%{$colorSearchData}%")
+            ->latest()
+            ->paginate(5);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'colorSearchStatus' => 'success',
+                'colorSearchProperty' => view('admin.colors.search.color_table', compact('all_colors'))->render(),
+            ]);
+        }
+    }
+    //color live search end here
+
+    //model live search start here
+    public function modelSearch(Request $request)
+    {
+        $product_model_search_query = $request->product_model_search_query;  // color_search এটা field name না এটা হচ্ছে AJAX য়ের key name.  data: { key: value }
+        $product_models = ProductModel::where('id', 'like', "%{$product_model_search_query}%")
+            ->orWhere('name', 'like', "%{$product_model_search_query}%")
+            ->latest()
+            ->paginate(5);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'product_model_search_status' => 'success',
+                'product_model_search_property' => view('admin.product_models.search.product_model_table', compact('product_models'))->render(),
+            ]);
+        }
+    }
+    //model live search end here
+
+    //size live search start here
+    public function sizeSearch(Request $request)
+    {
+        $sizeSearchData = $request->size_search; // size_search এটা field name না এটা হচ্ছে AJAX য়ের key name.  data: { key: value }
+
+        $all_sizes = Size::where('id', 'like', "%{$sizeSearchData}%")
+            ->orWhere('name', 'like', "%{$sizeSearchData}%")
+            ->latest()
+            ->paginate(5);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'sizeSearchStatus' => 'success',
+                'sizeSearchProperty' => view('admin.sizes.search.size_table', compact('all_sizes'))->render(),
+            ]);
+        }
+    }
+    //size live search end here
 
 
 

@@ -53,7 +53,7 @@ class AdminController extends Controller
             ->with('session_success', 'Admin data created successfully!');
     }
 
-    public function update(Request $request, string $id): RedirectResponse
+    public function update(Request $request, int $id): RedirectResponse
     {
         $user = User::findOrFail($id);
         if (auth()->id() !== $user->id || auth()->user()->role !== $user->role) {

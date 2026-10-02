@@ -39,8 +39,4 @@ class Subcategory extends Model
         return $this->hasMany(Product::class, 'subcategory_id', 'id');
     }
 
-    public function firstProduct(): HasOne
-    {
-        return $this->hasOne(Product::class, 'subcategory_id', 'id')->oldestOfMany();
-    }
 }

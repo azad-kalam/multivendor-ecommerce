@@ -24,6 +24,7 @@ class ProductController extends Controller
             ->with(['subcategories:id,category_id,subcategory_name'])
             ->get();
 
+
         $productsQuery = Product::with([
             'images',
             'price',
@@ -50,6 +51,7 @@ class ProductController extends Controller
         return view('vendor.products.create', compact('categorieIdName'));
     }
 
+
     // নির্দিষ্ট ক্যাটেগরির সব সাবক্যাটেগরি JSON এ ফেরত দেবে
     public function dependencyCategoryID($category_id)
     {
@@ -59,6 +61,7 @@ class ProductController extends Controller
 
         return response()->json($subcategories);
     }
+
 
     public function store(Request $request)
     {
@@ -140,12 +143,12 @@ class ProductController extends Controller
             if ($request->hasFile('image')) {
                 foreach ($request->file('image') as $image) {
                     $hash = md5_file($image->getRealPath());
-
                     $data = resize_image($image); // Call the helper function to resize the image
                     $img = $data['img'];
                     $originalName = $data['originalName'];
                     $uniqueName = $data['uniqueName'];
-                    $img->save($publicFolder . $uniqueName, quality: 80);// Move the image to the desktop directory
+                    // Save the resized image with 80% quality. desktop directory
+                    $img->save($publicFolder . $uniqueName, quality: 80);
 
                     $product->images()->create([
                         'file_name' => $originalName,
@@ -276,12 +279,11 @@ class ProductController extends Controller
                         $image = $item['file'];
                         $hash = $item['hash'];
 
-                        $data = resize_image($image); // Call the helper function to resize the image
-                        $img = $data['img'];
-                        $originalName = $data['originalName'];
-                        $uniqueName = $data['uniqueName'];
-                        $img->save($publicFolder . $uniqueName, quality: 80);// Move the image to the desktop directory
+                        $originalName = $image->getClientOriginalName();
+                        $ext = $image->getClientOriginalExtension();
+                        $uniqueName = time() . '_' . rand(1, 9) . '.' . $ext;
 
+                        $image->move($publicFolder, $uniqueName);
                         $product->images()->create([
                             'file_name' => $originalName,
                             'public_path' => $dbPath . $uniqueName,

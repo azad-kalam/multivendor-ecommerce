@@ -5,9 +5,6 @@ namespace App\Http\Controllers\FrontEnd;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FrontEnd\CartRequest;
 use App\Services\FrontEnd\CartService;
-use Illuminate\Http\JsonResponse;
-use Illuminate\View\View;
-
 
 class CartController extends Controller
 {
@@ -41,7 +38,7 @@ class CartController extends Controller
         $result = $this->cartService->update_cart($cartId, $validatedData['product_quantity']);
 
         if (!$result['status']) {
-          return response()->json($result, 422);
+            return response()->json($result, 422);
         }
         return $this->render_cart_and_summary($result['message']);
     }
@@ -51,17 +48,20 @@ class CartController extends Controller
     {
         $result = $this->cartService->delete_cart($cartId);
         if (!$result['status']) {
-          return response()->json($result, 422);
+            return response()->json($result, 422);
         }
         return $this->render_cart_and_summary($result['message']);
     }
 
 
-    public function render_cart_and_summary(string $message = 'cart refresh.')
+    public function render_cart_and_summary(string $message = 'cart refresh')
     {
         $cartData = $this->cartService->index_cart();
 
-        $cartTable = view('frontend.carts.table.cart_table', [
+        // $cartTable = view('frontend.carts.table.cart_table', [
+        //     'cart_items' => $cartData['items'],
+        // ])->render();
+        $cartTable = view('frontend.carts.AJAX.ajax_cart_item', [
             'cart_items' => $cartData['items'],
         ])->render();
 

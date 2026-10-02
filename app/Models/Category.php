@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Subcategory;
+use App\Models\Product;
 
 class Category extends Model
 {
@@ -23,5 +24,10 @@ class Category extends Model
     public function subcategories(): HasMany
     {
         return $this->hasMany(Subcategory::class, 'category_id', 'id');
+    }
+
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class, 'category_id', 'id');
     }
 }
