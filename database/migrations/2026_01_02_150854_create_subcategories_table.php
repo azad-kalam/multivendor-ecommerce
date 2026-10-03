@@ -13,7 +13,7 @@ return new class extends Migration
 
             // Foreign key to categories table
             $table->foreignId('category_id')
-                ->constrained()
+                ->constrained('categories')
                 ->onDelete('cascade');
 
             // Subcategory-specific fields

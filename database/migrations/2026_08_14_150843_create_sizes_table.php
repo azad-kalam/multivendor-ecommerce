@@ -1,22 +1,33 @@
 <?php
 
-namespace App\Models;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Models\ProductVariant;
-
-class Size extends Model
+return new class extends Migration
 {
-    protected $table = 'sizes';
-
-    protected $fillable = [
-        'name',
-        'status'
-    ];
-
-    public function variants(): HasMany
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
     {
-        return $this->hasMany(ProductVariant::class, 'size_id', 'id');
+        Schema::create('sizes', function (Blueprint $table) {
+            $table->id();
+
+           $table->string('name')->unique();
+            // Example: S, M, L, XL, XXL
+
+            $table->boolean('status')->default(true);
+
+            $table->timestamps();
+        });
     }
-}
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('sizes');
+    }
+};
