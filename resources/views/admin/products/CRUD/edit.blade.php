@@ -9,6 +9,7 @@
                     <!-- Role Display (User/Guest) -->
                     <span class="btn btn-outline-secondary p-1 text-capitalize user-role video-thumbnail">
                         {{ auth()->user()->role ?? 'Guest' }}
+
                     </span>
 
                     <nav aria-label="breadcrumb" class="d-flex my-1">
@@ -16,7 +17,7 @@
                             <!-- Home Breadcrumb -->
                             <li class="breadcrumb-item">
                                 <a href="{{ route('admin.dashboard') }}">
-                                    <span class="small">Home</span>
+                                    <span class="small">Dashboard</span>
                                 </a>
                             </li>
 
@@ -49,90 +50,83 @@
         </div>
 
         <div class="m-2">
-            <form action="{{ route('admin.products.CRUD.update', $productFind->id) }}" id="editProductForm') }}"
-                method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.products.CRUD.update', $productFind->id) }}" id="editProductForm" method="POST"
+                enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
+
                 <div class="row">
                     <div class="col-md-7 p-1">
                         {{-- product information starts here --}}
-                        <div class="card p-2 mb-1">
+                        <div class="card common_card p-2 mb-2">
                             <div class="card-header p-0 border-0">
-                                <h3 class="card-title text-center fw-bold">Product Information</h3>
+                                <h3 class="card-title text-center fw-bold">Product information</h3>
                             </div>
                             <div class="card-body">
-                                <!-- Name -->
                                 <div class="mb-4">
-                                    <label for="productEditName" class="form-label ms-1">
-                                        Product Name:
+                                    <label for="product_name" class="form-label">
+                                        Product Name: <span class="text-danger" aria-hidden="true">*</span>
                                     </label>
-                                    <input type="text" class="form-control" id="product_name" name="name"
-                                        value="{{ old('name', $productFind->name) }}" autocomplete="off">
+                                    <input type="text" class="form-control product_field" id="product_name"
+                                        name="name" autocomplete="off" value="{{ old('name', $productFind->name) }}"
+                                        required>
 
                                     @error('name')
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <!-- short description -->
+
                                 <div class="mb-4">
-                                    <label for="short_description" class="form-label ms-1">Short
-                                        Description:
+                                    <label for="short_description" class="form-label">
+                                        Short Description:
                                     </label>
-                                    <textarea class="form-control" id="short_description" name="short_description" rows="3"
-                                        style="resize: none; overflow-y: scroll">{{ old('short_description', $productFind->short_description) }}
-                                            </textarea>
+                                    <textarea class="form-control product_field" id="short_description" name="short_description" rows="3"
+                                        style="resize: none; overflow-y: scroll" required>{{ old('short_description', $productFind->short_description) }}</textarea>
+
                                     @error('short_description')
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
 
-                                <!-- Full Description -->
                                 <div class="mb-4">
-                                    <label for="full_description" class="form-label ms-1">
+                                    <label for="full_description" class="form-label">
                                         Full Description:
                                     </label>
-                                    <textarea class="form-control" id="full_description" name="full_description" rows="5"
-                                        style="resize: none; overflow-y: scroll">{{ old('full_description', $productFind->full_description) }}
-                                            </textarea>
+                                    <textarea class="form-control product_field" id="full_description" name="full_description" rows="4"
+                                        style="resize: none; overflow-y: scroll" required>{{ old('full_description', $productFind->full_description) }}</textarea>
+
                                     @error('full_description')
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <!-- Slug -->
-                                <div class="form-group mb-3">
-                                    <label for="productEditSlug" class="form-label">
+
+                                <div>
+                                    <label for="product_slug" class="form-label">
                                         SLUG: <span class="fw-bolder">[ SEO-Friendly URL ]</span>
                                     </label>
-                                    <input type="text" class="form-control" id="product_slug" name="slug"
+                                    <input type="text" class="form-control product_field" name="slug"
                                         value="{{ old('slug', $productFind->slug) }}">
+
                                     @error('slug')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <!-- SKU -->
-                                <div class="form-group mb-4">
-                                    <label for="product_sku" class="form-label">
-                                        SKU: <span class="fw-bolder">[ Stock Keeping Unit ]</span>
-                                    </label>
-                                    <input type="text" class="form-control" id="product_sku" name="sku"
-                                        value="{{ old('sku', $productFind->sku ?? '') }}">
-                                    @error('sku')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                             </div>
                         </div>
                         {{-- product information ends here --}}
+                    </div>
 
+                    <div class="col-md-5 p-1">
                         {{-- Categorization starts here --}}
-                        <div class="card p-2 mb-1">
+                        <div class="card common_card p-2 mb-2">
                             <div class="card-header p-0 border-0">
                                 <h3 class="card-title text-center fw-bold">Categorization</h3>
                             </div>
                             <div class="card-body">
-                                <!-- Category -->
-                                <div class="form-group mb-4">
-                                    <label for="category_id" class="form-label ms-1 pt-2">Category Select:</label>
+                                <div class="mb-5">
+                                    <label for="category_id" class="form-label ms-1 pt-2">
+                                        Category Select: <span class="text-danger" aria-hidden="true">*</span>
+                                    </label>
                                     <select class="form-select" id="category_id" name="category_id" required>
                                         <option disabled selected hidden>Select Category</option>
 
@@ -149,10 +143,9 @@
                                     @enderror
                                 </div>
 
-                                <!-- Subcategory -->
-                                <div class="form-group mb-4">
-                                    <label for="subcategory_id" class="form-label ms-1 pt-2">
-                                        Sub-category Select:
+                                <div class="mb-1">
+                                    <label for="subcategory_id" class="form-label ms-1 pt-1">
+                                        Sub-category Select: <span class="text-danger" aria-hidden="true">*</span>
                                     </label>
                                     <select class="form-select" id="subcategory_id" name="subcategory_id" required>
                                         <option disabled selected hidden>Select Subcategory</option>
@@ -175,18 +168,331 @@
                         </div>
                         {{-- Categorization ends here --}}
 
-                        {{-- Media starts here --}}
-                        <div class="card p-2 mb-1">
+                        {{-- specification starts here --}}
+                        <div class="card common_card p-2 mb-2">
+                            <div class="card-header p-0 border-0 mb-2">
+                                <h3 class="card-title text-center fw-bold">Specification</h3>
+                            </div>
+                            <div class="card-body">
+
+                                <!-- Weight -->
+                                <div class="mb-4">
+                                    <label for="product_weight" class="form-label ms-1">Weight <strong>[ gm ]
+                                            :</strong></label>
+
+                                    <input type="number" class="form-control" id="product_weight" name="product_weight"
+                                        step="0.001" min="0" placeholder="optional"
+                                        value="{{ old('product_weight', $productFind->product_weight) }}">
+
+                                    @if (empty(old('product_weight', $productFind->product_weight)))
+                                        <small class="mt-1 ms-1 text-danger">Weight is not set.</small>
+                                    @endif
+
+                                    @error('product_weight')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+
+                                <!-- warenty -->
+                                <div>
+                                    <label for="warranty" class="form-label ms-1">Warranty:</label>
+
+                                    <input type="text" class="form-control" id="warranty" name="warranty"
+                                        placeholder="optional" value="{{ old('warranty', $productFind->warranty) }}">
+
+                                    @if (empty(old('warranty', $productFind->warranty)))
+                                        <small class="mt-1 ms-1 text-danger">Not available</small>
+                                    @endif
+
+                                    @error('warranty')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        {{-- specification ends here --}}
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    <div class="col-md-12 px-1">
+                        {{-- product variant start here --}}
+                        <div class="card common_card px-1 mb-1">
+                            <div class="card-header p-0 border-0">
+                                <h3 class="card-title text-center fw-bold">Product variant</h3>
+                            </div>
+
+                            <div class="card-body p-0">
+                                <div class="row" style="margin-bottom: 70px;">
+                                    <div class="col-md-6">
+                                        <label for="brand_id" class="form-label ms-1">
+                                            Brand
+                                        </label>
+
+                                        <select class="form-select" id="brand_id" name="brand_id">
+                                            <option value="" hidden>
+                                                Select Brand
+                                            </option>
+
+                                            @foreach ($brands as $brand)
+                                                <option value="{{ $brand->id }}"
+                                                    {{ old('brand_id', $productFind->brand_id) == $brand->id ? 'selected' : '' }}>
+
+                                                    {{ $brand->name }}
+
+                                                </option>
+                                            @endforeach
+                                        </select>
+
+                                        @error('brand_id')
+                                            <span class="text-danger">
+                                                {{ $message }}
+                                            </span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="product_model_id" class="form-label ms-1">
+                                            Model Select
+                                        </label>
+
+                                        <select class="form-select" id="product_model_id" name="product_model_id">
+                                            <option value="" hidden>
+                                                Select Model
+                                            </option>
+
+                                            @foreach ($product_models as $model)
+                                                <option value="{{ $model->id }}"
+                                                    {{ old('product_model_id', $productFind->product_model_id) == $model->id ? 'selected' : '' }}>
+
+                                                    {{ $model->name }}
+
+                                                </option>
+                                            @endforeach
+                                        </select>
+
+                                        @error('product_model_id')
+                                            <span class="text-danger">
+                                                {{ $message }}
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div id="variationWrapper">
+                                    @foreach ($productFind->variants as $index => $variant)
+                                        <input type="hidden" name="variant_id[]" value="{{ $variant->id }}">
+
+                                        <div class="variation-block border rounded mb-1">
+                                            <div class="d-flex align-items-center gap-2 border border-1 border-danger">
+                                                <div style="display: flex; overflow-x: auto">
+                                                    <div class="table-responsive table_horizontal_scroll">
+
+                                                        <table class="table table-bordered align-middle mb-0"
+                                                            style="table-layout: fixed; width: 100%;">
+                                                            <thead>
+
+                                                                <tr class="text-center">
+                                                                    <th style="width: 16%">Color <span class="text-danger"
+                                                                            aria-hidden="true">*</span></th>
+
+                                                                    <th style="width: 16%">Size <span class="text-danger"
+                                                                            aria-hidden="true">*</span></th>
+
+                                                                    <th style="width: 19%">SKU</th>
+
+                                                                    <th style="width: 19%">Regular price <span
+                                                                            class="text-danger"
+                                                                            aria-hidden="true">*</span>
+                                                                    </th>
+
+                                                                    <th style="width: 14%">Selling price</th>
+
+                                                                    <th style="width: 16%">Stock quantity</th>
+                                                                </tr>
+                                                            </thead>
+
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>
+                                                                        <select class="form-select" name="color_id[]">
+                                                                            <option value="" disabled selected>
+                                                                                Select Color
+                                                                            </option>
+
+                                                                            @foreach ($colors as $color)
+                                                                                <option value="{{ $color->id }}"
+                                                                                    {{ $variant->color_id == $color->id ? 'selected' : '' }}>
+                                                                                    {{ $color->name }}
+                                                                                </option>
+                                                                            @endforeach
+
+                                                                        </select>
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <select class="form-select" name="size_id[]">
+                                                                            <option value="" disabled selected>
+                                                                                Select Size
+                                                                            </option>
+
+                                                                            @foreach ($sizes as $size)
+                                                                                <option value="{{ $size->id }}"
+                                                                                    {{ $variant->size_id == $size->id ? 'selected' : '' }}>
+                                                                                    {{ $size->name }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <input type="text" class="form-control"
+                                                                            name="sku[]"
+                                                                            value="{{ old('sku.' . $index, $variant->sku) }}">
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <input type="number" class="form-control"
+                                                                            name="regular_price[]" min="0"
+                                                                            step="0.01"
+                                                                            value="{{ old('regular_price.' . $loop->index, $variant->regular_price) }}"
+                                                                            required>
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <input type="number" class="form-control"
+                                                                            name="selling_price[]" min="0"
+                                                                            step="0.01"
+                                                                            value="{{ old('selling_price.' . $loop->index, $variant->selling_price) }}"
+                                                                            required>
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <input type="number" class="form-control"
+                                                                            name="stock_quantity[]" min="0"
+                                                                            value="{{ old('stock_quantity.' . $loop->index, $variant->stock_quantity) }}"
+                                                                            required>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+
+                                                        <table class="table table-bordered align-middle mb-0"
+                                                            style="table-layout: fixed; width: 100%;">
+                                                            <thead>
+                                                                <tr class="text-center">
+                                                                    <th style="width: 16%">Discount type</th>
+                                                                    <th style="width: 16%">Discount value</th>
+                                                                    <th style="width: 19%">Discount start</th>
+                                                                    <th style="width: 19%">Discount end</th>
+                                                                    <th style="width: 14%">Manage stock</th>
+                                                                    <th style="width: 16%">Stock status</th>
+                                                                </tr>
+
+                                                            </thead>
+
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>
+                                                                        <select class="form-select"
+                                                                            name="discount_type[]">
+                                                                            <option value="none"
+                                                                                {{ old('discount_type.' . $index, $variant->discount_type) == 'none' ? 'selected' : '' }}>
+                                                                                None
+                                                                            </option>
+
+                                                                            <option value="fixed"
+                                                                                {{ old('discount_type.' . $index, $variant->discount_type) == 'fixed' ? 'selected' : '' }}>
+                                                                                Fixed
+                                                                            </option>
+
+                                                                            <option value="percent"
+                                                                                {{ old('discount_type.' . $index, $variant->discount_type) == 'percent' ? 'selected' : '' }}>
+                                                                                Percent
+                                                                            </option>
+                                                                        </select>
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <input type="number"
+                                                                            class="form-control product_field discount_value"
+                                                                            name="discount_value[]" min="0"
+                                                                            value="{{ old('discount_value.' . $index, $variant->discount_value) }}"
+                                                                            placeholder="Active for Fixed and Percent">
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <input type="datetime-local" class="form-control"
+                                                                            name="discount_start[]"
+                                                                            value="{{ old('discount_start.' . $index, $variant->discount_start?->format('Y-m-d\TH:i')) }}">
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <input type="datetime-local" class="form-control"
+                                                                            name="discount_end[]"
+                                                                            value="{{ old('discount_end.' . $index, $variant->discount_end?->format('Y-m-d\TH:i')) }}">
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <select class="form-select" name="manage_stock[]">
+                                                                            <option value="1"
+                                                                                {{ old('manage_stock.' . $index, $variant->manage_stock) == 1 ? 'selected' : '' }}>
+                                                                                Yes
+                                                                            </option>
+                                                                            <option value="0"
+                                                                                {{ old('manage_stock.' . $index, $variant->manage_stock) == 0 ? 'selected' : '' }}>
+                                                                                No
+                                                                            </option>
+                                                                        </select>
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <select class="form-select" name="stock_status[]">
+                                                                            <option value="in_stock"
+                                                                                {{ old('stock_status.' . $index, $variant->stock_status) == 'in_stock' ? 'selected' : '' }}>
+                                                                                In Stock
+                                                                            </option>
+
+                                                                            <option value="out_of_stock"
+                                                                                {{ old('stock_status.' . $index, $variant->stock_status) == 'out_of_stock' ? 'selected' : '' }}>
+                                                                                Out Of Stock
+                                                                            </option>
+                                                                        </select>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                            </div>
+                        </div>
+                        {{-- product variant end here --}}
+                    </div>
+                </div>
+
+                {{-- Media starts here --}}
+                <div class="row">
+                    <div class="col-md-7 px-1">
+                        <div class="card common_card p-2 mb-2">
                             <div class="card-header p-0 border-0">
                                 <h3 class="card-title text-center fw-bold">Media</h3>
                             </div>
 
                             <div class="card-body">
+                                @php
+                                    $images = $productFind->images ?? collect();
+                                    $firstImage = $images->first();
+                                @endphp
                                 <!-- Image Upload -->
                                 @include('partials.global_file.edit_file')
 
                                 <!-- Video URL -->
-                                <div class="form-group mb-4">
+                                <div class="mb-1">
                                     <label for="video_url" class="form-label ms-1">Video URL:</label>
                                     <input type="url" class="form-control" id="video_url" name="video_url"
                                         value="{{ old('video_url', $productFind->images->first()->video_url ?? '') }}">
@@ -200,18 +506,16 @@
                                     @enderror
                                 </div>
                             </div>
-
                         </div>
-                        {{-- Media ends here --}}
 
                         {{-- Visibility & Status starts here --}}
-                        <div class="card p-2 mb-1">
+                        <div class="card common_card p-2 mb-2">
                             <div class="card-header p-0 border-0">
-                                <h3 class="card-title text-center fw-bold">Visibility & Status</h3>
+                                <h3 class="card-title text-center fw-bold">Visibility & Feature</h3>
                             </div>
                             <div class="card-body">
                                 <!-- Visibility -->
-                                <div class="mb-4">
+                                <div style="margin-bottom: 60px;">
                                     <label for="visibility" class="form-label ms-1">Select Visibility:</label>
                                     <select name="visibility" class="form-select">
                                         <option value="visible"
@@ -227,14 +531,14 @@
                                 </div>
 
                                 <!-- Status -->
-                                <div class="mb-4">
+                                <div style="margin-bottom: 60px;">
                                     <label for="status" class="form-label ms-1">Select Status:</label>
                                     <select name="status" class="form-select">
                                         <option value="1"
-                                            {{ old('status', $productFind->status) === '1' ? 'selected' : '' }}>Active
+                                            {{ old('status', $productFind->status) === 1 ? 'selected' : '' }}>Active
                                         </option>
                                         <option value="0"
-                                            {{ old('status', $productFind->status) === '0' ? 'selected' : '' }}>
+                                            {{ old('status', $productFind->status) === 0 ? 'selected' : '' }}>
                                             Inactive
                                         </option>
                                     </select>
@@ -244,7 +548,7 @@
                                 </div>
 
                                 <!-- Featured -->
-                                <div class="mb-4">
+                                <div style="margin-bottom: 44px;">
                                     <label class="form-label ms-1 me-5">Featured:</label>
 
                                     <div class="form-check form-check-inline">
@@ -269,465 +573,11 @@
                         </div>
                         {{-- Visibility & Status ends here --}}
 
-                        {{-- Inventory starts here --}}
-                        <div class="card p-2 mb-1">
-                            <div class="card-header p-0 border-0">
-                                <h3 class="card-title text-center fw-bold">Inventory</h3>
-                            </div>
-                            <div class="card-body">
-                                <!-- Stock Quantity -->
-                                <div class="mb-4">
-                                    <label for="stock_quantity" class="form-label ms-1">Stock Quantity:</label>
-                                    <input type="number" class="form-control" id="stock_quantity" name="stock_quantity"
-                                        value="{{ old('stock_quantity', $productFind->stock_quantity ?? 1) }}"
-                                        min="1" required>
-                                    @error('stock_quantity')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                <!-- Stock Status -->
-                                <div class="mb-4">
-                                    <label for="stock_status" class="form-label ms-1">Stock Status:</label>
-                                    <select name="stock_status" id="stock_status" class="form-select">
-                                        <option value="in_stock"
-                                            {{ old('stock_status', $productFind->stock_status ?? 'in_stock') === 'in_stock' ? 'selected' : '' }}>
-                                            In Stock
-                                        </option>
-                                        <option value="out_of_stock"
-                                            {{ old('stock_status', $productFind->stock_status ?? 'in_stock') === 'out_of_stock' ? 'selected' : '' }}>
-                                            Out of Stock
-                                        </option>
-                                    </select>
-
-                                    @error('stock_status')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                <!-- Manage Stock -->
-                                <div class="form-check mb-4">
-                                    <input type="hidden" name="manage_stock" value="0">
-
-                                    <input type="checkbox" class="form-check-input border-2 border-danger p-2"
-                                        id="manage_stock" name="manage_stock" value="1"
-                                        {{ old('manage_stock', $productFind->manage_stock ?? false) ? 'checked' : '' }}>
-
-                                    <label class="form-check-label" for="manage_stock">Manage Stock:</label>
-
-                                    @error('manage_stock')
-                                        <div id="manageStockError" class="text-danger mt-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                        {{-- Inventory ends here --}}
                     </div>
 
-                    <div class="col-md-5 p-1">
-                        {{-- pricing starts here --}}
-                        <div class="card p-2 mb-1">
-                            <div class="card-header border-none p-0">
-                                <h3 class="card-title text-center fw-bold">Pricing</h3>
-                            </div>
-                            <div class="card-body">
-                                <!-- Regular Price-->
-                                <div class="mb-4">
-                                    <label for="regular_price" class="form-label ms-1">
-                                        Regular Price:
-                                    </label>
-                                    <input type="number" class="form-control" id="regular_price" name="regular_price"
-                                        value="{{ old('regular_price', $productFind->price->regular_price ?? '') }}"
-                                        step="0.01" min="0" required>
-                                    @error('regular_price')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <!-- Selling Price-->
-                                <div class="mb-4">
-                                    <label for="selling_price" class="form-label ms-1">
-                                        Selling Price:
-                                    </label>
-                                    <input type="number" class="form-control" id="selling_price" name="selling_price"
-                                        value="{{ old('selling_price', $productFind->price->selling_price ?? '') }}"
-                                        step="0.01" min="0" required>
-                                    @error('selling_price')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                {{-- Discount Type --}}
-                                <fieldset class="mb-4 border-0">
-                                    <legend class="form-label me-5 h6">Discount Type:</legend>
-
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input border border-dark p-2 product_field"
-                                            type="radio" name="discount_type" id="discount_none" value="none"
-                                            {{ old('discount_type', $productFind->price->discount_type) == 'none' ? 'checked' : '' }}>
-
-                                        <label class="form-check-label" for="discount_none">None</label>
-                                    </div>
-
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input border border-dark p-2 product_field"
-                                            type="radio" name="discount_type" id="discount_flat" value="flat"
-                                            {{ old('discount_type', $productFind->price->discount_type) == 'flat' ? 'checked' : '' }}>
-
-                                        <label class="form-check-label" for="discount_flat">Flat</label>
-                                    </div>
-
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input border border-dark p-2 product_field"
-                                            type="radio" name="discount_type" id="discount_percent" value="percent"
-                                            {{ old('discount_type', $productFind->price->discount_type) == 'percent' ? 'checked' : '' }}>
-
-                                        <label class="form-check-label" for="discount_percent">Percent</label>
-                                    </div>
-
-                                    @error('discount_type')
-                                        <div class="text-danger mt-1">{{ $message }}</div>
-                                    @enderror
-                                </fieldset>
-
-                                {{-- Discount Value --}}
-                                <div class="form-group mb-5">
-                                    <label for="discount_value" class="form-label">Discount Value</label>
-
-                                    <input type="number" class="form-control product_field" id="discount_value"
-                                        name="discount_value" min="0"
-                                        value="{{ old('discount_value', $productFind->price->discount_value) }}">
-
-                                    <small class="text-success d-block mt-1">
-                                        Enter percentage if percent is selected, Or fixed amount if flat.
-                                    </small>
-
-                                    @error('discount_value')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <!-- Discount Start -->
-                                <div class="mb-4 pb-2">
-                                    <label for="discount_start" class="form-label ms-1">Discount Start:</label>
-
-                                    <input type="datetime-local" id="discount_start" name="discount_start"
-                                        class="form-control"
-                                        value="{{ optional($productFind->price)->discount_start
-                                            ? \Carbon\Carbon::parse(optional($productFind->price)->discount_start)->format('Y-m-d\TH:i')
-                                            : '' }}">
-
-                                    @if (empty($productFind->price->discount_start))
-                                        <small class="mt-1 ms-1 text-danger">Data Empty.</small>
-                                    @endif
-
-                                    @error('discount_start')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-
-                                <!-- Discount End -->
-                                <div class="mb-4">
-                                    <label for="discount_end" class="form-label ms-1">Discount End:</label>
-
-                                    <input type="datetime-local" id="discount_end" name="discount_end"
-                                        class="form-control" placeholder="dd-mm-yyyy hh:mm AM/PM"
-                                        value="{{ $productFind->price && $productFind->price->discount_end
-                                            ? \Carbon\Carbon::parse($productFind->price->discount_end)->format('Y-m-d\TH:i')
-                                            : '' }}">
-
-                                    @if (empty($productFind->price->discount_end))
-                                        <small class="mt-1 ms-1 text-danger">Data Empty.</small>
-                                    @endif
-                                    @error('discount_end')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                        {{-- pricing ends here --}}
-
-                        {{-- specification starts here --}}
-                        <div class="card p-2 mb-1">
-                            <div class="card-header p-0 border-0 mb-2">
-                                <h3 class="card-title text-center fw-bold">Specification</h3>
-                            </div>
-                            <div class="card-body">
-                                <!-- Brand -->
-                                <div class="mb-4">
-                                    <label for="brand" class="form-label ms-1">Brand:</label>
-
-                                    @if (!empty($productFind->brand))
-                                        <input type="text" class="form-control" id="brand" name="brand"
-                                            placeholder="optional" value="{{ old('brand', $productFind->brand) }}">
-                                    @else
-                                        <small class="mt-1 ms-1 text-danger">Brand is not set.</small>
-                                    @endif
-
-                                    @error('brand')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-
-                                <!-- Model -->
-                                <div class="mb-4">
-                                    <label for="model" class="form-label ms-1">Model:</label>
-
-                                    <input type="text" class="form-control" id="model" name="model"
-                                        placeholder="optional" value="{{ old('model', $productFind->model) }}">
-
-                                    @if (empty($productFind->model))
-                                        <small class="mt-1 ms-1 text-danger">Model is not set.</small>
-                                    @endif
-
-                                    @error('model')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-
-                                <!-- Size -->
-                                <div class="mb-4">
-                                    <label for="size" class="form-label ms-1">Select Size:</label>
-
-                                    <select name="size" class="form-select" id="size">
-                                        <option value="" disabled
-                                            {{ old('size', $productFind->size) ? '' : 'selected' }}>
-                                            Select any size (Optional)
-                                        </option>
-                                        <option value="free"
-                                            {{ old('size', $productFind->size) === 'free' ? 'selected' : '' }}>Free
-                                        </option>
-                                        <option value="small"
-                                            {{ old('size', $productFind->size) === 'small' ? 'selected' : '' }}>S</option>
-                                        <option value="medium"
-                                            {{ old('size', $productFind->size) === 'medium' ? 'selected' : '' }}>M</option>
-                                        <option value="large"
-                                            {{ old('size', $productFind->size) === 'large' ? 'selected' : '' }}>L</option>
-                                        <option value="xlarge"
-                                            {{ old('size', $productFind->size) === 'xlarge' ? 'selected' : '' }}>XL
-                                        </option>
-                                        <option value="xxlarge"
-                                            {{ old('size', $productFind->size) === 'xxlarge' ? 'selected' : '' }}>XXL
-                                        </option>
-                                    </select>
-
-                                    @if (empty(old('size', $productFind->size)))
-                                        <small class="mt-1 ms-1 text-danger">Size is not set.</small>
-                                    @endif
-
-                                    @error('size')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                <!-- Color -->
-                                <div class="mb-4">
-                                    <label for="color" class="form-label ms-1">Select Color:</label>
-
-                                    @php
-                                        $colors = [
-                                            'aliceblue',
-                                            'antiquewhite',
-                                            'aqua',
-                                            'aquamarine',
-                                            'azure',
-                                            'beige',
-                                            'bisque',
-                                            'black',
-                                            'blanchedalmond',
-                                            'blue',
-                                            'blueviolet',
-                                            'brown',
-                                            'burlywood',
-                                            'cadetblue',
-                                            'chartreuse',
-                                            'chocolate',
-                                            'coral',
-                                            'cornflowerblue',
-                                            'cornsilk',
-                                            'crimson',
-                                            'cyan',
-                                            'darkblue',
-                                            'darkcyan',
-                                            'darkgoldenrod',
-                                            'darkgray',
-                                            'darkgreen',
-                                            'darkkhaki',
-                                            'darkmagenta',
-                                            'darkolivegreen',
-                                            'darkorange',
-                                            'darkorchid',
-                                            'darkred',
-                                            'darksalmon',
-                                            'darkseagreen',
-                                            'darkslateblue',
-                                            'darkslategray',
-                                            'darkturquoise',
-                                            'darkviolet',
-                                            'deeppink',
-                                            'deepskyblue',
-                                            'dimgray',
-                                            'dodgerblue',
-                                            'firebrick',
-                                            'floralwhite',
-                                            'forestgreen',
-                                            'fuchsia',
-                                            'gainsboro',
-                                            'ghostwhite',
-                                            'gold',
-                                            'goldenrod',
-                                            'gray',
-                                            'greenyellow',
-                                            'honeydew',
-                                            'hotpink',
-                                            'indianred',
-                                            'indigo',
-                                            'ivory',
-                                            'khaki',
-                                            'lavender',
-                                            'lavenderblush',
-                                            'lawngreen',
-                                            'lemonchiffon',
-                                            'lightblue',
-                                            'lightcoral',
-                                            'lightcyan',
-                                            'lightgoldenrodyellow',
-                                            'lightgray',
-                                            'lightgreen',
-                                            'lightpink',
-                                            'lightsalmon',
-                                            'lightseagreen',
-                                            'lightskyblue',
-                                            'lightslategray',
-                                            'lightsteelblue',
-                                            'lightyellow',
-                                            'lime',
-                                            'limegreen',
-                                            'linen',
-                                            'magenta',
-                                            'mediumaquamarine',
-                                            'mediumblue',
-                                            'mediumorchid',
-                                            'mediumpurple',
-                                            'mediumseagreen',
-                                            'mediumslateblue',
-                                            'mediumspringgreen',
-                                            'mediumturquoise',
-                                            'mediumvioletred',
-                                            'midnightblue',
-                                            'mintcream',
-                                            'mistyrose',
-                                            'moccasin',
-                                            'navajowhite',
-                                            'oldlace',
-                                            'olive',
-                                            'olivedrab',
-                                            'orange',
-                                            'orangered',
-                                            'orchid',
-                                            'palegoldenrod',
-                                            'palegreen',
-                                            'paleturquoise',
-                                            'palevioletred',
-                                            'papayawhip',
-                                            'peachpuff',
-                                            'peru',
-                                            'pink',
-                                            'plum',
-                                            'powderblue',
-                                            'purple',
-                                            'rebeccapurple',
-                                            'red',
-                                            'rosybrown',
-                                            'royalblue',
-                                            'saddlebrown',
-                                            'salmon',
-                                            'sandybrown',
-                                            'seashell',
-                                            'sienna',
-                                            'silver',
-                                            'skyblue',
-                                            'slateblue',
-                                            'slategray',
-                                            'snow',
-                                            'springgreen',
-                                            'steelblue',
-                                            'tan',
-                                            'teal',
-                                            'thistle',
-                                            'tomato',
-                                            'turquoise',
-                                            'violet',
-                                            'wheat',
-                                            'white',
-                                            'whitesmoke',
-                                            'yellow',
-                                            'yellowgreen',
-                                        ];
-                                        $selectedColor = old('color', $productFind->color);
-                                    @endphp
-
-                                    <select class="form-select" id="color" name="color">
-                                        <option value="" disabled {{ empty($selectedColor) ? 'selected' : '' }}>
-                                            Select any color (Optional)
-                                        </option>
-
-                                        @foreach ($colors as $color)
-                                            <option value="{{ $color }}"
-                                                {{ $selectedColor === $color ? 'selected' : '' }}>
-                                                {{ ucwords(str_replace('-', ' ', $color)) }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-
-                                    @if (empty($selectedColor))
-                                        <small class="mt-1 ms-1 text-danger">Color is not set.</small>
-                                    @endif
-
-                                    @error('color')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-
-                                <!-- Weight -->
-                                <div class="mb-4">
-                                    <label for="product_weight" class="form-label ms-1">Weight <strong>[ gm ]
-                                            :</strong></label>
-
-                                    <input type="number" class="form-control" id="product_weight" name="product_weight"
-                                        step="0.001" min="0" placeholder="optional"
-                                        value="{{ old('product_weight', $productFind->product_weight) }}">
-
-                                    @if (empty(old('product_weight', $productFind->product_weight)))
-                                        <small class="mt-1 ms-1 text-danger">Weight is not set.</small>
-                                    @endif
-
-                                    @error('product_weight')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-
-                                <!-- warenty -->
-                                <div class="mb-4">
-                                    <label for="warranty" class="form-label ms-1">Warranty:</label>
-
-                                    <input type="text" class="form-control" id="warranty" name="warranty"
-                                        placeholder="optional" value="{{ old('warranty', $productFind->warranty) }}">
-
-                                    @if (empty(old('warranty', $productFind->warranty)))
-                                        <small class="mt-1 ms-1 text-danger">Warranty is not set.</small>
-                                    @endif
-
-                                    @error('warranty')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                        {{-- specification ends here --}}
-
+                    <div class="col-md-5 px-1">
                         {{-- SEO starts here --}}
-                        <div class="card p-2 pb-1 mb-2">
+                        <div class="card common_card p-2 pb-1 mb-2">
                             <div class="card-header p-0 border-0">
                                 <h3 class="card-title text-center fw-bold">SEO</h3>
                             </div>
@@ -737,8 +587,8 @@
                                     <label for="meta_title" class="form-label ms-1">
                                         Meta Title:
                                     </label>
-                                    <textarea style="resize: none; overflow-y: scroll" id="meta_title" name="meta_title" class="form-control"
-                                        rows="5" required placeholder="Enter meta title here...">{{ old('meta_title', $productFind->meta_title) }}</textarea>
+                                    <textarea style="resize: none; overflow-y: scroll" id="meta_title" name="meta_title"
+                                        class="form-control product_field" rows="6" placeholder="Enter meta title here...">{{ old('meta_title', $productFind->meta_title) }}</textarea>
 
                                     @if (empty(old('meta_title', $productFind->meta_title)))
                                         <small class="text-danger ms-1">Meta title is not set.</small>
@@ -754,7 +604,7 @@
                                         Meta Description:
                                     </label>
 
-                                    <textarea id="meta_description" name="meta_description" class="form-control" rows="6" required
+                                    <textarea id="meta_description" name="meta_description" class="form-control" rows="10"
                                         style="resize: none; overflow-y: scroll" placeholder="Enter meta description here...">{{ old('meta_description', $productFind->meta_description) }}</textarea>
 
                                     @if (empty(old('meta_description', $productFind->meta_description)))
@@ -770,8 +620,8 @@
                                     <label for="meta_keywords" class="form-label ms-1">
                                         Meta Keywords:
                                     </label>
-                                    <textarea style="resize: none; overflow-y: scroll" id="meta_keywords" name="meta_keywords" class="form-control p-2"
-                                        rows="5" required placeholder="Enter comma-separated keywords">{{ old('meta_keywords', $productFind->meta_keywords) }}</textarea>
+                                    <textarea style="resize: none; overflow-y: scroll" id="meta_keywords" name="meta_keywords"
+                                        class="form-control product_field p-2" rows="6" placeholder="Enter comma-separated keywords">{{ old('meta_keywords', $productFind->meta_keywords) }}</textarea>
 
                                     @if (empty(old('meta_keywords', $productFind->meta_keywords)))
                                         <small class="text-danger ms-1">Meta keywords are not set.</small>
@@ -784,14 +634,21 @@
                             </div>
                         </div>
                         {{-- SEO ends here --}}
+                    </div>
+                </div>
 
-                        <!-- Submit Button -->
-                        <div class="d-flex justify-content-between mx-2">
-                            <button type="reset" class="btn btn-danger">Cancel</button>
-                            <button type="submit" class="btn btn-success">Update</button>
+                <div class="row mt-4">
+                    <div class="col-md-7"></div>
+                    <div class="col-md-5">
+                        <div class="card common_card border-0">
+                            <div class="d-flex justify-content-between">
+                                <button type="reset" class="btn btn-outline-danger">Reset</button>
+                                <button type="submit" class="btn btn-outline-success">Submit</button>
+                            </div>
                         </div>
                     </div>
                 </div>
+
             </form>
         </div>
     </main>

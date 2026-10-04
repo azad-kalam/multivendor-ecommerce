@@ -1,15 +1,14 @@
 @extends('layouts.master_layout', ['title' => 'product create'])
 @section('content')
     @include('inc.headers.vendor.vendor_header')
-    @include('inc.asidebar.admin.admin_asidebar')
+    @include('inc.asidebar.vendor.vendor_asidebar')
     <main id="main">
         <div class="row">
             <div class="col-12">
                 <div class="mt-3 p-2">
                     <div class="pagetitle">
                         <span class="btn btn-outline-secondary p-1 text-capitalize video-thumbnail">
-                            {{ Auth::check() ? Auth::user()->role : 'Guest' }}
-
+                            {{ auth()->user()->role ?? 'Guest' }}
                         </span>
                         <nav aria-label="breadcrumb" class="d-flex my-1">
                             <ol class="breadcrumb m-0 mb-1">
@@ -168,6 +167,7 @@
 
                                         <div class="card-body">
                                             <!-- Choose Image Upload -->
+
                                             @include('partials.global_file.create_file')
 
                                             <!-- Video URL -->
@@ -318,23 +318,25 @@
                                                 <legend class="form-label me-5 h6">Discount Type:</legend>
 
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input border border-dark p-2" type="radio"
-                                                        name="discount_type" id="discount_none" value="none"
-                                                        {{ old('discount_type', 'none') == 'none' ? 'checked' : '' }}>
+                                                    <input class="form-check-input border border-dark p-2 product_field"
+                                                        type="radio" name="discount_type" id="discount_none"
+                                                        value="none" checked>
+
                                                     <label class="form-check-label" for="discount_none">None</label>
                                                 </div>
 
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input border border-dark p-2" type="radio"
-                                                        name="discount_type" id="discount_flat" value="flat"
-                                                        {{ old('discount_type') == 'flat' ? 'checked' : '' }}>
+                                                    <input class="form-check-input border border-dark p-2 product_field"
+                                                        type="radio" name="discount_type" id="discount_flat">
+
                                                     <label class="form-check-label" for="discount_flat">Flat</label>
                                                 </div>
 
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input border border-dark p-2" type="radio"
-                                                        name="discount_type" id="discount_percent" value="percent"
-                                                        {{ old('discount_type') == 'percent' ? 'checked' : '' }}>
+                                                    <input class="form-check-input border border-dark p-2 product_field"
+                                                        type="radio" name="discount_type" id="discount_percent"
+                                                        value="percent">
+
                                                     <label class="form-check-label" for="discount_percent">Percent</label>
                                                 </div>
 

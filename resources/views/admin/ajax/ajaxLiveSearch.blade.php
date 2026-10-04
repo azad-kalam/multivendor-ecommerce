@@ -1,8 +1,8 @@
 <script>
     $(document).ready(function() {
         // custom toastr option + error option start here
-        @include('partials.toastr_options.toastr_option')
-        @include('partials.error_options.errorHandler')
+        // @include('partials.toastr_options.toastr_option')
+        // @include('partials.error_options.errorHandler')
         // custom toastr option + error option end here
 
         // Register live search start here
@@ -353,6 +353,151 @@
             });
         });
         // product live search end here
+
+        // banner live search start here
+        $(document).on('keyup', '#banner_search', function() {
+            let search_query = $(this).val();
+            let url = $(this).data('search-url');
+
+            if (search_query === "") {
+                toastr.info('Search Query Is Empty!');
+            }
+
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: {
+                    banner_search: search_query
+                },
+                success: function(response) {
+                    if (response.bannerSearchStatus === 'success') {
+                        $('.banner_table_container').html(
+                            response.bannerSearchProperty
+                        );
+                    }
+                },
+                error: function(err) {
+                    customErrorHandler(err);
+                }
+            });
+        });
+        // banner live search end here
+
+        // brand live search start here
+        $(document).on('keyup', '#brandsearch', function() {
+            let search_query = $(this).val();
+            let url = $(this).data('search-url');
+
+            if (search_query === "") {
+                toastr.info('Search Query Is Empty!');
+            }
+
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: {
+                    brand_search: search_query
+                },
+                success: function(response) {
+                    if (response.brandSearchStatus === 'success') {
+                        $('.brand_table_container').html(
+                            response.brandSearchProperty
+                        );
+                    }
+                },
+                error: function(err) {
+                    customErrorHandler(err);
+                }
+            });
+        });
+        // brand live search end here
+
+        // color live search start here
+        $(document).on('keyup', '#colorSearch', function() {
+            let search_query = $(this).val();
+            let url = $(this).data('search-url');
+
+            if (search_query === "") {
+                toastr.info('Search Query Is Empty!');
+            }
+
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: {
+                    color_search: search_query
+                },
+                success: function(response) {
+                    if (response.colorSearchStatus === 'success') {
+                        $('.color_table_container').html(
+                            response.colorSearchProperty
+                        );
+                    }
+                },
+                error: function(err) {
+                    customErrorHandler(err);
+                }
+            });
+        });
+        // color live search end here
+
+        // model live search start here
+        $(document).on('keyup', '#product_model_search', function() {
+            let search_query = $(this).val();
+            let url = $(this).data('search-url');
+
+            if (search_query === "") {
+                toastr.info('Search Query Is Empty!');
+            }
+
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: {
+                    product_model_search_query: search_query
+                },
+                success: function(response) {
+                    if (response.product_model_search_status === 'success') {
+                        $('.productModel_table_container').html(
+                            response.product_model_search_property
+                        );
+                    }
+                },
+                error: function(err) {
+                    customErrorHandler(err);
+                }
+            });
+        });
+        // model live search end here
+
+        // size live search start here
+        $(document).on('keyup', '#sizeSearch', function() {
+            let search_query = $(this).val();
+            let url = $(this).data('search-url');
+
+            if (search_query === "") {
+                toastr.info('Search Query Is Empty!');
+            }
+
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: {
+                    size_search: search_query
+                },
+                success: function(response) {
+                    if (response.sizeSearchStatus === 'success') {
+                        $('.size_table_container').html(
+                            response.sizeSearchProperty
+                        );
+                    }
+                },
+                error: function(err) {
+                    customErrorHandler(err);
+                }
+            });
+        });
+        // size live search end here
 
 
     });

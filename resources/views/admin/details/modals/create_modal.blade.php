@@ -100,11 +100,11 @@
 
                     <!-- button -->
                     <div class="d-flex justify-content-between align-items-center mt-4">
-                        <button type="reset" class="btn btn-outline-danger me-3">
-                            Reset
-                        </button>
                         <button type="submit" class="btn btn-outline-success">
                             {{ __('Register') }}
+                        </button>
+                        <button type="reset" class="btn btn-outline-danger">
+                            Reset
                         </button>
                     </div>
                 </form>

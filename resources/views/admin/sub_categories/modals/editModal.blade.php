@@ -102,10 +102,9 @@
 
                     <!-- Buttons -->
                     <div class="mt-4 d-flex justify-content-between">
-                        <button type="reset" class="btn btn-outline-danger" id="cancel">Reset</button>
-
                         <button type="submit" class="btn btn-outline-success createBtn px-2"
                             id="subCategoryUpdateBtn">Update</button>
+                        <button type="reset" class="btn btn-outline-danger" id="cancel">Reset</button>
                     </div>
                 </form>
             </div>

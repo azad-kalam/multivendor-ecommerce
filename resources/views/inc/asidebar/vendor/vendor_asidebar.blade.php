@@ -7,6 +7,7 @@
             </a>
         </li>
 
+        {{-- <li class="nav-item"> --}}
         <li class="nav-item {{ Request::is('vendor/details*') ? 'active' : '' }}">
             <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
                 <i class="fa-solid fa-user"></i>
@@ -22,6 +23,7 @@
             </ul>
         </li>
 
+        {{-- product toggle start here --}}
         <li class="nav-item {{ Request::is('vendor/products*') ? 'active' : '' }}">
             <a class="nav-link collapsed" data-bs-target="#vendor-products" data-bs-toggle="collapse" href="#">
                 <i class="bi bi-layout-text-window-reverse"></i>
@@ -41,6 +43,8 @@
                 </li>
             </ul>
         </li>
+        {{-- product toggle end here --}}
+
 
         <li class="nav-item">
             <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
@@ -76,7 +80,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed" href="{{ route('vendor.contact.index') }}">
-                <i class="fa fa-envelope"></i>
+               <i class="fa fa-envelope"></i>
                 <span>Contact</span>
             </a>
         </li>
@@ -86,13 +90,14 @@
                 <i class="bi bi-card-list"></i>
                 <span>Register</span>
             </a>
-        </li>
+        </li><!-- End Register Page Nav -->
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="{{ route('homepage.login') }}">
+            <a class="nav-link collapsed" href="{{ route('homepage.index') }}">
                 <i class="bi bi-box-arrow-in-right"></i>
                 <span>Login</span>
             </a>
-        </li>
+        </li><!-- End Login Page Nav -->
+
     </ul>
 </aside>

@@ -17,10 +17,14 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
 
+<!-- Tom Select CSS -->
+<link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+
 <!-- THEME + CUSTOM slick + homepage + frontend + admin + vendor + main -->
 <link rel="stylesheet" href="{{ asset('assets/css/slick/style.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/css/homepage/style.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/css/frontend/style.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/frontend/cart.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/css/admin/style.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/css/vendor/style.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/css/main/style.css') }}">

@@ -7,25 +7,20 @@
     <div class="col-md-6">
         <div class="card overflow-auto" style="scrollbar-width: thin">
             <table class="table table-bordered table-hover table-striped data-table text-sm text-nowrap align-middle">
-                <thead id="table-head" class="border border-1 border-dark text-center">
+                <thead class="border border-1 border-dark text-center">
                     <tr>
                         <th>ID</th>
                         <th>User ID</th>
                         <th>Role</th>
-                        <th>Brand</th>
-                        <th>Model</th>
-                        <th>Color</th>
-                        <th>Size</th>
+                        <th>Description <span class="badge bg-secondary">Short</span></th>
+                        <th>Description <span class="badge bg-secondary">Full</span></th>
                         <th>Warranty</th>
                         <th>Featured</th>
-                        <th>SKU</th>
                         <th>Visibility</th>
-                        <th>Description <kbd class="small py-0">Short</kbd></th>
-                        <th>Description <kbd class="small py-0">Full</kbd></th>
-                        <th>File <kbd class="small py-0">Name</kbd></th>
-                        <th>Image <kbd class="small py-0">Path</kbd></th>
-                        <th>Alter <kbd class="small py-0">Text</kbd></th>
-                        <th>Video <kbd class="small py-0">Link</kbd></th>
+                        <th>File <span class="badge bg-secondary">Name</span></th>
+                        <th>Image <span class="badge bg-secondary">Path</span></th>
+                        <th>Alter <span class="badge bg-secondary">Text</span></th>
+                        <th>Video <span class="badge bg-secondary">Link</span></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,131 +32,92 @@
                             <td>
                                 {{ $product->user_id }}
                             </td>
+
                             <td>
-                                {{ $product->user->role }}
+                                @if ($product->user?->role)
+                                    {{ $product->user->role }}
+                                @else
+                                    <span class="text-danger">Data empty</span>
+                                @endif
                             </td>
 
-                            {{-- brand --}}
                             <td>
-                                @if ($product->brand != null)
-                                    <span>{{ $product->brand }}</span>
+                                @if ($product->short_description != null)
+                                    <span>{{ $product->short_description }}</span>
                                 @else
-                                    <span class="text-danger">Brand Name Empty</span>
+                                    <span class="text-danger">Data empty</span>
                                 @endif
                             </td>
-                            {{-- model --}}
+
                             <td>
-                                @if ($product->model != null)
-                                    <span>{{ $product->model }}</span>
+                                @if ($product->full_description != null)
+                                    <span>{{ $product->full_description }}</span>
                                 @else
-                                    <span class="text-danger">Model Name Empty</span>
+                                    <span class="text-danger">Data empty</span>
                                 @endif
                             </td>
-                            {{-- color --}}
-                            <td>
-                                @if ($product->color != null)
-                                    <span>{{ $product->color }}</span>
-                                @else
-                                    <span class="text-danger">Color Name Empty</span>
-                                @endif
-                            </td>
-                            {{-- size --}}
-                            <td>
-                                @if ($product->size != null)
-                                    <span>{{ $product->size }}</span>
-                                @else
-                                    <span class="text-danger">Size Name Empty</span>
-                                @endif
-                            </td>
-                            {{-- warranty --}}
+
                             <td>
                                 @if ($product->warranty != null)
                                     <span>{{ $product->warranty }}</span>
                                 @else
-                                    <span class="text-danger">Warranty Empty</span>
+                                    <span class="text-danger">Data empty</span>
                                 @endif
                             </td>
-                            {{-- feature --}}
+
                             <td>
                                 @if ($product->featured === 1 || $product->featured === '1')
                                     <span class="text-success">Yes</span>
                                 @elseif ($product->featured === 0 || $product->featured === '0')
-                                    <span class="text-warning">No</span>
+                                    <span class="text-warning fw-bold">No</span>
                                 @else
-                                    <span class="text-danger">Featured Empty</span>
+                                    <span class="text-danger">Data empty</span>
                                 @endif
                             </td>
-                            {{-- SKU --}}
-                            <td>
-                                @if ($product->sku != null)
-                                    <span>{{ $product->sku }}</span>
-                                @else
-                                    <span class="text-danger">Sku Empty</span>
-                                @endif
-                            </td>
-                            {{-- visibility --}}
+
                             <td>
                                 @if ($product->visibility === 'visible')
                                     <span class="text-success">Visible</span>
                                 @elseif ($product->visibility === 'hidden')
                                     <span class="text-warning">Hidden</span>
                                 @else
-                                    <span class="text-danger">Visibility Empty</span>
+                                    <span class="text-danger">Data empty</span>
                                 @endif
                             </td>
-                            {{-- short description --}}
-                            <td>
-                                @if ($product->short_description != null)
-                                    <span>{{ $product->short_description }}</span>
-                                @else
-                                    <span class="text-danger">Short Description Empty</span>
-                                @endif
-                            </td>
-                            {{-- full description --}}
-                            <td>
-                                @if ($product->full_description != null)
-                                    <span>{{ $product->full_description }}</span>
-                                @else
-                                    <span class="text-danger">Full Description Empty</span>
-                                @endif
-                            </td>
-                            {{-- file name --}}
+
                             <td>
                                 @if ($product->images && $product->images->count())
                                     <span>
                                         {{ $product->images->pluck('file_name')->implode(', ') }}
                                     </span>
                                 @else
-                                    <span class="text-danger">File name Empty</span>
+                                    <span class="text-danger">Data empty</span>
                                 @endif
                             </td>
 
-                            {{-- first image --}}
                             <td>
                                 @if ($product->images->first()?->public_path)
                                     <span>{{ $product->images->first()->public_path }}
                                         <small class="text-primary ms-2"> [ First ]</small>
                                     </span>
                                 @else
-                                    <span class="text-danger">Image Path Empty</span>
+                                    <span class="text-danger">Data empty</span>
                                 @endif
                             </td>
 
-                            {{-- first alt text --}}
                             <td>
                                 @if ($product->images->first()?->alt_text)
                                     <span>{{ $product->images->first()->alt_text }}</span>
                                 @else
-                                    <span class="text-danger">Alt Text Empty</span>
+                                    <span class="text-danger">Data empty</span>
                                 @endif
                             </td>
 
-                            {{-- first video url --}}
                             <td>
                                 @if ($product->images->first()?->video_url)
                                     <span>{{ $product->images->first()->video_url }}</span>
                                 @else
-                                    <span class="text-danger">Video Link Empty</span>
+                                    <span class="text-danger">Not available</span>
                                 @endif
                             </td>
                         </tr>
@@ -170,11 +126,12 @@
             </table>
         </div>
     </div>
+
     <div class="col-md-6">
         <div class="card overflow-auto" style="scrollbar-width: thin">
             <table
                 class="table table-bordered table-hover table-striped data-table product_table text-sm text-nowrap align-middle">
-                <thead id="table-head" class="border border-1 border-dark text-center">
+                <thead class="border border-1 border-dark text-center">
                     <tr>
                         <th>ID</th>
                         <th>User ID</th>
@@ -194,103 +151,220 @@
                         <th>Updated</th>
                     </tr>
                 </thead>
+
+                <tbody>
+                    @foreach ($allProducts as $product)
+                        @php
+                            $variant = $product->variants->first();
+                        @endphp
+
+                        <tr class="text-center">
+
+                            <td>{{ $product->id }}</td>
+
+                            <td>{{ $product->user_id }}</td>
+
+                            <td>
+                                @if ($product->user && $product->user->role)
+                                    {{ $product->user->role }}
+                                @else
+                                    <span class="text-danger">Not available</span>
+                                @endif
+                            </td>
+
+                            <td>
+                                @if (!is_null($variant?->discount_value))
+                                    {{ $variant->discount_value }}
+                                    {{ $variant->discount_type === 'percent' ? '%' : '' }}
+                                @else
+                                    <span class="text-danger">Not available</span>
+                                @endif
+                            </td>
+
+                            <td>
+                                @if ($variant?->discount_type)
+                                    {{ ucfirst($variant->discount_type) }}
+                                @else
+                                    <span class="text-danger">Not available</span>
+                                @endif
+                            </td>
+
+                            <td>
+                                @if ($variant?->discount_start)
+                                    {{ \Carbon\Carbon::parse($variant->discount_start)->format('d-m-Y h:i A') }}
+                                @else
+                                    <span class="text-danger">Not available</span>
+                                @endif
+                            </td>
+
+                            <td>
+                                @if ($variant?->discount_end)
+                                    {{ \Carbon\Carbon::parse($variant->discount_end)->format('d-m-Y h:i A') }}
+                                @else
+                                    <span class="text-danger">Not available</span>
+                                @endif
+                            </td>
+
+                            <td>
+                                @if (!is_null($product->product_weight))
+                                    {{ $product->product_weight }}
+                                @else
+                                    <span class="text-danger">Not available</span>
+                                @endif
+                            </td>
+
+                            <td>
+                                @if (!empty($variant->stock_quantity))
+                                    {{ $variant->stock_quantity }}
+                                @else
+                                    <span class="text-danger">Not available</span>
+                                @endif
+                            </td>
+
+                            <td>
+                                @if ($variant?->stock_status === 'in_stock')
+                                    <span class="text-success">In Stock</span>
+                                @elseif ($variant?->stock_status === 'out_of_stock')
+                                    <span class="text-danger">Out Of Stock</span>
+                                @else
+                                    <span class="text-danger">Not available</span>
+                                @endif
+                            </td>
+
+                            <td>
+                                @if (!is_null($variant?->manage_stock))
+                                    <span
+                                        class="{{ $variant->manage_stock ? 'text-success' : 'text-warning fw-bold' }}">
+                                        {{ $variant->manage_stock ? 'Yes' : 'No' }}
+                                    </span>
+                                @else
+                                    <span class="text-danger">Not available</span>
+                                @endif
+                            </td>
+
+                            <td>
+                                @if (!empty($product->meta_title))
+                                    {{ $product->meta_title }}
+                                @else
+                                    <span class="text-danger">Not available</span>
+                                @endif
+                            </td>
+
+                            <td>
+                                @if (!empty($product->meta_description))
+                                    {{ $product->meta_description }}
+                                @else
+                                    <span class="text-danger">Not available</span>
+                                @endif
+                            </td>
+
+                            <td>
+                                @if (!empty($product->meta_keywords))
+                                    {{ $product->meta_keywords }}
+                                @else
+                                    <span class="text-danger">Not available</span>
+                                @endif
+                            </td>
+
+                            <td>
+                                @if ($product->created_at)
+                                    {{ $product->created_at->format('d/m/Y') }}
+                                    <small class="text-muted ms-2">
+                                        {{ $product->created_at->format('h:i A') }}
+                                    </small>
+                                @else
+                                    <span class="text-danger">Not available</span>
+                                @endif
+                            </td>
+
+                            <td>
+                                @if ($product->updated_at && $product->created_at && $product->updated_at->equalTo($product->created_at))
+                                    <small class="text-danger">
+                                        Data not updated yet.
+                                    </small>
+                                @elseif ($product->updated_at)
+                                    {{ $product->updated_at->format('d/m/Y') }}
+                                    <small class="text-muted ms-2">
+                                        {{ $product->updated_at->format('h:i A') }}
+                                    </small>
+                                @else
+                                    <span class="text-danger">Not available</span>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <div class="card overflow-auto" style="scrollbar-width: thin">
+            <table class="table table-bordered table-hover table-striped data-table text-sm text-nowrap align-middle">
+                <thead class="border border-1 border-dark text-center">
+                    <tr>
+                        <th>ID</th>
+                        <th>User ID</th>
+                        <th>Brand</th>
+                        <th>Model</th>
+                        <th>Color</th>
+                        <th>Size</th>
+                        <th>SKU</th>
+                    </tr>
+                </thead>
                 <tbody>
                     @foreach ($allProducts as $product)
                         <tr class="text-center">
-                            <td>{{ $product->id }}</td>
-                            <td>{{ $product->user_id }}</td>
-                            <td>{{ $product->user->role }}</td>
+                            <td>
+                                {{ $product->id }}
+                            </td>
 
-                            @if ($product->price)
-                                <td>{{ $product->price->discount_value }}</td>
-                            @else
-                                <td class="text-danger">Discount Value Empty</td>
-                            @endif
+                            <td>
+                                {{ $product->user_id }}
+                            </td>
 
-                            @if ($product->price)
-                                <td>{{ $product->price->discount_type }}</td>
-                            @else
-                                <td class="text-danger">Discount Type Empty</td>
-                            @endif
+                            <td>
+                                @if ($product->brand?->name)
+                                    {{ $product->brand->name }}
+                                @else
+                                    <span class="text-danger">Not available</span>
+                                @endif
+                            </td>
 
-                            @if ($product->price)
-                                <td>
-                                    {{ \Carbon\Carbon::parse($product->price->discount_start)->format('d-m-Y h:i A') }}
-                                </td>
-                            @else
-                                <td class="text-danger">Discount Not Start</td>
-                            @endif
+                            <td>
+                                @if ($product->productModel?->name)
+                                    {{ $product->productModel->name }}
+                                @else
+                                    <span class="text-danger">Not available</span>
+                                @endif
+                            </td>
 
-                            @if ($product->price)
-                                <td>
-                                    {{ \Carbon\Carbon::parse($product->price->discount_end)->format('d-m-Y h:i A') }}
-                                </td>
-                            @else
-                                <td class="text-danger">Discount Expired</td>
-                            @endif
+                            <td>
+                                @foreach ($product->variants->pluck('color.name')->unique() as $color)
+                                    <span class="badge bg-primary">
+                                        {{ $color }}
+                                    </span>
+                                @endforeach
+                            </td>
 
-                            @if ($product->product_weight != null)
-                                <td>{{ $product->product_weight }}</td>
-                            @else
-                                <td class="text-danger">Weight Empty</td>
-                            @endif
+                            <td>
+                                @foreach ($product->variants->pluck('size.name')->unique() as $size)
+                                    <span class="badge bg-success">
+                                        {{ $size }}
+                                    </span>
+                                @endforeach
+                            </td>
 
-                            @if ($product->stock_quantity != null)
-                                <td>{{ $product->stock_quantity }}</td>
-                            @else
-                                <td class="text-danger">Stock Quantity Empty</td>
-                            @endif
-
-                            @if ($product->stock_status != null)
-                                <td>{{ $product->stock_status }}</td>
-                            @else
-                                <td class="text-danger">Stock Status Empty</td>
-                            @endif
-
-
-                            @if ($product->manage_stock != null)
-                                <td>{{ $product->manage_stock }}</td>
-                            @else
-                                <td class="text-danger">Manage Stock Empty</td>
-                            @endif
-
-                            @if ($product->meta_title != null)
-                                <td>{{ $product->meta_title }}</td>
-                            @else
-                                <td class="text-danger">Meta Title Empty</td>
-                            @endif
-
-                            @if ($product->meta_description != null)
-                                <td>{{ $product->meta_description }}</td>
-                            @else
-                                <td class="text-danger">Meta Description Empty</td>
-                            @endif
-
-                            @if ($product->meta_keywords != null)
-                                <td>{{ $product->meta_keywords }}</td>
-                            @else
-                                <td class="text-danger">Meta Keywords Empty</td>
-                            @endif
-
-                            @if ($product->created_at != null)
-                                <td>
-                                    {{ $product->created_at->format('d/m/Y') }}
-                                    <small class="text-muted ms-2">{{ $product->created_at->format('h:i A') }}</small>
-                                </td>
-                            @else
-                                <td class="text-danger text-center">Data not found</td>
-                            @endif
-
-                            @if ($product->updated_at == $product->created_at)
-                                <td class="text-danger text-center">
-                                    <small>Data not updated yet.</small>
-                                </td>
-                            @else
-                                <td>
-                                    {{ $product->updated_at->format('d/m/Y') }}
-                                    <small class="text-muted ms-2">{{ $product->updated_at->format('h:i A') }}</small>
-                                </td>
-                            @endif
+                            <td class="text-start align-middle">
+                                <ul class="mb-0">
+                                    @forelse ($product->variants as $variant)
+                                        <li>{{ $variant->sku }}</li>
+                                    @empty
+                                        <li>No variants found</li>
+                                    @endforelse
+                                </ul>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -382,22 +456,12 @@
                                 </td>
                                 <!-- regular price -->
                                 <td class="td-11">
-                                    @if ($product->price)
-                                        <i class="fa-solid fa-bangladeshi-taka-sign text-danger"></i>
-                                        {{ $product->price->regular_price }}
-                                    @else
-                                        <span class="text-danger">Regular Price Empty</span>
-                                    @endif
+                                    {{ $product->variants->first()?->regular_price ?? 'not available' }}
                                 </td>
 
                                 <!-- Selling Price -->
                                 <td class="td-11">
-                                    @if ($product->price)
-                                        <i class="fa-solid fa-bangladeshi-taka-sign text-danger"></i>
-                                        {{ $product->price->selling_price }}
-                                    @else
-                                        <span class="text-danger">Selling Price Empty</span>
-                                    @endif
+                                    {{ $product->variants->first()?->selling_price ?? 'not available' }}
                                 </td>
 
                                 <!-- Product Slug -->

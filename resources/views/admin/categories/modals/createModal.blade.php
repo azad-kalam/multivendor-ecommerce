@@ -20,7 +20,8 @@
                         <label for="name" class="form-label fw-bold">
                             Category Name: <span class="text-danger">*</span>
                         </label>
-                        <input type="text" class="form-control custom-border required_field" id="name" name="name" required>
+                        <input type="text" class="form-control custom-border required_field" id="name"
+                            name="name" required>
                         @error('name')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
@@ -31,7 +32,8 @@
                         <label for="title" class="form-label fw-bold">
                             Category Title: <span class="text-danger">*</span>
                         </label>
-                        <input type="text" class="form-control custom-border required_field" id="title" name="title" required>
+                        <input type="text" class="form-control custom-border required_field" id="title"
+                            name="title" required>
                         @error('title')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
@@ -42,8 +44,8 @@
                         <label for="description" class="form-label fw-bold">
                             Category Description: <span class="text-danger">*</span>
                         </label>
-                        <textarea class="form-control custom-border required_field" id="description" name="description" rows="5" minlength="5"
-                            maxlength="300" style="resize: none;" required></textarea>
+                        <textarea class="form-control custom-border required_field" id="description" name="description" rows="5"
+                            minlength="5" maxlength="300" style="resize: none;" required></textarea>
                         @error('description')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
@@ -69,7 +71,8 @@
                         <label for="slug" class="form-label fw-bold">
                             Category Slug: <span class="text-danger">*</span>
                         </label>
-                        <input type="text" class="form-control custom-border required_field" id="slug" name="slug" required>
+                        <input type="text" class="form-control custom-border required_field" id="slug"
+                            name="slug" required>
                         @error('slug')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
@@ -77,12 +80,11 @@
 
                     <!-- Buttons -->
                     <div class="mt-4 d-flex justify-content-between">
-                        <button type="reset" class="btn btn-outline-danger">
-                            Reset
-                        </button>
-
                         <button type="submit" class="btn btn-outline-success px-2">
                             Create
+                        </button>
+                        <button type="reset" class="btn btn-outline-danger">
+                            Reset
                         </button>
                     </div>
                 </form>

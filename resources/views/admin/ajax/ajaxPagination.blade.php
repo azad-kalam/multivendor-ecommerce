@@ -1,45 +1,30 @@
 <script>
     $(document).ready(function() {
         // custom toastr option + error option start here
-        @include('partials.toastr_options.toastr_option')
-        @include('partials.error_options.errorHandler')
+        // @include('partials.toastr_options.toastr_option')
+        // @include('partials.error_options.errorHandler')
         // custom toastr option + error option end here
 
         // category ajax pagination start here
         $(document).on('click', '#categoryPagination a', function(e) {
             e.preventDefault();
-            let categoryPageNumber;
 
             var href = $(this).attr('href');
+            var link_seperate_byPage = href.split('page=');
+            var value_after_page = link_seperate_byPage[1];
 
-            if (href && href.includes('page=')) {
-                //only get page number and ignore other parameters
-                categoryPageNumber = href.split('page=')[1].split('&')[0];
-            } else {
-                categoryPageNumber = 1;
-            }
-
-            loadCategories(categoryPageNumber);
-        });
-
-        function loadCategories(categoryPageNumber) {
             $.ajax({
                 type: "GET",
-                url: "category/pagination?page=" + categoryPageNumber,
+                url: "category/pagination?page=" + value_after_page,
                 success: function(response) {
-                    if (response.categoryPaginationStatus === "success") {
-                        $('.category_table_container').html(response.categoriesPaginationProperty);
-                        window.history.pushState(null, null, '?page=' +
-                            categoryPageNumber); //display current URL with page number
-                    } else {
-                        toastr.error('Pagination Failed');
-                    }
+                    $('.category_table_container').html(response);
+                    window.history.pushState(null, null, '?page=' + value_after_page);
                 },
                 error: function(err) {
                     customErrorHandler(err);
                 }
             });
-        }
+        });
         // category ajax pagination end here
 
         // subcategory ajax pagination start here
@@ -50,7 +35,6 @@
             var href = $(this).attr('href');
 
             if (href && href.includes('page=')) {
-                //only get page number and ignore other parameters
                 subcategoryPageNumber = href.split('page=')[1].split('&')[0];
             } else {
                 subcategoryPageNumber = 1;

@@ -7,7 +7,7 @@
             <div class="col-md-12">
                 <div class="pagetitle mt-3 p-1">
                     <span class="btn btn-outline-secondary p-1 text-capitalize user-role video-thumbnail">
-                        {{ Auth::check() ? Auth::user()->role : 'Guest' }}
+                        {{ auth()->user()->role ?? 'Guest' }}
                     </span>
 
                     <nav aria-label="breadcrumb" class="mt-1">
@@ -53,7 +53,7 @@
                         <div class="card-footer border-0 px-1 py-0">
                             <div class="text-center mb-1">
                                 <small class="text-muted">
-                                     Last updated {{ $vendor_last_updated->diffForHumans() }}
+                                    Last updated {{ $vendor_last_updated->diffForHumans() }}
                                 </small><br>
                                 <small class="text-muted">
                                     {{ $vendor_last_updated?->timezone('Asia/Dhaka')->format('d/m/Y') }}

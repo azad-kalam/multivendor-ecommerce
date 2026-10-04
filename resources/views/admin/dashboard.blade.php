@@ -215,6 +215,88 @@
         </div>
 
         <div class="row">
+            <!-- banner card start here -->
+            <div class="col-md-3">
+                <div class="card custom_card mb-2">
+                    <div class="card-header p-2">
+                        <h5 class="text-center text-white mb-0 custom_font_style_1">Banner</h5>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between px-2">
+                            <p class="mb-0 fw-semibold">Total:</p>
+                            <p class="mb-0 fw-semibold">[ {{ $banners_count }} ]</p>
+                        </div>
+                    </div>
+
+                    <div class="card-footer border-0 p-1">
+                        <div class="text-center mb-3">
+                            <small class="text-muted">
+                                Last updated {{ $updated['banner']?->updated_at?->diffForHumans() ?? 'N/A' }}
+                            </small><br>
+                            <small class="text-muted">
+                                @if ($updated['banner'])
+                                    {{ $updated['banner']?->updated_at?->timezone('Asia/Dhaka')->format('d/m/Y') }}
+                                    <i class="fa-regular fa-clock mx-1 text-dark"></i>
+                                    {{ $updated['banner']?->updated_at?->timezone('Asia/Dhaka')->format('h:i A') }}
+                                @else
+                                    Data not found
+                                @endif
+                            </small>
+                        </div>
+
+                        <div class="d-flex justify-content-end">
+                            <a href="{{ route('admin.banners.CRUD.index') }}"
+                                class="btn btn-sm btn-outline-warning text-danger">
+                                More views ...
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- banner card end here -->
+
+            <!-- brand card start here -->
+            <div class="col-md-3">
+                <div class="card custom_card mb-2">
+                    <div class="card-header p-2">
+                        <h5 class="text-center text-white mb-0 custom_font_style_1">Brand</h5>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between px-2">
+                            <p class="mb-0 fw-semibold">Total:</p>
+                            <p class="mb-0 fw-semibold">[ {{ $brands_count }} ]</p>
+                        </div>
+                    </div>
+
+                    <div class="card-footer border-0 p-1">
+                        <div class="text-center mb-3">
+                            <small class="text-muted">
+                                Last updated {{ $updated['brand']?->updated_at?->diffForHumans() ?? 'N/A' }}
+                            </small><br>
+                            <small class="text-muted">
+                                @if ($updated['brand'])
+                                    {{ $updated['brand']?->updated_at?->timezone('Asia/Dhaka')->format('d/m/Y') }}
+                                    <i class="fa-regular fa-clock mx-1 text-dark"></i>
+                                    {{ $updated['brand']?->updated_at?->timezone('Asia/Dhaka')->format('h:i A') }}
+                                @else
+                                    Data not found
+                                @endif
+                            </small>
+                        </div>
+
+                        <div class="d-flex justify-content-end">
+                            <a href="{{ route('admin.brands.CRUD.index') }}"
+                                class="btn btn-sm btn-outline-warning text-danger">
+                                More views ...
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- brand card end here -->
+
             <!-- category card start here -->
             <div class="col-md-3">
                 <div class="card custom_card mb-2">
@@ -296,6 +378,89 @@
                 </div>
             </div>
             <!-- sub-category card end here -->
+        </div>
+
+        <div class="row">
+
+            <!-- color card start here -->
+            <div class="col-md-3">
+                <div class="card custom_card mb-2">
+                    <div class="card-header p-2">
+                        <h5 class="text-center text-white mb-0 custom_font_style_1">Color</h5>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between px-2">
+                            <p class="mb-0 fw-semibold">Total:</p>
+                            <p class="mb-0 fw-semibold">[ {{ $colors_count }} ]</p>
+                        </div>
+                    </div>
+
+                    <div class="card-footer border-0 p-1">
+                        <div class="text-center mb-3">
+                            <small class="text-muted d-block">
+                                Last updated {{ $updated['color']?->updated_at?->diffForHumans() ?? 'N/A' }}
+                            </small>
+                            @if (!empty($updated['color']?->updated_at))
+                                <small class="text-muted">
+                                    {{ $updated['color']->updated_at->timezone('Asia/Dhaka')->format('d/m/Y') }}
+                                    <i class="fa-regular fa-clock mx-1 text-dark"></i>
+                                    {{ $updated['color']->updated_at->timezone('Asia/Dhaka')->format('h:i A') }}
+                                </small>
+                            @else
+                                <small class="text-muted">Data not found</small>
+                            @endif
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <a href="{{ route('admin.colors.CRUD.index') }}"
+                                class="btn btn-sm btn-outline-warning text-danger">
+                                More views ...
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- color card end here -->
+
+            <!-- model card start here -->
+            <div class="col-md-3">
+                <div class="card custom_card mb-2">
+                    <div class="card-header p-2">
+                        <h5 class="text-center text-white mb-0 custom_font_style_1">Product-Model</h5>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between px-2">
+                            <p class="mb-0 fw-semibold">Total:</p>
+                            <p class="mb-0 fw-semibold">[ {{ $product_models_count }} ]</p>
+                        </div>
+                    </div>
+
+                    <div class="card-footer border-0 p-1">
+                        <div class="text-center mb-3">
+                            <small class="text-muted d-block">
+                                Last updated {{ $updated['product_model']?->updated_at?->diffForHumans() ?? 'N/A' }}
+                            </small>
+                            @if (!empty($updated['product_model']?->updated_at))
+                                <small class="text-muted">
+                                    {{ $updated['product_model']->updated_at->timezone('Asia/Dhaka')->format('d/m/Y') }}
+                                    <i class="fa-regular fa-clock mx-1 text-dark"></i>
+                                    {{ $updated['product_model']->updated_at->timezone('Asia/Dhaka')->format('h:i A') }}
+                                </small>
+                            @else
+                                <small class="text-muted">Data not found</small>
+                            @endif
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <a href="{{ route('admin.product_models.CRUD.index') }}"
+                                class="btn btn-sm btn-outline-warning text-danger">
+                                More views ...
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- model card end here -->
 
             <!-- product card start here -->
             <div class="col-md-3">
@@ -336,6 +501,46 @@
                 </div>
             </div>
             <!-- product card end here -->
+
+            <!-- size card start here -->
+            <div class="col-md-3">
+                <div class="card custom_card mb-2">
+                    <div class="card-header p-2">
+                        <h5 class="text-center text-white mb-0 custom_font_style_1">Size</h5>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between px-2">
+                            <p class="mb-0 fw-semibold">Total:</p>
+                            <p class="mb-0 fw-semibold">[ {{ $sizes_count }} ]</p>
+                        </div>
+                    </div>
+
+                    <div class="card-footer border-0 p-1">
+                        <div class="text-center mb-3">
+                            <small class="text-muted d-block">
+                                Last updated {{ $updated['size']?->updated_at?->diffForHumans() ?? 'N/A' }}
+                            </small>
+                            @if (!empty($updated['size']?->updated_at))
+                                <small class="text-muted">
+                                    {{ $updated['size']->updated_at->timezone('Asia/Dhaka')->format('d/m/Y') }}
+                                    <i class="fa-regular fa-clock mx-1 text-dark"></i>
+                                    {{ $updated['size']->updated_at->timezone('Asia/Dhaka')->format('h:i A') }}
+                                </small>
+                            @else
+                                <small class="text-muted">Data not found</small>
+                            @endif
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <a href="{{ route('admin.sizes.CRUD.index') }}"
+                                class="btn btn-sm btn-outline-warning text-danger">
+                                More views ...
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- size card end here -->
         </div>
     </main>
 @endsection

@@ -80,9 +80,9 @@
 
                     <!-- Modal Footer -->
                     <div class="modal-footer border-0 mx-2">
-                        <button type="button" class="btn btn-outline-danger me-4"
-                            data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-outline-success">Update</button>
+                        <button type="button" class="btn btn-outline-danger ms-5"
+                            data-bs-dismiss="modal">Cancel</button>
                     </div>
                 </form>
             </div>

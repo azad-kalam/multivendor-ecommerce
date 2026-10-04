@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
@@ -11,7 +10,6 @@ $roles = [
 ];
 
 foreach ($roles as $role => $controller) {
-
     Route::middleware(['auth', 'verified', RoleMiddleware::class . ':' . $role])
         ->prefix($role)
         ->name($role . '.')

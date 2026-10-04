@@ -1,7 +1,7 @@
 <!--Modal starts here-->
 <div class="modal fade" id="admin_createSubCategory_modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel">
-    
+
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-shadow custom_modal_dialog mx-auto">
         <div class="modal-content">
             <!-- AJAX content loads here -->
@@ -38,8 +38,8 @@
                         <label for="subcategory_name" class="form-label fw-bold">
                             Sub-category Name: <span class="text-danger">*</span>
                         </label>
-                        <input type="text" class="form-control required_field" id="subcategory_name" name="subcategory_name"
-                            value="{{ old('subcategory_name') }}" required>
+                        <input type="text" class="form-control required_field" id="subcategory_name"
+                            name="subcategory_name" value="{{ old('subcategory_name') }}" required>
                         @error('subcategory_name')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -48,8 +48,8 @@
                     <!-- Sub-category Title -->
                     <div class="mb-4">
                         <label for="subcategory_title" class="form-label fw-bold">Sub-category Title:</label>
-                        <input type="text" class="form-control required_field" id="subcategory_title" name="subcategory_title"
-                            value="{{ old('subcategory_title') }}">
+                        <input type="text" class="form-control required_field" id="subcategory_title"
+                            name="subcategory_title" value="{{ old('subcategory_title') }}">
                         @error('subcategory_title')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -59,8 +59,8 @@
                     <div class="mb-4">
                         <label for="subcategory_description" class="form-label fw-bold">Sub-category
                             Description:</label>
-                        <textarea class="form-control required_field" id="subcategory_description" name="subcategory_description" rows="5" minlength="5"
-                            maxlength="300" style="resize: none">{{ old('subcategory_description') }}</textarea>
+                        <textarea class="form-control required_field" id="subcategory_description" name="subcategory_description" rows="5"
+                            minlength="5" maxlength="300" style="resize: none">{{ old('subcategory_description') }}</textarea>
                         @error('subcategory_description')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -71,7 +71,8 @@
                         <label for="subcategory_status" class="form-label fw-bold">
                             Sub-category Status: <span class="text-danger">*</span>
                         </label>
-                        <select  class="form-select required_field" name="subcategory_status" id="subcategory_status" required>
+                        <select class="form-select required_field" name="subcategory_status" id="subcategory_status"
+                            required>
                             <option value="" hidden>Select any one</option>
                             <option value="active">Active</option>
                             <option value="inactive">Block</option>
@@ -86,8 +87,8 @@
                         <label for="subcategory_slug" class="form-label fw-bold">
                             Sub-category Slug: <span class="text-danger">*</span>
                         </label>
-                        <input type="text" class="form-control required_field" id="subcategory_slug" name="subcategory_slug"
-                            value="{{ old('subcategory_slug') }}" required>
+                        <input type="text" class="form-control required_field" id="subcategory_slug"
+                            name="subcategory_slug" value="{{ old('subcategory_slug') }}" required>
                         @error('subcategory_slug')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -95,8 +96,8 @@
 
                     <!-- Buttons -->
                     <div class="mt-4 d-flex justify-content-between">
-                        <button type="reset" class="btn btn-outline-danger">Reset</button>
                         <button type="submit" class="btn btn-outline-success createBtn px-3">Create</button>
+                        <button type="reset" class="btn btn-outline-danger">Reset</button>
                     </div>
                 </form>
             </div>

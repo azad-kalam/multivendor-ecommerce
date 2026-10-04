@@ -108,7 +108,7 @@
      * Initiate tooltips
      */
     var tooltipTriggerList = [].slice.call(
-        document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        document.querySelectorAll('[data-bs-toggle="tooltip"]'),
     );
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
@@ -191,7 +191,7 @@
      */
 
     const useDarkMode = window.matchMedia(
-        "(prefers-color-scheme: dark)"
+        "(prefers-color-scheme: dark)",
     ).matches;
     const isSmallScreen = window.matchMedia("(max-width: 1023.5px)").matches;
 
@@ -292,7 +292,7 @@
 
                 form.classList.add("was-validated");
             },
-            false
+            false,
         );
     });
 

@@ -38,8 +38,8 @@
                 <!-- Right main Image end here -->
 
                 <div class="col-md-5">
-
-                    <form action="{{ route('frontend.carts.store') }}" id="add_to_cart" method="POST">
+                    <form action="{{ route('frontend.carts.store') }}" id="add_to_cart" method="POST"
+                        data-variants='@json($variantData)'>
                         @csrf
                         <input type="hidden" name="product_id" id="productId" value="{{ $product->id }}">
 
@@ -72,7 +72,6 @@
                                 $firstVariant = $product->variants->first();
                             @endphp
 
-                            {{-- Price --}}
                             <div class="d-flex align-items-center">
 
                                 <h3 class="product-price w-50">
@@ -164,90 +163,56 @@
                             {{-- Available Stock --}}
                             <p>
                                 <strong>Available:</strong>
-
-                                <span id="availableQty">
-                                    {{ $firstVariant?->stock_quantity ?? 0 }}
-                                </span>
+                                <span id="availableQty"> {{ $firstVariant?->stock_quantity ?? 0 }}</span>
                             </p>
 
-
-                            {{-- Size / Color --}}
                             <div class="row product-options mb-1 mt-0">
-
-                                {{-- SIZE --}}
                                 <div class="col-md-6">
-
-                                    <label for="sizeSelect" class="fw-bold d-block mb-1">
-                                        Size:
-                                    </label>
+                                    <label for="sizeSelect" class="fw-bold d-block mb-1">Size:</label>
 
                                     <select id="sizeSelect" class="form-select">
-
                                         @foreach ($product->variants->whereNotNull('size_id')->unique('size_id') as $variant)
                                             <option value="{{ $variant->size_id }}">
                                                 {{ $variant->size?->name ?? 'N/A' }}
                                             </option>
                                         @endforeach
-
                                     </select>
-
                                 </div>
 
-
-                                {{-- COLOR --}}
                                 <div class="col-md-6">
-                                    <label for="colorSelect" class="fw-bold d-block mb-1">
-                                        Color:
-                                    </label>
+                                    <label for="colorSelect" class="fw-bold d-block mb-1"> Color:</label>
 
                                     <select id="colorSelect" class="form-select">
-
                                         @foreach ($product->variants->whereNotNull('color_id')->unique('color_id') as $variant)
                                             <option value="{{ $variant->color_id }}">
                                                 {{ $variant->color?->name ?? 'N/A' }}
                                             </option>
                                         @endforeach
-
                                     </select>
-
                                 </div>
-
                             </div>
 
-
-                            {{-- Quantity --}}
                             <div class="row align-items-center">
-
                                 <div class="col-md-6">
-
-                                    <label class="fw-bold mb-1">
-                                        Quantity:
-                                    </label>
+                                    <label class="fw-bold mb-1">Quantity:</label>
 
                                     <div class="input-number">
                                         <input type="number" name="product_quantity" id="productQuantity" min="1"
-                                            value="1" class="form-control">
+                                            max="{{ $variant->stock_quantity }}" value="1" class="form-control">
 
                                         <span class="quantity_up">+</span>
                                         <span class="quantity_down">-</span>
                                     </div>
                                 </div>
 
-
-                                {{-- Add Cart Button --}}
                                 <div class="col-md-6">
-
                                     <div class="add-to-cart mt-4">
-
                                         <button type="submit" class="add-to-cart-btn mt-4" id="addToCartBtn">
                                             <i class="fa fa-shopping-cart"></i>
                                             Add to cart
                                         </button>
-
                                     </div>
-
                                 </div>
-
                             </div>
 
 
@@ -325,7 +290,6 @@
                     <h3 class="text-center">Related Products</h3>
                 </div>
                 @foreach ($relatedProducts as $relatedProduct)
-            
                     <div class="col-md-3">
                         <div class="product">
                             <div class="product-img text-center" style="height: 200px;">

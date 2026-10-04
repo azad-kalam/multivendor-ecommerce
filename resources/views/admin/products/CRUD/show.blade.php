@@ -42,64 +42,88 @@
         </div>
 
         <div class="row">
+            @php
+                $variant = $productDetails->variants->first();
+            @endphp
+
             <div class="col-md-6">
-                {{-- Product Name --}}
                 <ul class="list-group mb-2">
                     <li class="list-group-item d-flex justify-content-between">
-                        <strong class="fw-bolder">Product<kbd class="pt-0 ms-1">name:</kbd></strong>
-                        <p>{{ $productDetails->name }}</p>
+                        <strong class="fw-bolder">Product <kbd class="pt-0 ms-1">name:</kbd> </strong>
+
+                        @if ($productDetails->name)
+                            <p>{{ $productDetails->name }}</p>
+                        @else
+                            <p class="text-danger">Not available</p>
+                        @endif
                     </li>
                 </ul>
 
-                {{-- Category Name --}}
                 <ul class="list-group mb-2">
                     <li class="list-group-item d-flex justify-content-between">
                         <strong class="fw-bolder">Category<kbd class="pt-0 ms-1">name:</kbd></strong>
-                        <p>{{ optional(optional($productDetails->subcategory)->category)->name ?? 'N/A' }}</p>
+
+                        @if (optional($productDetails->subcategory?->category)->name)
+                            <p>{{ $productDetails->subcategory->category->name }}</p>
+                        @else
+                            <p class="text-danger">Not available</p>
+                        @endif
                     </li>
                 </ul>
 
-                {{-- Subcategory Name --}}
                 <ul class="list-group mb-2">
                     <li class="list-group-item d-flex justify-content-between">
                         <strong class="fw-bolder">Subcategory<kbd class="pt-0 ms-1">name:</kbd></strong>
-                        <p>{{ optional($productDetails->subcategory)->subcategory_name ?? 'N/A' }}</p>
+
+                        @if (optional($productDetails->subcategory)->subcategory_name)
+                            <p>{{ $productDetails->subcategory->subcategory_name }}</p>
+                        @else
+                            <p class="text-danger">Not available</p>
+                        @endif
                     </li>
                 </ul>
 
-                {{-- Regular Price --}}
                 <ul class="list-group mb-2">
                     <li class="list-group-item d-flex justify-content-between">
                         <strong class="fw-bolder">Regular<kbd class="pt-0 ms-1">price:</kbd></strong>
-                        <p>{{ optional($productDetails->price)->regular_price ?? 'N/A' }}</p>
+                        @if ($variant?->regular_price)
+                            <p>{{ number_format($variant->regular_price, 2) }}</p>
+                        @else
+                            <p class="text-danger">Not available</p>
+                        @endif
                     </li>
                 </ul>
 
-                {{-- Selling Price --}}
                 <ul class="list-group mb-2">
                     <li class="list-group-item d-flex justify-content-between">
                         <strong class="fw-bolder">Selling<kbd class="pt-0 ms-1">price:</kbd></strong>
-                        <p>{{ optional($productDetails->price)->selling_price ?? 'N/A' }}</p>
+                        @if ($variant?->selling_price)
+                            <p>{{ $variant->selling_price }}</p>
+                        @else
+                            <p class="text-danger">Not available</p>
+                        @endif
                     </li>
                 </ul>
 
-                {{-- Discount Value --}}
                 <ul class="list-group mb-2">
                     <li class="list-group-item d-flex justify-content-between">
                         <strong class="fw-bolder">Discount<kbd class="pt-0 ms-1">value:</kbd></strong>
-                        <p class="{{ optional($productDetails->price)->discount_value ? '' : 'text-danger' }}">
-                            {{ optional($productDetails->price)->discount_value ?? 'Discount Value Empty' }}
-                        </p>
+                        @if ($variant?->discount_value)
+                            {{ $variant->discount_value }}
+                        @else
+                            <span class="text-danger">Not available</span>
+                        @endif
                     </li>
                 </ul>
 
-                {{-- Discount Type --}}
                 <ul class="list-group mb-2">
                     <li class="list-group-item d-flex justify-content-between">
                         <strong class="fw-bolder">Discount<kbd class="pt-0 ms-1">type:</kbd></strong>
-                        <p class="{{ optional($productDetails->price)->discount_type ? '' : 'text-danger' }}">
-                            {{ optional($productDetails->price)->discount_type ?? 'Discount Type Empty' }}
-                        </p>
+                        @if ($variant?->discount_type)
+                            {{ $variant->discount_type }}
+                        @else
+                            <span class="text-danger">Not available</span>
+                        @endif
                     </li>
                 </ul>
 
@@ -107,11 +131,11 @@
                 <ul class="list-group mb-2">
                     <li class="list-group-item d-flex justify-content-between">
                         <strong class="fw-bolder">Discount<kbd class="pt-0 ms-1">start:</kbd></strong>
-                        @if (optional($productDetails->price)->discount_start)
-                            <p>{{ \Carbon\Carbon::parse($productDetails->price->discount_start)->format('d-m-Y h:i A') }}
+                        @if ($variant?->discount_start)
+                            <p>{{ \Carbon\Carbon::parse($variant->discount_start)->format('d-m-Y h:i A') }}
                             </p>
                         @else
-                            <p class="text-danger">Discount Start Empty</p>
+                            <p class="text-danger">Not available</p>
                         @endif
                     </li>
                 </ul>
@@ -120,11 +144,11 @@
                 <ul class="list-group mb-2">
                     <li class="list-group-item d-flex justify-content-between">
                         <strong class="fw-bolder">Discount<kbd class="pt-0 ms-1">end:</kbd></strong>
-                        @if (optional($productDetails->price)->discount_end)
-                            <p>{{ \Carbon\Carbon::parse($productDetails->price->discount_end)->format('d-m-Y h:i A') }}
+                        @if ($variant?->discount_end)
+                            <p>{{ \Carbon\Carbon::parse($variant->discount_end)->format('d-m-Y h:i A') }}
                             </p>
                         @else
-                            <p class="text-danger">Discount End Empty</p>
+                            <p class="text-danger">Not available</p>
                         @endif
                     </li>
                 </ul>
@@ -134,7 +158,7 @@
                     <li class="list-group-item d-flex justify-content-between">
                         <strong class="">Weight<kbd class="pt-0 ms-1">KG:</kbd></strong>
                         <p class="{{ $productDetails->product_weight ? '' : 'text-danger' }}">
-                            {{ $productDetails->product_weight ?? 'Weight Empty' }}
+                            {{ $productDetails->product_weight ?? 'Not available' }}
                         </p>
                     </li>
                 </ul>
@@ -143,7 +167,11 @@
                 <ul class="list-group mb-2">
                     <li class="list-group-item d-flex justify-content-between">
                         <strong class="fw-bolder">Stock<kbd class="pt-0 ms-1">quantity:</kbd></strong>
-                        <p>{{ $productDetails->stock_quantity }}</p>
+                        @if ($variant?->stock_quantity !== null)
+                            <p>{{ $variant->stock_quantity }}</p>
+                        @else
+                            <p class="text-danger">Stock Quantity Empty</p>
+                        @endif
                     </li>
                 </ul>
 
@@ -151,7 +179,11 @@
                 <ul class="list-group mb-2">
                     <li class="list-group-item d-flex justify-content-between">
                         <strong class="fw-bolder">Stock<kbd class="pt-0 ms-1">status:</kbd></strong>
-                        <p>{{ $productDetails->stock_status }}</p>
+                        @if ($variant?->stock_status)
+                            <p>{{ ucfirst($variant->stock_status) }}</p>
+                        @else
+                            <p class="text-danger">Not available</p>
+                        @endif
                     </li>
                 </ul>
 
@@ -159,15 +191,34 @@
                 <ul class="list-group mb-2">
                     <li class="list-group-item d-flex justify-content-between">
                         <strong class="fw-bolder">Stock<kbd class="pt-0 ms-1">manage:</kbd></strong>
-                        <p>{{ $productDetails->manage_stock }}</p>
+                        @if ($variant?->manage_stock)
+                            <span class="btn btn-outline-success py-1">
+                                Yes
+                            </span>
+                        @else
+                            <span class="btn btn-outline-danger py-1">
+                                No
+                            </span>
+                        @endif
                     </li>
                 </ul>
 
                 {{-- SKU --}}
                 <ul class="list-group mb-2">
-                    <li class="list-group-item d-flex justify-content-between">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
                         <strong class="fw-bolder">SKU:</strong>
-                        <p>{{ $productDetails->sku }}</p>
+
+                        <div class="text-start">
+                            <ul style="list-style-type: disc;">
+                                @forelse ($productDetails->variants as $variant)
+                                    <li>{{ $variant->sku }}</li>
+                                @empty
+                                    <p class="text-danger mb-0">
+                                        Not Available
+                                    </p>
+                                @endforelse
+                            </ul>
+                        </div>
                     </li>
                 </ul>
 
@@ -183,9 +234,11 @@
                 <ul class="list-group mb-2">
                     <li class="list-group-item d-flex justify-content-between">
                         <strong class="fw-bolder">Brand:</strong>
-                        <p class="{{ $productDetails->brand ? '' : 'text-danger' }}">
-                            {{ $productDetails->brand ?? 'Brand Empty' }}
-                        </p>
+                        @if ($productDetails->brand)
+                            <p>{{ $productDetails->brand->name }}</p>
+                        @else
+                            <p class="text-danger">Brand Empty</p>
+                        @endif
                     </li>
                 </ul>
 
@@ -193,9 +246,11 @@
                 <ul class="list-group mb-2">
                     <li class="list-group-item d-flex justify-content-between">
                         <strong class="fw-bolder">Model:</strong>
-                        <p class="{{ $productDetails->model ? '' : 'text-danger' }}">
-                            {{ $productDetails->model ?? 'Model Empty' }}
-                        </p>
+                        @if ($productDetails->productModel)
+                            <p>{{ $productDetails->productModel->name }}</p>
+                        @else
+                            <p class="text-danger">Model Empty</p>
+                        @endif
                     </li>
                 </ul>
 
@@ -203,18 +258,51 @@
                 <ul class="list-group mb-2">
                     <li class="list-group-item d-flex justify-content-between">
                         <strong class="fw-bolder">Color:</strong>
-                        <p class="{{ $productDetails->color ? '' : 'text-danger' }}">
-                            {{ $productDetails->color ?? 'Color Empty' }}
-                        </p>
+                        <div>
+                            @php
+                                $colors = $productDetails->variants->pluck('color.name')->filter()->unique();
+                            @endphp
+
+                            @if ($colors->count())
+                                @foreach ($colors as $color)
+                                    <span class="badge bg-primary ms-2 p-2">
+                                        {{ $color }}
+                                    </span>
+                                @endforeach
+                            @else
+                                <span class="text-danger">
+                                    Not available
+                                </span>
+                            @endif
+                        </div>
                     </li>
                 </ul>
 
-                {{-- Size --}}
                 <ul class="list-group mb-2">
                     <li class="list-group-item d-flex justify-content-between">
                         <strong class="fw-bolder">Size:</strong>
                         <p class="{{ $productDetails->size ? '' : 'text-danger' }}">
-                            {{ $productDetails->size ?? 'Size Empty' }}
+                        <div class="d-flex ms-auto">
+                            @php
+                                $sizes = $productDetails->variants
+                                    ->pluck('size.name')
+                                    ->filter()
+                                    ->unique()
+                                    ->map(fn($size) => strtoupper($size));
+                            @endphp
+
+                            @if ($sizes->count())
+                                @foreach ($sizes as $size)
+                                    <span class="badge bg-success ms-2 p-2">
+                                        {{ $size }}
+                                    </span>
+                                @endforeach
+                            @else
+                                <span class="text-danger">
+                                    Not available
+                                </span>
+                            @endif
+                        </div>
                         </p>
                     </li>
                 </ul>
@@ -293,7 +381,7 @@
                     <li class="list-group-item d-flex justify-content-between">
                         <strong class="fw-bolder">Warranty:</strong>
                         <p class="{{ $productDetails->warranty ? '' : 'text-danger' }}">
-                            {{ $productDetails->warranty ?? 'Warranty Empty' }}
+                            {{ $productDetails->warranty ?? 'Not available' }}
                         </p>
                     </li>
                 </ul>
@@ -312,7 +400,6 @@
                     </li>
                 </ul>
 
-                {{-- Visibility --}}
                 <ul class="list-group mb-2">
                     <li class="list-group-item d-flex align-items-center justify-content-between py-2">
                         <strong class="heading-shadow" style="width: 52%">Visibility:</strong>
@@ -324,7 +411,6 @@
                     </li>
                 </ul>
 
-                {{-- Status --}}
                 <ul class="list-group">
                     <li class="list-group-item d-flex align-items-center justify-content-between py-2">
                         <strong class="heading-shadow" style="width: 52%">Status:</strong>
@@ -337,10 +423,10 @@
                 </ul>
             </div>
         </div>
-        
+
         <div class="row">
             <div class="col-md-12 mt-4 mb-4">
-                {{-- Image --}}
+
                 <ul class="list-group mb-4 border border-1 border-dark">
                     <li class="list-group-item d-flex align-items-center justify-content-between">
                         <strong class="fw-bolder">
@@ -350,7 +436,7 @@
                         <div class="d-flex flex-wrap gap-2">
                             @if ($productDetails->images && $productDetails->images->isNotEmpty())
                                 @foreach ($productDetails->images as $image)
-                                    <div class="mx-auto d-flex align-items-center justify-content-center 
+                                    <div class="mx-auto d-flex align-items-center justify-content-center
                             btn btn-outline-success p-1 border border-1 border-info rounded"
                                         style="width: 70px; height: 70px;">
 
@@ -363,7 +449,7 @@
                             @endif
                         </div>
                     </li>
-                    {{-- alter text --}}
+
                     <li class="list-group-item d-flex align-items-center justify-content-between py-3">
                         <strong class="fw-bolder">
                             Alt<kbd class="pt-0 ms-1">text:</kbd>
@@ -377,7 +463,7 @@
                             <p class="text-danger">Alt Text Empty</p>
                         @endif
                     </li>
-                    {{-- image public path --}}
+
                     <li class="list-group-item d-flex align-items-center justify-content-between py-3">
                         <strong class="fw-bolder">
                             Image<kbd class="pt-0 ms-1">path:</kbd>
@@ -393,7 +479,6 @@
                         @endif
                     </li>
 
-                    {{-- video link --}}
                     <li class="list-group-item d-flex align-items-center justify-content-between py-3">
                         <strong class="fw-bolder">
                             Video<kbd class="pt-0 ms-1">link:</kbd>
@@ -416,7 +501,6 @@
                     </li>
                 </ul>
 
-                {{-- Created --}}
                 <ul class="list-group mb-2">
                     <li class="list-group-item d-flex align-items-center justify-content-between py-3">
                         <strong class="heading-shadow" style="width: 52%">Created:</strong>
@@ -430,7 +514,6 @@
                     </li>
                 </ul>
 
-                {{-- Updated --}}
                 <ul class="list-group mb-2">
                     <li class="list-group-item d-flex align-items-center justify-content-between py-3">
                         <strong class="heading-shadow" style="width: 52%">Updated:</strong>

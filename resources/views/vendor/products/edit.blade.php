@@ -173,6 +173,7 @@
 
                                     <div class="card-body">
                                         <!-- Image Upload -->
+
                                         @include('partials.global_file.edit_file')
 
                                         <!-- Video URL -->
@@ -354,41 +355,34 @@
                                             @enderror
                                         </div>
 
-                                        <!-- Discount value-->
-                                        <div class="mb-5">
-                                            <label for="discount_value" class="form-label ms-1">Discount
-                                                Value:</label>
-                                            <input type="number" class="form-control" id="discount_value"
-                                                name="discount_value"
-                                                value="{{ old('discount_value', $productFind->price->discount_value ?? '') }}"
-                                                step="0.01" min="0">
-                                            @error('discount_value')
-                                                <div class="text-danger">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-
-                                        <!-- Discount Type -->
-                                        <fieldset class="mb-5 border-0">
+                                        {{-- Discount Type --}}
+                                        <fieldset class="mb-4 border-0">
                                             <legend class="form-label me-5 h6">Discount Type:</legend>
 
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input border border-dark p-2" type="radio"
-                                                    name="discount_type" id="discount_none" value="none"
-                                                    {{ old('discount_type', 'none') == 'none' ? 'checked' : '' }}>
+                                                <input class="form-check-input border border-dark p-2 product_field"
+                                                    type="radio" name="discount_type" id="discount_none"
+                                                    value="none"
+                                                    {{ old('discount_type', $productFind->price->discount_type) == 'none' ? 'checked' : '' }}>
+
                                                 <label class="form-check-label" for="discount_none">None</label>
                                             </div>
 
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input border border-dark p-2" type="radio"
-                                                    name="discount_type" id="discount_flat" value="flat"
-                                                    {{ old('discount_type') == 'flat' ? 'checked' : '' }}>
+                                                <input class="form-check-input border border-dark p-2 product_field"
+                                                    type="radio" name="discount_type" id="discount_flat"
+                                                    value="flat"
+                                                    {{ old('discount_type', $productFind->price->discount_type) == 'flat' ? 'checked' : '' }}>
+
                                                 <label class="form-check-label" for="discount_flat">Flat</label>
                                             </div>
 
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input border border-dark p-2" type="radio"
-                                                    name="discount_type" id="discount_percent" value="percent"
-                                                    {{ old('discount_type') == 'percent' ? 'checked' : '' }}>
+                                                <input class="form-check-input border border-dark p-2 product_field"
+                                                    type="radio" name="discount_type" id="discount_percent"
+                                                    value="percent"
+                                                    {{ old('discount_type', $productFind->price->discount_type) == 'percent' ? 'checked' : '' }}>
+
                                                 <label class="form-check-label" for="discount_percent">Percent</label>
                                             </div>
 
@@ -396,6 +390,23 @@
                                                 <div class="text-danger mt-1">{{ $message }}</div>
                                             @enderror
                                         </fieldset>
+
+                                        {{-- Discount Value --}}
+                                        <div class="form-group mb-5">
+                                            <label for="discount_value" class="form-label">Discount Value</label>
+
+                                            <input type="number" class="form-control product_field" id="discount_value"
+                                                name="discount_value" min="0"
+                                                value="{{ old('discount_value', $productFind->price->discount_value) }}">
+
+                                            <small class="text-success d-block mt-1">
+                                                Enter percentage if percent is selected, Or fixed amount if flat.
+                                            </small>
+
+                                            @error('discount_value')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
 
                                         <!-- Discount Start -->
                                         <div class="mb-4 pb-2">
@@ -799,3 +810,5 @@
         </div>
     </main>
 @endsection
+
+@include('custom_global_components.products.auto_generate')

@@ -1,7 +1,7 @@
 <!-- Modal starts here -->
 <div class="modal fade" id="register_create_modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="registerCreateModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="width: 400px;">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="width: 400px; margin: auto;">
         <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header bg-secondary">
@@ -96,11 +96,12 @@
 
                     <!-- button -->
                     <div class="d-flex justify-content-between align-items-center mt-4">
-                        <button type="reset" class="btn btn-outline-danger me-3">
-                            Reset
-                        </button>
                         <button type="submit" class="btn btn-outline-success">
                             {{ __('Register') }}
+                        </button>
+
+                        <button type="reset" class="btn btn-outline-danger">
+                            Reset
                         </button>
                     </div>
                 </form>

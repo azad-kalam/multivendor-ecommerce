@@ -1,7 +1,7 @@
 <!--Modal starts here-->
 <div class="modal fade mt-0" id="categoryEditModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="categoryEditModal">
-     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-shadow custom_modal_dialog mx-auto">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-shadow custom_modal_dialog mx-auto">
         <div class="modal-content">
             <div class="modal-header bg-secondary">
                 <button type="button" class="btn-close bg-danger btn-hover" data-bs-dismiss="modal"
@@ -70,11 +70,10 @@
 
                     <!-- Buttons -->
                     <div class="mt-4 d-flex justify-content-between">
-                        <button type="reset" class="btn btn-outline-danger">Reset</button>
-
                         <button type="submit" id="catUpdateBtn" class="btn btn-outline-success createBtn px-2">
                             Update
                         </button>
+                        <button type="reset" class="btn btn-outline-danger">Reset</button>
                     </div>
                 </form>
 

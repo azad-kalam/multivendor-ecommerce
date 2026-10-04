@@ -58,6 +58,57 @@
         </li>
         <!-- Customer menu end here -->
 
+        <!-- banner menu start here -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#banner-nav" data-bs-toggle="collapse" href="#">
+
+                <i class="fa-solid fa-photo-film"></i>
+                <span>Banners</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="banner-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="{{ route('admin.banners.CRUD.index') }}">
+                        <i class="bi bi-circle"></i>
+                        <span>All Banners</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('admin.banners.CRUD.create') }}">
+                        <i class="bi bi-circle"></i>
+                        <span>Add Banner</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <!-- banner menu end here -->
+
+        <!-- brand menu start here -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#brand-nav" data-bs-toggle="collapse" href="#">
+                <i class="fa-brands fa-apple" style="font-size:22px;"></i>
+                <span>Brands</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="brand-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="{{ route('admin.brands.CRUD.index') }}">
+                        <i class="bi bi-circle"></i>
+                        <span>All Brands</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('admin.brands.CRUD.create') }}">
+                        <i class="bi bi-circle"></i>
+                        <span>Add Brand</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <!-- brand menu end here -->
+
         <!-- category menu start here -->
         <li class="nav-item">
             <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
@@ -138,6 +189,57 @@
         </li>
         <!-- sub-category menu end here -->
 
+        <!-- color menu start here -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#color-nav" data-bs-toggle="collapse" href="#">
+                <i class="fa-solid fa-layer-group" style="font-size:19px;"></i>
+                <span>Colors</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="color-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="{{ route('admin.colors.CRUD.index') }}">
+                        <i class="bi bi-circle"></i>
+                        <span>All Colors</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('admin.colors.CRUD.create') }}">
+                        <i class="bi bi-circle"></i>
+                        <span>Add Color</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <!-- color menu end here -->
+
+        <!-- model menu start here -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#product_model_nav" data-bs-toggle="collapse"
+                href="#">
+                <i class="fa-solid fa-cube"></i>
+                <span>Models</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="product_model_nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="{{ route('admin.product_models.CRUD.index') }}">
+                        <i class="bi bi-circle"></i>
+                        <span>All Models</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('admin.product_models.CRUD.create') }}">
+                        <i class="bi bi-circle"></i>
+                        <span>Add Models</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <!-- model menu end here -->
+
         <!-- product menu end here -->
         <li class="nav-item">
             <a class="nav-link collapsed" data-bs-target="#my-products" data-bs-toggle="collapse" href="#">
@@ -159,6 +261,31 @@
             </ul>
         </li>
         <!-- product menu end here -->
+
+        <!-- size menu start here -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#size-nav" data-bs-toggle="collapse" href="#">
+                <i class="fa-solid fa-ruler-combined"></i>
+                <span>Sizes</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="size-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="{{ route('admin.sizes.CRUD.index') }}">
+                        <i class="bi bi-circle"></i>
+                        <span>All Size</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('admin.sizes.CRUD.create') }}">
+                        <i class="bi bi-circle"></i>
+                        <span>Add Size</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <!-- size menu end here -->
 
         <li class="nav-item">
             <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
@@ -182,7 +309,7 @@
                 </li>
             </ul>
         </li>
-        
+
         <li class="nav-item">
             <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
                 <i class="bi bi-bar-chart"></i><span>Discount %</span><i class="bi bi-chevron-down ms-auto"></i>

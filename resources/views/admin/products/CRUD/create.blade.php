@@ -7,8 +7,11 @@
             <div class="col-12">
                 <div class="pagetitle">
                     <span class="btn btn-outline-secondary p-1 text-capitalize video-thumbnail">
-                        {{ Auth::check() ? Auth::user()->role : 'Guest' }}
-
+                        @auth
+                            {{ auth()->user()->role }}
+                        @else
+                            Guest
+                        @endauth
                     </span>
                     <nav aria-label="breadcrumb" class="d-flex my-1">
                         <ol class="breadcrumb m-0 mb-1">
@@ -42,88 +45,80 @@
                 <div class="m-2">
                     <form action="{{ route('admin.products.CRUD.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
+
                         <div class="row">
                             <div class="col-md-7 p-1">
                                 {{-- product information starts here --}}
-                                <div class="card p-2 mb-1">
+                                <div class="card common_card p-2 mb-2">
                                     <div class="card-header p-0 border-0">
                                         <h3 class="card-title text-center fw-bold">Product information</h3>
                                     </div>
                                     <div class="card-body">
-                                        <!-- Name -->
                                         <div class="mb-4">
                                             <label for="product_name" class="form-label">
                                                 Product Name: <span class="text-danger" aria-hidden="true">*</span>
                                             </label>
                                             <input type="text" class="form-control product_field" id="product_name"
-                                                name="name" autocomplete="off" required>
+                                                name="name" value="{{ old('name') }}" placeholder="Enter product name"
+                                                autocomplete="off" required>
 
                                             @error('name')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
 
-                                        <!-- short description -->
                                         <div class="mb-4">
-                                            <label for="short_description" class="form-label">Short Description:
-                                                <span class="text-danger" aria-hidden="true">*</span>
+                                            <label for="short_description" class="form-label">
+                                                Short Description:
                                             </label>
-                                            <textarea class="form-control product_field" id="short_description" name="short_description" rows="3"
-                                                style="resize: none; overflow-y: scroll" required></textarea>
+                                            <textarea class="form-control product_field" placeholder="Enter short description" id="short_description"
+                                                name="short_description" rows="3" style="resize: none; overflow-y: scroll"></textarea>
+
                                             @error('short_description')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
 
-                                        <!-- Full Description -->
                                         <div class="mb-4">
                                             <label for="full_description" class="form-label">
-                                                Full Description: <span class="text-danger" aria-hidden="true">*</span>
+                                                Full Description:
                                             </label>
-                                            <textarea class="form-control product_field" id="full_description" name="full_description" rows="5"
-                                                style="resize: none; overflow-y: scroll" required></textarea>
+                                            <textarea class="form-control product_field" placeholder="Enter full description" id="full_description"
+                                                name="full_description" rows="4" style="resize: none; overflow-y: scroll"></textarea>
+
                                             @error('full_description')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
 
-                                        <!-- Slug -->
-                                        <div class="form-group mb-3">
+                                        <div>
                                             <label for="product_slug" class="form-label">
-                                                SLUG: <span class="fw-bolder">[ SEO-Friendly URL ]</span>
+                                                SLUG: <span class="text-danger" aria-hidden="true">*</span> <span
+                                                    class="fw-bolder">[ SEO-Friendly URL ]</span>
                                             </label>
                                             <input type="text" class="form-control product_field" id="product_slug"
-                                                name="slug" readonly>
-                                            @error('slug')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
+                                                name="slug" placeholder="readonly" readonly>
 
-                                        <!-- SKU -->
-                                        <div class="form-group mb-4">
-                                            <label for="product_sku" class="form-label">
-                                                SKU: <span class="fw-bolder">[ Stock Keeping Unit ]</span>
-                                            </label>
-                                            <input type="text" class="form-control product_field" id="product_sku"
-                                                name="sku">
-                                            @error('sku')
+                                            @error('slug')
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
                                     </div>
                                 </div>
-                                {{-- product information ends here --}}
+                                {{-- product information end here --}}
+                            </div>
 
+                            <div class="col-md-5 p-1">
                                 {{-- Categorization starts here --}}
-                                <div class="card p-2 mb-1">
+                                <div class="card common_card p-2 mb-2">
                                     <div class="card-header p-0 border-0">
                                         <h3 class="card-title text-center fw-bold">Categorization</h3>
                                     </div>
                                     <div class="card-body">
-                                        <!-- Category -->
-                                        <div class="form-group mb-4">
+
+                                        <div class="mb-5">
                                             <label for="category_id" class="form-label pt-2">
-                                                Select Category: <span class="text-danger" aria-hidden="true">*</span>
+                                                Category Select: <span class="text-danger" aria-hidden="true">*</span>
                                             </label>
                                             <select class="form-select product_field" id="category_id" name="category_id"
                                                 aria-label="Category selection" required>
@@ -139,9 +134,9 @@
                                         </div>
 
                                         <!-- Subcategory -->
-                                        <div class="form-group mb-4">
+                                        <div class="mb-1">
                                             <label for="subcategory_id" class="form-label pt-2">
-                                                Select Sub-category: <span class="text-danger" aria-hidden="true">*</span>
+                                                Sub-category Select: <span class="text-danger" aria-hidden="true">*</span>
                                             </label>
                                             <select class="form-select product_field" id="subcategory_id"
                                                 name="subcategory_id" aria-label="Subcategory selection" required>
@@ -155,36 +150,293 @@
                                 </div>
                                 {{-- Categorization ends here --}}
 
+                                {{-- specification starts here --}}
+                                <div class="card common_card p-2 mb-2">
+                                    <div class="card-header p-0 border-0">
+                                        <h3 class="card-title text-center fw-bold">Specification</h3>
+                                    </div>
+                                    <div class="card-body">
+
+                                        <!-- Weight -->
+                                        <div class="mb-4">
+                                            <label for="product_weight" class="form-label ms-1">Weight <strong>[ gm ]
+                                                    :</strong></label>
+                                            <input type="number" class="form-control product_field" id="product_weight"
+                                                name="product_weight" step="0.001" min="0"
+                                                placeholder="optional">
+                                            @error('product_weight')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+
+                                        <!-- warenty -->
+                                        <div>
+                                            <label for="warranty" class="form-label ms-1">Warranty:</label>
+                                            <input type="text" class="form-control product_field" id="warranty"
+                                                name="warranty" placeholder="optional">
+                                            @error('warranty')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                                {{-- specification ends here --}}
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-md-12 px-1">
+                                {{-- product variant start here --}}
+                                <div class="card common_card px-1 mb-1">
+                                    <div class="card-header p-0 border-0">
+                                        <h3 class="card-title text-center fw-bold">Product variant</h3>
+                                    </div>
+
+                                    <div class="card-body p-0">
+
+                                        <div class="row" style="margin-bottom: 70px;">
+                                            <div class="col-md-6">
+                                                <label for="brand_id" class="form-label ms-1">Brand</label>
+                                                <select class="form-select" id="brand_id" name="brand_id">
+                                                    <option value="" disabled selected hidden>Select Brand</option>
+                                                    @foreach ($brands as $brand)
+                                                        <option value="{{ $brand->id }}">{{ $brand->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                @error('brand_id')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label for="product_model_id" class="form-label ms-1">
+                                                    Model Select:
+                                                </label>
+
+                                                <select class="form-select" id="product_model_id"
+                                                    name="product_model_id">
+                                                    <option value="" disabled selected hidden>Select Model</option>
+                                                </select>
+                                                @error('product_model_id')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div id="variationWrapper">
+                                            <div class="variation-block border rounded mb-1">
+                                                <div class="d-flex align-items-center gap-2 border border-1 border-danger">
+                                                    <div style="display: flex; overflow-x: auto">
+                                                        <div class="table-responsive table_horizontal_scroll">
+
+                                                            <table class="table table-bordered align-middle mb-0"
+                                                                style="table-layout: fixed; width: 100%;">
+                                                                <thead>
+
+                                                                    <tr class="text-center">
+                                                                        <th style="width: 16%">Color <span
+                                                                                class="text-danger"
+                                                                                aria-hidden="true">*</span></th>
+
+                                                                        <th style="width: 16%">Size <span
+                                                                                class="text-danger"
+                                                                                aria-hidden="true">*</span></th>
+
+                                                                        <th style="width: 19%">SKU</th>
+
+                                                                        <th style="width: 19%">Regular price <span
+                                                                                class="text-danger"
+                                                                                aria-hidden="true">*</span></th>
+
+                                                                        <th style="width: 14%">Selling price</th>
+
+                                                                        <th style="width: 16%">Stock quantity</th>
+                                                                    </tr>
+                                                                </thead>
+
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <select class="form-select" name="color_id[]">
+                                                                                <option value="" disabled selected>
+                                                                                    Select Color
+                                                                                </option>
+
+                                                                                @foreach ($colors as $color)
+                                                                                    <option value="{{ $color->id }}">
+                                                                                        {{ $color->name }}
+                                                                                    </option>
+                                                                                @endforeach
+                                                                            </select>
+                                                                        </td>
+
+                                                                        <td>
+                                                                            <select class="form-select" name="size_id[]">
+                                                                                <option value="" disabled selected>
+                                                                                    Select Size
+                                                                                </option>
+
+                                                                                @foreach ($sizes as $size)
+                                                                                    <option value="{{ $size->id }}">
+                                                                                        {{ $size->name }}
+                                                                                    </option>
+                                                                                @endforeach
+                                                                            </select>
+                                                                        </td>
+
+                                                                        <td>
+                                                                            <input type="text" class="form-control"
+                                                                                name="sku[]"
+                                                                                placeholder="Create OR auto generate">
+                                                                        </td>
+
+                                                                        <td>
+                                                                            <input type="number" class="form-control"
+                                                                                name="regular_price[]" min="0"
+                                                                                step="0.01" required>
+                                                                        </td>
+
+                                                                        <td>
+                                                                            <input type="number" class="form-control"
+                                                                                name="selling_price[]" min="0"
+                                                                                step="0.01">
+                                                                        </td>
+
+                                                                        <td>
+                                                                            <input type="number" class="form-control"
+                                                                                name="stock_quantity[]" min="0"
+                                                                                value="0">
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+
+                                                            <table class="table table-bordered align-middle mb-0"
+                                                                style="table-layout: fixed; width: 100%;">
+                                                                <thead>
+                                                                    <tr class="text-center">
+                                                                        <th style="width: 16%">Discount type</th>
+                                                                        <th style="width: 16%">Discount value</th>
+                                                                        <th style="width: 19%">Discount start</th>
+                                                                        <th style="width: 19%">Discount end</th>
+                                                                        <th style="width: 14%">Manage stock</th>
+                                                                        <th style="width: 16%">Stock status</th>
+                                                                    </tr>
+
+                                                                </thead>
+
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <select class="form-select"
+                                                                                name="discount_type[]">
+
+                                                                                <option value="none" id="discount_none"
+                                                                                    class="product_field">None</option>
+                                                                                <option value="fixed" id="discount_flat"
+                                                                                    class="product_field">Fixed</option>
+                                                                                <option value="percent"
+                                                                                    id="discount_percent"
+                                                                                    class="product_field">Percent</option>
+                                                                            </select>
+                                                                        </td>
+
+                                                                        <td>
+                                                                            <input type="number"
+                                                                                class="form-control product_field discount_value"
+                                                                                name="discount_value[]" min="0"
+                                                                                placeholder="Active for Fixed and Percent">
+                                                                        </td>
+
+                                                                        <td>
+                                                                            <input type="datetime-local"
+                                                                                class="form-control"
+                                                                                name="discount_start[]">
+                                                                        </td>
+
+                                                                        <td>
+                                                                            <input type="datetime-local"
+                                                                                class="form-control"
+                                                                                name="discount_end[]">
+                                                                        </td>
+
+                                                                        <td>
+                                                                            <select class="form-select"
+                                                                                name="manage_stock[]">
+                                                                                <option value="1">Yes</option>
+                                                                                <option value="0">No</option>
+                                                                            </select>
+                                                                        </td>
+
+                                                                        <td>
+                                                                            <select class="form-select"
+                                                                                name="stock_status[]">
+
+                                                                                <option value="in_stock">
+                                                                                    In Stock
+                                                                                </option>
+
+                                                                                <option value="out_of_stock">
+                                                                                    Out Of Stock
+                                                                                </option>
+                                                                            </select>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+
+                                                    <div
+                                                        class="variation-action d-flex justify-content-center align-items-center">
+                                                        <button type="button"
+                                                            class="btn btn-sm btn-success addBlock me-2">
+                                                            <i class="fa fa-plus"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                {{-- product variant end here --}}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-7 px-1">
                                 {{-- Media starts here --}}
-                                <div class="card p-2 mb-1">
+                                <div class="card common_card p-2 mb-2">
                                     <div class="card-header p-0 border-0">
                                         <h3 class="card-title text-center fw-bold">Media</h3>
                                     </div>
 
                                     <div class="card-body">
-                                        <!-- Choose Image Upload -->
-                                        @include('partials.global_file.create_file')
 
-                                        <!-- Video URL -->
-                                        <div class="mb-4">
+                                        @include('partials.global_file.create_multiple_file')
+
+                                        <div class="mb-1">
                                             <label for="video_url" class="form-label">Video URL:</label>
                                             <input type="url" class="form-control product_field" id="video_url"
                                                 name="video_url" placeholder="optional">
                                         </div>
                                     </div>
                                 </div>
-                                {{-- Media ends here --}}
+                                {{-- Media starts here --}}
 
-                                {{-- Visibility & Status starts here --}}
-                                <div class="card p-2 mb-1">
+                                {{-- Video URL start here --}}
+                                <div class="card common_card p-2 mb-2">
                                     <div class="card-header p-0 border-0">
-                                        <h3 class="card-title text-center fw-bold">Visibility & Status</h3>
+                                        <h3 class="card-title text-center fw-bold">Visibility & Feature</h3>
                                     </div>
                                     <div class="card-body">
                                         <!-- Visibility -->
-                                        <div class="mb-4">
+                                        <div style="margin-bottom: 60px;">
                                             <label for="product_visibility" class="form-label">Select
-                                                Visibility:</label>
+                                                Visibility: <span class="text-danger" aria-hidden="true">*</span>
+                                            </label>
                                             <select name="visibility" id="product_visibility"
                                                 class="form-select product_field">
                                                 <option value="visible" selected>Visible</option>
@@ -196,8 +448,10 @@
                                         </div>
 
                                         <!-- Status -->
-                                        <div class="mb-4">
-                                            <label for="product_status" class="form-label">Select Status:</label>
+                                        <div style="margin-bottom: 60px;">
+                                            <label for="product_status" class="form-label">
+                                                Status Select: <span class="text-danger" aria-hidden="true">*</span>
+                                            </label>
                                             <select name="status" id="product_status" class="form-select product_field">
                                                 <option value="1" selected>Active</option>
                                                 <option value="0">Inactive</option>
@@ -208,7 +462,7 @@
                                         </div>
 
                                         <!-- Featured -->
-                                        <div class="mb-4">
+                                        <div style="margin-bottom: 24px;">
                                             <label class="form-label me-5">Featured:</label>
 
                                             <div class="form-check form-check-inline">
@@ -231,375 +485,12 @@
                                         </div>
                                     </div>
                                 </div>
-                                {{-- Visibility & Status ends here --}}
-
-                                {{-- Inventory starts here --}}
-                                <div class="card p-2 mb-1">
-                                    <div class="card-header p-0 border-0">
-                                        <h3 class="card-title text-center fw-bold">Inventory</h3>
-                                    </div>
-                                    <div class="card-body">
-                                        <!-- Stock Quantity -->
-                                        <div class="mb-4">
-                                            <label for="stock_quantity" class="form-label">Stock Quantity:</label>
-                                            <input type="number" class="form-control product_field" id="stock_quantity"
-                                                name="stock_quantity" min="1" required>
-                                            @error('stock_quantity')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-
-                                        <!-- Stock Status -->
-                                        <div class="mb-4">
-                                            <label for="stock_status" class="form-label">Stock Status:</label>
-                                            <select name="stock_status" id="stock_status"
-                                                class="form-select product_field">
-                                                <option value="in_stock" selected>In Stock</option>
-                                                <option value="out_of_stock">Out of Stock</option>
-                                            </select>
-
-                                            @error('stock_status')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-
-                                        <!-- Manage Stock -->
-                                        <div class="form-check mb-3">
-                                            <input type="checkbox"
-                                                class="form-check-input border-2 border-danger p-2 product_field"
-                                                id="manage_stock" name="manage_stock" value="1">
-                                            <label class="form-check-label ms-1" for="manage_stock">
-                                                Manage Stock
-                                            </label>
-                                            @error('manage_stock')
-                                                <div class="text-danger mt-1">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
-                                {{-- Inventory ends here --}}
+                                {{-- Video URL end here --}}
                             </div>
 
                             <div class="col-md-5 p-1">
-                                {{-- pricing starts here --}}
-                                <div class="card p-2 mb-1">
-                                    <div class="card-header border-0 p-0">
-                                        <h3 class="card-title text-center fw-bold">Pricing</h3>
-                                    </div>
-                                    <div class="card-body">
-                                        <!-- Regular Price-->
-                                        <div class="mb-4">
-                                            <label for="regular_price" class="form-label">
-                                                Regular Price: <span class="text-danger" aria-hidden="true">*</span>
-                                            </label>
-                                            <input type="number" class="form-control product_field" id="regular_price"
-                                                name="regular_price" step="1.00" min="1" required>
-                                            @error('regular_price')
-                                                <div class="text-danger">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-
-                                        <!-- Selling Price-->
-                                        <div class="mb-4">
-                                            <label for="selling_price" class="form-label">
-                                                Selling Price: <span class="text-danger">*</span>
-                                            </label>
-                                            <input type="number" class="form-control product_field" id="selling_price"
-                                                name="selling_price" step="1.00" min="1" required>
-                                            @error('selling_price')
-                                                <div class="text-danger">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-
-                                        <!-- Discount Type -->
-                                        <fieldset class="mb-4 border-0">
-                                            <legend class="form-label me-5 h6">Discount Type:</legend>
-
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input border border-dark p-2 product_field"
-                                                    type="radio" name="discount_type" id="discount_none"
-                                                    value="none" checked>
-
-                                                <label class="form-check-label" for="discount_none">None</label>
-                                            </div>
-
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input border border-dark p-2 product_field"
-                                                    type="radio" name="discount_type" id="discount_flat">
-
-                                                <label class="form-check-label" for="discount_flat">Flat</label>
-                                            </div>
-
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input border border-dark p-2 product_field"
-                                                    type="radio" name="discount_type" id="discount_percent"
-                                                    value="percent">
-
-                                                <label class="form-check-label" for="discount_percent">Percent</label>
-                                            </div>
-
-                                            @error('discount_type')
-                                                <div class="text-danger mt-1">{{ $message }}</div>
-                                            @enderror
-                                        </fieldset>
-
-                                        {{-- discount value --}}
-                                        <div class="form-group mb-5">
-                                            <label for="discount_value" class="form-label">Discount Value</label>
-
-                                            <input type="number" class="form-control product_field" id="discount_value"
-                                                name="discount_value" min="0">
-
-                                            <small class="text-success d-block mt-1">
-                                                Enter percentage if percent is selected, Or fixed amount if flat.
-                                            </small>
-
-                                            @error('discount_value')
-                                                <div class="text-danger">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-
-                                        <!-- Discount Start -->
-                                        <div class="mb-4 pb-2">
-                                            <label for="discount_start" class="form-label">Discount Start:</label>
-                                            <input type="datetime-local" id="discount_start" name="discount_start"
-                                                class="form-control product_field" placeholder="dd-mm-yyyy hh:mm AM/PM">
-                                            @error('discount_start')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-
-                                        <!-- Discount End -->
-                                        <div class="mb-4">
-                                            <label for="discount_end" class="form-label">Discount End:</label>
-                                            <input type="datetime-local" id="discount_end" name="discount_end"
-                                                class="form-control product_field" placeholder="dd-mm-yyyy hh:mm AM/PM">
-                                            @error('discount_end')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
-                                {{-- pricing ends here --}}
-
-                                {{-- specification starts here --}}
-                                <div class="card p-2 mb-2">
-                                    <div class="card-header p-0 border-0 mb-2">
-                                        <h3 class="card-title text-center fw-bold">Specification</h3>
-                                    </div>
-                                    <div class="card-body">
-                                        <!-- Brand -->
-                                        <div class="mb-4">
-                                            <label for="brand" class="form-label">Brand:</label>
-                                            <input type="text" class="form-control product_field" id="brand"
-                                                name="brand" placeholder="optional">
-                                            @error('brand')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-
-                                        <!-- Model -->
-                                        <div class="mb-4">
-                                            <label for="model" class="form-label">Model:</label>
-                                            <input type="text" class="form-control product_field" id="model"
-                                                name="model" placeholder="optional">
-                                            @error('model')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-
-                                        <!-- Size -->
-                                        <div class="mb-4">
-                                            <label for="size" class="form-label">Select Size:</label>
-                                            <select name="size" class="form-select product_field" id="size">
-                                                <option selected hidden disabled>Select any size</option>
-                                                <option value="free">Free</option>
-                                                <option value="small">S</option>
-                                                <option value="medium">M</option>
-                                                <option value="large">L</option>
-                                                <option value="xlarge">XL</option>
-                                                <option value="xxlarge">XXL</option>
-                                            </select>
-                                            @error('size')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-
-                                        <!-- Color -->
-                                        <div class="mb-4">
-                                            <label for="color" class="form-label">Select Color:</label>
-                                            <select class="form-select product_field" id="color" name="color">
-                                                <option selected hidden disabled>select any color</option>
-                                                <option value="aliceblue">AliceBlue</option>
-                                                <option value="antiquewhite">AntiqueWhite</option>
-                                                <option value="aqua">Aqua</option>
-                                                <option value="aquamarine">Aquamarine</option>
-                                                <option value="azure">Azure</option>
-                                                <option value="beige">Beige</option>
-                                                <option value="bisque">Bisque</option>
-                                                <option value="black">Black</option>
-                                                <option value="blanchedalmond">BlanchedAlmond</option>
-                                                <option value="blue">Blue</option>
-                                                <option value="blueviolet">BlueViolet</option>
-                                                <option value="brown">Brown</option>
-                                                <option value="burlywood">Burlywood</option>
-                                                <option value="cadetblue">CadetBlue</option>
-                                                <option value="chartreuse">Chartreuse</option>
-                                                <option value="chocolate">Chocolate</option>
-                                                <option value="coral">Coral</option>
-                                                <option value="cornflowerblue">CornflowerBlue</option>
-                                                <option value="cornsilk">Cornsilk</option>
-                                                <option value="crimson">Crimson</option>
-                                                <option value="cyan">Cyan</option>
-                                                <option value="darkblue">DarkBlue</option>
-                                                <option value="darkcyan">DarkCyan</option>
-                                                <option value="darkgoldenrod">DarkGoldenrod</option>
-                                                <option value="darkgray">DarkGray</option>
-                                                <option value="darkgreen">DarkGreen</option>
-                                                <option value="darkkhaki">DarkKhaki</option>
-                                                <option value="darkmagenta">DarkMagenta</option>
-                                                <option value="darkolivegreen">DarkOliveGreen</option>
-                                                <option value="darkorange">DarkOrange</option>
-                                                <option value="darkorchid">DarkOrchid</option>
-                                                <option value="darkred">DarkRed</option>
-                                                <option value="darksalmon">DarkSalmon</option>
-                                                <option value="darkseagreen">DarkSeaGreen</option>
-                                                <option value="darkslateblue">DarkSlateBlue</option>
-                                                <option value="darkslategray">DarkSlateGray</option>
-                                                <option value="darkturquoise">DarkTurquoise</option>
-                                                <option value="darkviolet">DarkViolet</option>
-                                                <option value="deeppink">DeepPink</option>
-                                                <option value="deepskyblue">DeepSkyBlue</option>
-                                                <option value="dimgray">DimGray</option>
-                                                <option value="dodgerblue">DodgerBlue</option>
-                                                <option value="firebrick">FireBrick</option>
-                                                <option value="floralwhite">FloralWhite</option>
-                                                <option value="forestgreen">ForestGreen</option>
-                                                <option value="fuchsia">Fuchsia</option>
-                                                <option value="gainsboro">Gainsboro</option>
-                                                <option value="ghostwhite">GhostWhite</option>
-                                                <option value="gold">Gold</option>
-                                                <option value="goldenrod">Goldenrod</option>
-                                                <option value="gray">Gray</option>
-                                                <option value="greenyellow">GreenYellow</option>
-                                                <option value="honeydew">Honeydew</option>
-                                                <option value="hotpink">HotPink</option>
-                                                <option value="indianred">IndianRed</option>
-                                                <option value="indigo">Indigo</option>
-                                                <option value="ivory">Ivory</option>
-                                                <option value="khaki">Khaki</option>
-                                                <option value="lavender">Lavender</option>
-                                                <option value="lavenderblush">LavenderBlush</option>
-                                                <option value="lawngreen">LawnGreen</option>
-                                                <option value="lemonchiffon">LemonChiffon</option>
-                                                <option value="lightblue">LightBlue</option>
-                                                <option value="lightcoral">LightCoral</option>
-                                                <option value="lightcyan">LightCyan</option>
-                                                <option value="lightgoldenrodyellow">LightGoldenrodYellow</option>
-                                                <option value="lightgray">LightGray</option>
-                                                <option value="lightgreen">LightGreen</option>
-                                                <option value="lightpink">LightPink</option>
-                                                <option value="lightsalmon">LightSalmon</option>
-                                                <option value="lightseagreen">LightSeaGreen</option>
-                                                <option value="lightskyblue">LightSkyBlue</option>
-                                                <option value="lightslategray">LightSlateGray</option>
-                                                <option value="lightsteelblue">LightSteelBlue</option>
-                                                <option value="lightyellow">LightYellow</option>
-                                                <option value="lime">Lime</option>
-                                                <option value="limegreen">LimeGreen</option>
-                                                <option value="linen">Linen</option>
-                                                <option value="magenta">Magenta</option>
-                                                <option value="mediumaquamarine">MediumAquamarine</option>
-                                                <option value="mediumblue">MediumBlue</option>
-                                                <option value="mediumorchid">MediumOrchid</option>
-                                                <option value="mediumpurple">MediumPurple</option>
-                                                <option value="mediumseagreen">MediumSeaGreen</option>
-                                                <option value="mediumslateblue">MediumSlateBlue</option>
-                                                <option value="mediumspringgreen">MediumSpringGreen</option>
-                                                <option value="mediumturquoise">MediumTurquoise</option>
-                                                <option value="mediumvioletred">MediumVioletRed</option>
-                                                <option value="midnightblue">MidnightBlue</option>
-                                                <option value="mintcream">MintCream</option>
-                                                <option value="mistyrose">MistyRose</option>
-                                                <option value="moccasin">Moccasin</option>
-                                                <option value="navajowhite">NavajoWhite</option>
-                                                <option value="oldlace">OldLace</option>
-                                                <option value="olive">Olive</option>
-                                                <option value="olivedrab">OliveDrab</option>
-                                                <option value="orange">Orange</option>
-                                                <option value="orangered">OrangeRed</option>
-                                                <option value="orchid">Orchid</option>
-                                                <option value="palegoldenrod">PaleGoldenrod</option>
-                                                <option value="palegreen">PaleGreen</option>
-                                                <option value="paleturquoise">PaleTurquoise</option>
-                                                <option value="palevioletred">PaleVioletRed</option>
-                                                <option value="papayawhip">PapayaWhip</option>
-                                                <option value="peachpuff">PeachPuff</option>
-                                                <option value="peru">Peru</option>
-                                                <option value="pink">Pink</option>
-                                                <option value="plum">Plum</option>
-                                                <option value="powderblue">PowderBlue</option>
-                                                <option value="purple">Purple</option>
-                                                <option value="rebeccapurple">RebeccaPurple</option>
-                                                <option value="red">Red</option>
-                                                <option value="rosybrown">RosyBrown</option>
-                                                <option value="royalblue">RoyalBlue</option>
-                                                <option value="saddlebrown">SaddleBrown</option>
-                                                <option value="salmon">Salmon</option>
-                                                <option value="sandybrown">SandyBrown</option>
-                                                <option value="seashell">Seashell</option>
-                                                <option value="sienna">Sienna</option>
-                                                <option value="silver">Silver</option>
-                                                <option value="skyblue">SkyBlue</option>
-                                                <option value="slateblue">SlateBlue</option>
-                                                <option value="slategray">SlateGray</option>
-                                                <option value="snow">Snow</option>
-                                                <option value="springgreen">SpringGreen</option>
-                                                <option value="steelblue">SteelBlue</option>
-                                                <option value="tan">Tan</option>
-                                                <option value="teal">Teal</option>
-                                                <option value="thistle">Thistle</option>
-                                                <option value="tomato">Tomato</option>
-                                                <option value="turquoise">Turquoise</option>
-                                                <option value="violet">Violet</option>
-                                                <option value="wheat">Wheat</option>
-                                                <option value="white">White</option>
-                                                <option value="whitesmoke">WhiteSmoke</option>
-                                                <option value="yellow">Yellow</option>
-                                                <option value="yellowgreen">YellowGreen</option>
-                                            </select>
-                                            @error('color')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-
-                                        <!-- Weight -->
-                                        <div class="mb-4">
-                                            <label for="product_weight" class="form-label">Weight <strong>[ gm ]
-                                                    :</strong></label>
-                                            <input type="number" class="form-control product_field" id="product_weight"
-                                                name="product_weight" step="0.001" min="0"
-                                                placeholder="optional">
-                                            @error('product_weight')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-
-                                        <!-- warenty -->
-                                        <div class="mb-4">
-                                            <label for="warranty" class="form-label">Warranty:</label>
-                                            <input type="text" class="form-control product_field" id="warranty"
-                                                name="warranty" placeholder="optional">
-                                            @error('warranty')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
-                                {{-- specification ends here --}}
-
                                 {{-- SEO starts here --}}
-                                <div class="card p-2 pb-1 mb-2">
+                                <div class="card common_card p-2 pb-1 mb-2">
                                     <div class="card-header p-0 border-0">
                                         <h3 class="card-title text-center fw-bold">SEO</h3>
                                     </div>
@@ -607,10 +498,10 @@
                                         <!-- Meta Title -->
                                         <div class="mb-4">
                                             <label for="meta_title" class="form-label ms-1">
-                                                Meta Title: <span class="text-danger" aria-hidden="true">*</span>
+                                                Meta Title:
                                             </label>
                                             <textarea style="resize: none; overflow-y: scroll" id="meta_title" name="meta_title"
-                                                class="form-control product_field" rows="5" required placeholder="Enter meta title here..."></textarea>
+                                                class="form-control product_field" rows="6" placeholder="Enter meta title"></textarea>
 
                                             @error('meta_title')
                                                 <small class="text-danger">{{ $message }}</small>
@@ -620,11 +511,11 @@
                                         <!-- Meta Description -->
                                         <div class="mb-4">
                                             <label for="meta_description" class="form-label ms-1">
-                                                Meta Description: <span class="text-danger" aria-hidden="true">*</span>
+                                                Meta Description:
                                             </label>
 
-                                            <textarea id="meta_description" name="meta_description" class="form-control product_field" rows="6" required
-                                                style="resize: none; overflow-y: scroll" placeholder="Enter meta description here..."></textarea>
+                                            <textarea id="meta_description" name="meta_description" class="form-control product_field" rows="10"
+                                                style="resize: none; overflow-y: scroll" placeholder="Enter meta description"></textarea>
 
                                             @error('meta_description')
                                                 <span class="text-danger">{{ $message }}</span>
@@ -634,12 +525,11 @@
                                         <!-- Meta Keywords -->
                                         <div>
                                             <label for="meta_keywords" class="form-label ms-1">
-                                                Meta Keywords: <span class="text-danger" aria-hidden="true">*</span>
+                                                Meta Keywords:
                                             </label>
 
                                             <textarea style="resize: none; overflow-y: scroll" id="meta_keywords" name="meta_keywords"
-                                                class="form-control p-2 product_field" rows="5" required
-                                                placeholder="Enter meta keywords comma-separated here..."></textarea>
+                                                class="form-control p-2 product_field" rows="6" placeholder="Enter meta keywords comma-separated"></textarea>
 
                                             @error('meta_keywords')
                                                 <small class="text-danger">{{ $message }}</small>
@@ -648,11 +538,17 @@
                                     </div>
                                 </div>
                                 {{-- SEO ends here --}}
+                            </div>
+                        </div>
 
-                                <!-- Submit Button -->
-                                <div class="d-flex justify-content-between mx-2">
-                                    <button type="reset" class="btn btn-outline-danger">Cancel</button>
-                                    <button type="submit" class="btn btn-outline-success">Submit</button>
+                        <div class="row mt-3">
+                            <div class="col-md-7"></div>
+                            <div class="col-md-5">
+                                <div class="card common_card border-0">
+                                    <div class="d-flex justify-content-between">
+                                        <button type="reset" class="btn btn-outline-danger">Reset</button>
+                                        <button type="submit" class="btn btn-outline-success">Submit</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -664,3 +560,283 @@
 @endsection
 
 @include('custom_global_components.products.auto_generate')
+
+
+@push('scripts')
+    {{-- <script>
+        $(function() {
+            let maxVariantLimit = 0;
+            let selectedImages = [];
+
+            // IMAGE SELECT
+            $(document).on('change', '.product_image', function() {
+
+                selectedImages = [];
+                maxVariantLimit = this.files.length;
+
+                $('.fileNameText').html('');
+                $('.imageDisplay').html('');
+
+                // Remove all old variant except first
+                $('#variationWrapper .variation-block:not(:first)').remove();
+
+                if (maxVariantLimit === 0) {
+                    $('.fileNameText').text('No file');
+                    return;
+                }
+
+                $.each(this.files, function(index, file) {
+
+                    let serial = index + 1;
+                    selectedImages.push({
+                        serial: serial,
+                        name: file.name
+                    });
+
+                    // Filename Show
+                    $('.fileNameText').append(`
+                        <span class="text-primary me-1">
+                            ${file.name}
+                        </span>
+                    `);
+
+                    // Image Preview
+                    let reader = new FileReader();
+                    reader.onload = function(e) {
+
+                        $('.imageDisplay').append(`
+                            <img src="${e.target.result}"
+                            style="
+                            width:55px;
+                            height:55px;
+                            object-fit:cover;
+                            margin-left:5px;
+                            border-radius:5px;
+                            border:1px solid #ddd;">
+                         `);
+                    };
+                    reader.readAsDataURL(file);
+                    // First Variant Image Mapping
+                    if (serial === 1) {
+                        $('.variation-block:first')
+                            .attr('data-image', file.name)
+                            .attr('data-variant', serial);
+                    } else {
+                        createVariantBlock(serial, file.name);
+                    }
+                });
+                updateAddButton();
+            });
+
+            // CREATE VARIANT BLOCK
+            function createVariantBlock(serial, imageName) {
+
+                let clone = $('#variationWrapper .variation-block:first').clone();
+
+                clone.removeAttr('data-image');
+                clone.removeAttr('data-variant');
+
+                // Clear input
+                clone.find('input').each(function() {
+
+                    if ($(this).attr('type') !== 'file') {
+                        $(this).val('');
+                    }
+                });
+
+                // Reset select
+                clone.find('select').prop('selectedIndex', 0);
+
+                // Mapping Image
+                clone.attr('data-image', imageName);
+                clone.attr('data-variant', serial);
+
+                // Change button
+                clone.find('.variation-action')
+                    .html(`
+            <button type="button"
+            class="btn btn-sm btn-danger removeBlock">
+                <i class="fa fa-minus"></i>
+            </button>
+        `);
+
+                $('#variationWrapper').append(clone);
+            }
+
+            // PLUS BUTTON
+            $(document).on('click', '.addBlock', function() {
+
+                let currentVariant = $('.variation-block').length;
+                if (maxVariantLimit === 0) {
+                    toastr.warning('Please select image first.');
+                    return false;
+                }
+
+                // Maximum limit check
+                if (currentVariant >= maxVariantLimit) {
+                    toastr.warning('Maximum ' + maxVariantLimit +
+                        ' Variant allowed according to selected image.');
+
+                    return false;
+                }
+
+                let nextSerial = currentVariant + 1;
+
+                let imageData = selectedImages[nextSerial - 1];
+
+                createVariantBlock(nextSerial, imageData ? imageData.name : '');
+                updateAddButton();
+            });
+
+            // MINUS BUTTON
+            $(document).on('click', '.removeBlock', function() {
+
+                if ($('.variation-block').length > 1) {
+
+                    $(this).closest('.variation-block').remove();
+                }
+                updateAddButton();
+            });
+
+            // ENABLE / DISABLE PLUS BUTTON
+            function updateAddButton() {
+                let current = $('.variation-block').length;
+
+                if (current >= maxVariantLimit) {
+                    $('.addBlock').prop('disabled', true).addClass('disabled');
+                } else {
+                    $('.addBlock').prop('disabled', false).removeClass('disabled');
+                }
+            }
+        });
+    </script> --}}
+
+
+    <script>
+        $(function() {
+            let maxVariantLimit = 0;
+            let selectedImages = [];
+
+            // IMAGE COUNT ONLY FOR VARIANT LIMIT
+            $(document).on('change', '.product_image', function() {
+                selectedImages = [];
+
+                maxVariantLimit = this.files.length;
+
+                // Remove old variant except first
+                $('#variationWrapper .variation-block:not(:first)').remove();
+
+                if (maxVariantLimit === 0) {
+                    updateAddButton();
+                    return;
+                }
+
+                $.each(this.files, function(index, file) {
+
+                    let serial = index + 1;
+
+                    selectedImages.push({
+                        serial: serial,
+                        name: file.name
+                    });
+
+                    // First Variant Image Mapping
+                    if (serial === 1) {
+                        $('.variation-block:first').attr('data-image', file.name)
+                            .attr('data-variant', serial);
+
+                    } else {
+
+                        createVariantBlock(serial, file.name);
+                    }
+                });
+                updateAddButton();
+            });
+
+            // CREATE VARIANT BLOCK
+            function createVariantBlock(serial, imageName) {
+
+                let clone = $('#variationWrapper .variation-block:first').clone();
+
+                clone.removeAttr('data-image');
+                clone.removeAttr('data-variant');
+
+                // Clear input
+                clone.find('input').each(function() {
+
+                    if ($(this).attr('type') !== 'file') {
+                        $(this).val('');
+                    }
+                });
+
+                // Reset select
+                clone.find('select').prop('selectedIndex', 0);
+
+                // Image mapping
+                clone.attr('data-image', imageName);
+                clone.attr('data-variant', serial);
+
+                clone.find('.variation-action')
+                    .html(`<button type="button"
+                            class="btn btn-sm btn-danger removeBlock">
+                            <i class="fa fa-minus"></i>
+                        </button>`);
+                $('#variationWrapper').append(clone);
+            }
+
+            // PLUS BUTTON
+            $(document).on('click', '.addBlock', function() {
+                let currentVariant = $('.variation-block').length;
+
+                if (maxVariantLimit === 0) {
+
+                    toastr.warning('Please select image first.');
+
+                    return false;
+                }
+
+                if (currentVariant >= maxVariantLimit) {
+
+                    toastr.warning(
+                        'Maximum ' + maxVariantLimit +
+                        ' Variant allowed according to selected image.'
+                    );
+                    return false;
+                }
+
+                let nextSerial = currentVariant + 1;
+
+                let imageData = selectedImages[nextSerial - 1];
+
+                createVariantBlock(nextSerial, imageData ? imageData.name : '');
+
+                updateAddButton();
+            });
+
+            // REMOVE BUTTON
+            $(document).on('click', '.removeBlock', function() {
+
+                if ($('.variation-block').length > 1) {
+
+                    $(this).closest('.variation-block').remove();
+                }
+                updateAddButton();
+            });
+
+            // PLUS BUTTON CONTROL
+            function updateAddButton() {
+
+                let current = $('.variation-block').length;
+
+                if (current >= maxVariantLimit) {
+
+                    $('.addBlock').prop('disabled', true).addClass('disabled');
+
+                } else {
+
+                    $('.addBlock').prop('disabled', false).removeClass('disabled');
+                }
+            }
+        });
+    </script>
+@endpush

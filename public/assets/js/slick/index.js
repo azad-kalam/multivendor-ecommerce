@@ -33,7 +33,7 @@ $(document).ready(function () {
             }
 
             $img.wrap(
-                '<span class="zoom-wrapper" style="display:inline-block;"></span>'
+                '<span class="zoom-wrapper" style="display:inline-block;"></span>',
             );
 
             $img.parent().zoom({
@@ -47,6 +47,4 @@ $(document).ready(function () {
     $("#product-main-img").on("afterChange", function () {
         applyZoom();
     });
-
-
 });

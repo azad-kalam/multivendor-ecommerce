@@ -2,7 +2,7 @@
 @foreach ($all_register as $register)
     <div class="modal fade" id="register_edit_modal_{{ $register->id }}" tabindex="-1"
         aria-labelledby="registerEditModalLabel{{ $register->id }}" data-bs-backdrop="static" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 400px; margin: auto;">
             <div class="modal-content p-0">
                 <!-- Modal Header -->
                 <div class="modal-header bg-secondary">
@@ -64,9 +64,9 @@
                     </div>
                     <!-- Modal Footer -->
                     <div class="modal-footer border-0 mx-2">
-                        <button type="button" class="btn btn-outline-danger me-4"
-                            data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-outline-success">Update</button>
+                        <button type="button" class="btn btn-outline-danger ms-5"
+                            data-bs-dismiss="modal">Cancel</button>
                     </div>
                 </form>
             </div>

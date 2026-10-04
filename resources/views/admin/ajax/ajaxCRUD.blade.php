@@ -7,8 +7,8 @@
     // Global Toastr JS start here
     $(document).ready(function() {
         // custom toastr option + error option start here
-        @include('partials.toastr_options.toastr_option')
-        @include('partials.error_options.errorHandler')
+        // @include('partials.toastr_options.toastr_option')
+        // @include('partials.error_options.errorHandler')
         // custom toastr option + error option end here
 
         // ↓ ....................................................................

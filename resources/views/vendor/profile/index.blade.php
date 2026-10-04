@@ -8,6 +8,7 @@
                 <div class="pagetitle mt-3 p-1">
                     <a href="{{ route('vendor.dashboard') }}"
                         class="btn btn-outline-secondary p-1 text-capitalize user-role video-thumbnail">
+                        {{-- use auth() helper method --}}
                         {{ auth()->check() ? auth()->user()->role : 'Guest' }}
                     </a>
 

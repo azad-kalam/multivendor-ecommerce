@@ -21,14 +21,14 @@ $(function () {
             $("#cartSummaryBody").html(`
                <div class="cart-loading-content">
                     <span class="spinner-border text-primary" role="status"aria-hidden="true"></span>
-                    <span class="cart-loading-text"> Loading cart... </span>
+                    <span class="cart-loading-text"> Loading summary... </span>
                 </div>
             `);
         },
 
         success: function (response) {
-            $("#cartItemsBody").html(response.cartTable);
-            $("#cartSummaryBody").html(response.cartSummary);
+            $("#cartItemsBody").html(response.cart_table);
+            $("#cartSummaryBody").html(response.cart_summary);
         },
 
         error: function (error) {

@@ -40,12 +40,13 @@
                                         $imagePath = auth()->user()?->profile?->image?->public_path;
                                     @endphp
 
+
                                     <div>
                                         @if ($imagePath)
                                             <img src="{{ asset($imagePath) }}" class="rounded-circle"
                                                 style="object-fit:cover;">
                                         @else
-                                            <i class="fa fa-user-circle text-secondary fa-2x"></i>
+                                            <i class="fa-regular fa-circle-user text-secondary fa-2x"></i>
                                         @endif
                                     </div>
 
@@ -82,6 +83,7 @@
                                             <span>Account Settings</span>
                                         </a>
                                     </li>
+
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>

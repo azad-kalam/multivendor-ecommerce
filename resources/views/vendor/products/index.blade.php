@@ -8,7 +8,7 @@
                 <div class="pagetitle">
                     <!-- Role Display (User/Guest) -->
                     <span class="btn btn-outline-secondary p-1 text-capitalize user-role video-thumbnail">
-                        {{ Auth::check() ? Auth::user()->role : 'Guest' }}
+                        {{ auth()->user()->role ?? 'Guest' }}
                     </span>
                     <nav aria-label="breadcrumb" class="d-flex my-1">
                         <ol class="breadcrumb m-0 mb-1">

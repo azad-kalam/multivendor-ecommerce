@@ -311,7 +311,7 @@
                                         <p class="product-category">
                                             {{ $category->name ?? 'Category name empty' }}
                                         </p>
-
+                                        
                                         <h5 class="product-name">
                                             {{ $product->name }}
                                         </h5>

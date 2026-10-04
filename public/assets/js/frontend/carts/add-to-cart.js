@@ -13,34 +13,24 @@ $(document).ready(function () {
 
             success: function (response) {
                 if (response.status) {
-                    const quantity = parseInt(response.cart_item_quantity) || 0;
+                    const quantity = parseInt(response.cart_item_quantity);
                     const badge = $(".cart-item-quantity");
                     badge.text(quantity);
+
                     if (quantity > 0) {
                         badge.show();
                     } else {
                         badge.hide();
                     }
+
                     toastr.success(response.message);
                 } else {
                     toastr.warning(response.message);
                 }
             },
-
-            error: function (xhr) {
-                if (xhr.status === 422) {
-                    const errors = xhr.responseJSON.errors;
-
-                    $.each(errors, function (field, messages) {
-                        messages.forEach(function (message) {
-                            toastr.error(message);
-                        });
-                    });
-                } else {
-                    toastr.error("Something went wrong.");
-                }
+            error: function (error) {
+                customErrorHandler(error);
             },
-
             complete: function () {
                 button.prop("disabled", false);
             },

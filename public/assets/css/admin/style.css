@@ -156,6 +156,7 @@
 .custom_card {
     border: 1px solid #28a745;
     border-radius: 5px;
+    transition: all 0.2s ease-in-out;
 }
 
 .custom_card .card-header {
@@ -163,10 +164,60 @@
 }
 
 .custom_card:hover {
-    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+    transform: scale(1.01);
+    box-shadow: 0px 4px 13px fuchsia !important;
+}
+/* custom_card end here */
+
+/* common_card start here */
+.common_card {
+    border: 1px solid #28a745;
+    border-radius: 5px;
+    transition: all 0.2s ease-in-out;
+}
+.common_card:hover {
+    transform: scale(1.01);
+    box-shadow: 0px 4px 13px turquoise !important;
+}
+/* common_card end here */
+
+/* table horizontal scroll start here */
+.table_horizontal_scroll {
+    overflow-x: auto;
+    scrollbar-width: thin;
 }
 
-/* custom_card end here */
+.table_horizontal_scroll::-webkit-scrollbar {
+    height: 2px;
+}
+
+.table_horizontal_scroll table {
+    min-width: 800px;
+    white-space: nowrap;
+}
+/* table horizontal scroll end here */
+
+/* tom-select start here */
+.ts-wrapper.multi .ts-control > div {
+    background: #0d6efd !important;
+    color: #fff !important;
+    border-radius: 4px;
+    padding: 4px 8px;
+    margin-left: 4px;
+}
+
+.ts-wrapper.multi .remove {
+    color: #fff !important;
+    background-color: black !important;
+    border-radius: 3px !important;
+    margin-left: 5px;
+}
+
+.ts-wrapper.focus .ts-control {
+    border-color: #0d6efd !important;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+/* tom-select end here */
 
 /* table start here */
 .td-2 {
@@ -292,6 +343,18 @@
 }
 
 /* table end here */
+
+/* placeholder text change start here */
+input[name="sku[]"]::placeholder {
+    font-size: 13px;
+    color: #999;
+}
+
+input[name="discount_value[]"]::placeholder {
+    font-size: 9px;
+    color: red;
+}
+/* placeholder text change end here */
 
 .back {
     position: relative;

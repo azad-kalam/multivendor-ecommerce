@@ -13,33 +13,42 @@
 
             let slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
             let randomStr = Math.random().toString(36).substring(2, 13); // 11 char random
-            productSlug.value = slug + '-' + randomStr;
+            // productSlug.value = slug + '-' + randomStr;
+            productSlug.value = slug;
         });
         // end slug generate
 
-        // start discount_type here
-        const radios = document.querySelectorAll('input[name="discount_type"]');
-        const discountInput = document.getElementById('discount_value');
-
+        // discount type start here
         function toggleDiscountField() {
-            const selected = document.querySelector('input[name="discount_type"]:checked');
-            if (selected && selected.value === 'none') {
-                discountInput.disabled = true; // Disable
-                discountInput.required = false; // Remove required
-                discountInput.value = ""; // Clear value
-            } else {
-                discountInput.disabled = false; // Enable
-                discountInput.required = true; // Make required
-            }
+            document.querySelectorAll(".variation-block").forEach(function(block) {
+
+                const discountType = block.querySelector('select[name="discount_type[]"]');
+                const discountInput = block.querySelector('input[name="discount_value[]"]');
+
+                if (!discountType || !discountInput) return;
+
+                if (discountType.value === "none") {
+                    // Do not use disabled
+                    discountInput.readOnly = true;
+                    discountInput.required = false;
+                    discountInput.value = "";
+
+                } else {
+                    discountInput.readOnly = false;
+                    discountInput.required = true;
+                }
+            });
         }
 
-        // Page load এ কাজ করবে
+        // initial load
         toggleDiscountField();
+        document.addEventListener("change", function(e) {
 
-        // Radio change হলে কাজ করবে
-        radios.forEach(function(radio) {
-            radio.addEventListener("change", toggleDiscountField);
+            if (e.target.matches('select[name="discount_type[]"]')) {
+                toggleDiscountField();
+            }
         });
-        // end discount_type here
+
+        // discount type end here
     });
 </script>

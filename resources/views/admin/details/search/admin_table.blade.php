@@ -72,7 +72,7 @@
             @endforeach
         @else
             <tr>
-                <td colspan="8" class="text-center text-danger">No admin data found.</td>
+                <td colspan="8" class="text-center text-danger">Admin data not available</td>
             </tr>
         @endif
     </tbody>
