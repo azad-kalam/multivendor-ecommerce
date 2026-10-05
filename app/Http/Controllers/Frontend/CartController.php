@@ -57,10 +57,6 @@ class CartController extends Controller
     public function render_cart_and_summary(string $message = 'cart refresh')
     {
         $cartData = $this->cartService->index_cart();
-
-        // $cartTable = view('frontend.carts.table.cart_table', [
-        //     'cart_items' => $cartData['items'],
-        // ])->render();
         $cartTable = view('frontend.carts.AJAX.ajax_cart_item', [
             'cart_items' => $cartData['items'],
         ])->render();

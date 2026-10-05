@@ -1,77 +1,11 @@
 <?php
 
-// use Illuminate\Support\Str;
-
-// if (!function_exists('sanitize_sku')) {
-
-//     function sanitize_sku(
-//         ?string $newSku,
-//         ?string $oldSku,
-//         string $productName,
-//         string $brandName,
-//         string $colorName,
-//         string $sizeName
-//     ): string {
-
-//         $newSku = strtoupper(trim((string)$newSku));
-//         $oldSku = strtoupper(trim((string)$oldSku));
-
-//         if ($newSku === '') {
-
-//             return implode('-', [
-//                 Str::upper(Str::substr($productName, 0, 3)),
-//                 Str::upper(Str::substr($brandName, 0, 3)),
-//                 Str::upper(Str::substr($colorName, 0, 3)),
-//                 Str::upper(Str::substr($sizeName, 0, 3)),
-//             ]) . '-' . Str::upper(Str::random(6));
-//         }
-
-//         $oldParts = explode('-', $oldSku);
-
-//         $oldSuffix = '';
-
-//         if (!empty($oldParts) && preg_match('/^[A-Z0-9]{6}$/', end($oldParts))) {
-
-//             $oldSuffix = array_pop($oldParts);
-//         }
-
-//         $oldBase = implode('-', $oldParts);
-
-//         $newParts = explode('-', $newSku);
-
-//         $newSuffix = '';
-
-//         if (!empty($newParts) && preg_match('/^[A-Z0-9]{6}$/', end($newParts))) {
-
-//             $newSuffix = array_pop($newParts);
-//         }
-
-//         $newBase = implode('-', $newParts);
-
-//         if ($newBase === '') {
-//             $newBase = $oldBase;
-//         }
-
-//         if ($newSuffix === '') {
-//             $newSuffix = $oldSuffix;
-//         }
-
-//         if ($newSuffix === '') {
-//             $newSuffix = Str::upper(Str::random(6));
-//         }
-
-//         return $newBase . '-' . $newSuffix;
-//     }
-// }
-
-
 use Illuminate\Support\Str;
 
 if (!function_exists('sanitize_sku')) {
 
     function sanitize_sku(
         ?string $newSku,
-        ?string $oldSku,
         string $productName,
         string $brandName,
         string $colorName,
