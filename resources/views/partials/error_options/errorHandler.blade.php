@@ -49,15 +49,15 @@
                 break;
 
             case 408:
-                message = "Request timed out. Please try again later.";
+                message = "Request timed out. Please try again.";
                 break;
 
             case 409:
-                message = "This request conflicts. Please try again later.";
+                message = "This request conflicts. Please try again.";
                 break;
 
             case 419:
-                message = "Your session has expired. Please try again later.";
+                message = "Your session has expired. Please try again.";
                 break;
 
             case 422:
@@ -65,23 +65,23 @@
                 break;
 
             case 429:
-                message = "Too many requests. Please try again later.";
+                message = "Too many requests. Please try again.";
                 break;
 
             case 500:
-                message = "Something went wrong. Please try again later.";
+                message = "Something went wrong. Please try again.";
                 break;
 
             case 502:
-                message = "Server is temporarily unavailable. Please try again later.";
+                message = "Server is temporarily unavailable. Please try again.";
                 break;
 
             case 503:
-                message = "Service is temporarily unavailable. Please try again later.";
+                message = "Service is temporarily unavailable. Please try again.";
                 break;
 
             case 504:
-                message = "Server took too long to respond. Please try again later.";
+                message = "Server took too long to respond. Please try again.";
                 break;
 
             default:
