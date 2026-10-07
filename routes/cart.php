@@ -9,4 +9,5 @@ Route::prefix('cart')->name('frontend.carts.')->group(function () {
     Route::patch('/{cartId}', [CartController::class, 'update'])->name('update');
     Route::delete('/{cartId}', [CartController::class, 'destroy'])->name('destroy');
     Route::get('/shopping-cart', [CartController::class, 'render_cart_and_summary'])->name('shopping-cart');
+    Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout-cart');
 });
