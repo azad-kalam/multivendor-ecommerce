@@ -106,5 +106,4 @@ class AdminController extends Controller
                 ->with('toastr_error', 'You are not allowed to delete another admin account.');
         }
     }
-
 }
