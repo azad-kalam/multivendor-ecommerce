@@ -8,10 +8,7 @@
 
         <div class="row">
             <div class="col-12">
-
-                <!-- PAGE TITLE -->
                 <div class="pagetitle">
-
                     <span class="btn btn-outline-secondary p-1 text-capitalize video-thumbnail">
                         @auth
                             {{ auth()->user()->role }}
@@ -129,18 +126,12 @@
                                         </button>
                                     </div>
                                 </form>
-
                             </div>
-
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
         </div>
-
     </main>
 @endsection
 
