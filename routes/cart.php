@@ -11,5 +11,5 @@ Route::prefix('cart')->name('frontend.carts.')->group(function () {
     Route::get('/shopping-cart', [CartController::class, 'render_cart_and_summary'])->name('shopping-cart');
 
     Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout-cart');
-    Route::get('/order', [CartController::class, 'order'])->name('orer');
+    Route::get('/payment', [CartController::class, 'payment'])->name('payment');
 });
