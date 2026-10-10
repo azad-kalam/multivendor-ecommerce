@@ -1,10 +1,5 @@
 <script>
     $(document).ready(function() {
-        // custom toastr option + error option start here
-        // @include('partials.toastr_options.toastr_option')
-        // @include('partials.error_options.errorHandler')
-        // custom toastr option + error option end here
-
         // category ajax pagination start here
         $(document).on('click', '#categoryPagination a', function(e) {
             e.preventDefault();

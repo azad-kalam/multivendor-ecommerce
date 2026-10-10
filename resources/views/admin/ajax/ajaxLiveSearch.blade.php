@@ -38,40 +38,6 @@
 
 
         // admin live search start here
-        // $('#admin_search').on('keyup', function(e) {
-        //     e.preventDefault();
-        //     var adminsearch_val = $(this).val().trim();
-
-        //     if (adminsearch_val === "") {
-        //         toastr.info('Search Query Is Empty !');
-        //     }
-
-        //     let url = "{{ route('admin.details.search') }}";
-
-        //     $.ajax({
-        //         type: "GET",
-        //         url: url,
-        //         data: {
-        //             admin_search: adminsearch_val
-        //         },
-        //         success: function(response) {
-        //             if (response.adminSearchStatus === 'success') {
-        //                 $('.admin_table_container').html(response.adminSearchProperty);
-        //             } else {
-        //                 toastr.warning("Failed to fetch data.");
-        //             }
-        //         },
-        //         error: function(err) {
-        //             customErrorHandler(err);
-        //         }
-        //     });
-        // });
-
-
-
-
-
-
         $('#admin_search').on('keyup', function() {
             let value = $(this).val().trim();
             if (value === "") {
@@ -295,36 +261,6 @@
         // subcategory live search end here
 
         // product live search start here
-        // $(document).on('keyup', '#productsearch', function() {
-        //     const url = "{{ route('admin.products.search') }}";
-
-        //     var search_query = $(this).val();
-        //     if (search_query === "") {
-        //         toastr.info('Search Query Is Empty!');
-        //         $('#productsearch').val('');
-        //     }
-        //     $.ajax({
-        //         type: "GET",
-        //         url: url,
-        //         data: {
-        //             product_search: search_query
-        //         },
-
-        //         success: function(response) {
-        //             if (response.productSearchStatus === 'success') {
-        //                 $('.product_table_container').html(response
-        //                     .productSearchProperty);
-        //             }
-        //         },
-        //         error: function(err) {
-        //             customErrorHandler(err);
-        //         }
-        //     });
-        // });
-
-
-
-
         $(document).on('keyup', '#productsearch', function() {
 
             let search_query = $(this).val();

@@ -1,17 +1,5 @@
 <script>
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-    // Global Toastr JS start here
     $(document).ready(function() {
-        // custom toastr option + error option start here
-        // @include('partials.toastr_options.toastr_option')
-        // @include('partials.error_options.errorHandler')
-        // custom toastr option + error option end here
-
-        // ↓ ....................................................................
         // category slug generate start here
         $('#name').on('input', function() {
             var thisCategoryName = $(this).val().trim().toLowerCase()
