@@ -20,6 +20,9 @@
 <!-- Tom Select CSS -->
 <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
 
+<!-- SELECT2 or SEARCHABLE DROPDOWN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
+
 <!-- THEME + CUSTOM slick + homepage + frontend + admin + vendor + main -->
 <link rel="stylesheet" href="{{ asset('assets/css/slick/style.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/css/homepage/style.css') }}">
