@@ -1,10 +1,5 @@
 <script>
     $(document).ready(function() {
-        // custom toastr option + error option start here
-        // @include('partials.toastr_options.toastr_option')
-        // @include('partials.error_options.errorHandler')
-        // custom toastr option + error option end here
-
         // Register live search start here
         const registerSearchUrl = "{{ route('admin.all_register_info.search') }}";
         $('#registersearch').on('keyup', function(e) {
