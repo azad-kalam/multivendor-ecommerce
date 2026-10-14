@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    const table = $("#coupon_data_table").DataTable({
+    const table = $("").DataTable({
         pageLength: 10,
         lengthMenu: [10, 25, 50, 100],
         ordering: true,
