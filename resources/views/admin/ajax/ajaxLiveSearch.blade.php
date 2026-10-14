@@ -31,7 +31,6 @@
         });
         // Register live search end here
 
-
         // admin live search start here
         $('#admin_search').on('keyup', function() {
             let value = $(this).val().trim();
@@ -429,7 +428,6 @@
             });
         });
         // size live search end here
-
 
     });
 </script>

@@ -63,10 +63,6 @@
 
 <script>
     $(document).ready(function() {
-
-        // @include('partials.toastr_options.toastr_option')
-        // @include('partials.error_options.errorHandler')
-
         // subcategory dependency start here
         $('#category_id').on('change', function() {
 
@@ -147,8 +143,6 @@
 
         });
         // product_model dependency end here
-
-
 
     });
 </script>

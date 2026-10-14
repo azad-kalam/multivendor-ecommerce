@@ -659,7 +659,5 @@
                 });
         });
         // Sub-category delete end here
-        // ↑ ....................................................................
-        // Admin Sub-category CRUD end here
     });
 </script>
