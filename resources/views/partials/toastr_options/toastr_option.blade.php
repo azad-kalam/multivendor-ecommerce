@@ -1,18 +1,20 @@
-<style>
-    #toast-container {
-        opacity: 1 !important;
-    }
+@push('styles')
+    <style>
+        #toast-container {
+            opacity: 1 !important;
+        }
 
-    #toast-container>.toast {
-        opacity: 1 !important;
-        background-image: none !important;
-        filter: none !important;
-    }
+        #toast-container>.toast {
+            opacity: 1 !important;
+            background-image: none !important;
+            filter: none !important;
+        }
 
-    #toast-container>.toast .toast-close-button {
-        opacity: 1 !important;
-    }
-</style>
+        #toast-container>.toast .toast-close-button {
+            opacity: 1 !important;
+        }
+    </style>
+@endpush
 
 <script>
     toastr.options = {

@@ -38,7 +38,7 @@
     @include('partials.error_options.errorHandler')
 
 
-    <!-- AJAX role includes (only role‑aware) -->
+    <!-- AJAX role (only role‑aware) -->
     @include('partials.AJAX.Ajax')
 
     <!-- Slick + Custom + Homepage + Frontend AJAX + Admin + Main scripts -->
