@@ -6,6 +6,8 @@ use App\Http\Controllers\FrontEnd\CheckoutController;
 Route::prefix('frontend')
     ->name('frontend.')
     ->group(function () {
+        Route::get('/checkout', [CheckoutController::class, 'index'])
+            ->name('checkout.index');
         Route::get('/checkout', [CheckoutController::class, 'create'])
             ->name('checkout.create');
 
