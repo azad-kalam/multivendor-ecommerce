@@ -15,4 +15,6 @@ Route::prefix('frontend')
             ->name('checkout.store');
         Route::post('/checkout', [CheckoutController::class, 'show'])
             ->name('checkout.show');
+        Route::post('/checkout', [CheckoutController::class, 'edit'])
+            ->name('checkout.edit');
     });
