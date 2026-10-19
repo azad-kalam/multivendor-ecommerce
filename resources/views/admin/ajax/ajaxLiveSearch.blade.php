@@ -1,433 +1,166 @@
 <script>
     $(document).ready(function() {
-        // Register live search start here
-        const registerSearchUrl = "{{ route('admin.all_register_info.search') }}";
-        $('#registersearch').on('keyup', function(e) {
-            e.preventDefault();
-            var registersearch_val = $(this).val().trim();
-            if (registersearch_val === "") {
-                toastr.info("Search Query Is Empty !");
+        const searchConfig = {
+            '#registersearch': {
+                url: @json(route('admin.all_register_info.search')),
+                key: 'registersearch',
+                status: 'registerSearchStatus',
+                property: 'registerSearchProperty',
+                container: '.register_table_container'
+            },
+
+            '#admin_search': {
+                url: @json(route('admin.details.search')),
+                key: 'admin_search',
+                status: 'adminSearchStatus',
+                property: 'adminSearchProperty',
+                container: '.admin_table_container'
+            },
+
+            '#vendor_search': {
+                url: @json(route('admin.all_vendor.search')),
+                key: 'vendor_search',
+                status: 'vendorSearchStatus',
+                property: 'vendorSearchProperty',
+                container: '.vendor_table_container'
+            },
+
+            '#user_search': {
+                url: @json(route('admin.all_user.search')),
+                key: 'user_search',
+                status: 'userSearchStatus',
+                property: 'userSearchProperty',
+                container: '.user_table_container',
+            },
+
+            '#categorySearchField': {
+                url: @json(route('admin.categories.search')),
+                key: 'categorysearch',
+                status: 'categorySearchStatus',
+                property: 'categorySearchProperty',
+                container: '.category_table_container'
+            },
+
+            '#subCategorySearchField': {
+                url: @json(route('admin.sub_categories.search')),
+                key: 'subCategorysearch',
+                status: 'subCategorySearchStatus',
+                property: 'subCategorySearchProperty',
+                container: '.subcategory_table_container'
+            },
+
+            '#productsearch': {
+                url: @json(route('admin.products.search')),
+                key: 'product_search',
+                status: 'productSearchStatus',
+                property: 'productSearchProperty',
+                container: '.product_table_container',
+            },
+
+            '#banner_search': {
+                url: @json(route('admin.banners.search')),
+                key: 'banner_search',
+                status: 'bannerSearchStatus',
+                property: 'bannerSearchProperty',
+                container: '.banner_table_container',
+            },
+
+            '#brandsearch': {
+                url: @json(route('admin.brands.search')),
+                key: 'brand_search',
+                status: 'brandSearchStatus',
+                property: 'brandSearchProperty',
+                container: '.brand_table_container',
+            },
+
+            '#colorSearch': {
+                url: @json(route('admin.colors.search')),
+                key: 'color_search',
+                status: 'colorSearchStatus',
+                property: 'colorSearchProperty',
+                container: '.color_table_container',
+            },
+
+            '#couponSearch': {
+                url: @json(route('admin.coupons.search')),
+                key: 'coupon_search',
+                status: 'couponSearchStatus',
+                property: 'couponSearchProperty',
+                container: '.coupon_table_container',
+            },
+
+            '#product_model_search': {
+                url: @json(route('admin.product_models.search')),
+                key: 'product_model_search_query',
+                status: 'product_model_search_status',
+                property: 'product_model_search_property',
+                container: '.productModel_table_container',
+            },
+
+            '#sizeSearch': {
+                url: @json(route('admin.sizes.search')),
+                key: 'size_search',
+                status: 'sizeSearchStatus',
+                property: 'sizeSearchProperty',
+                container: '.size_table_container',
+            }
+        };
+
+        function performSearch(input) {
+            //input field য়ের attribute যার নাম id সেই id য়ের name find করা যেমন colorSearch
+            const field_name = input.attr('id');
+
+            //#colorSearch
+            const full_field_name = '#' + field_name;
+
+            //searchConfig variable য়ের #colorSearch য়ের মধ্যে যা-যা আছে তা সব find করা যেমন url, key, status.....
+            const find_search_config_data = searchConfig[full_field_name];
+
+            if (!find_search_config_data) return;
+
+            const query = input.val().trim();
+            const url = find_search_config_data.url;
+
+            if (query === '') {
+                toastr.info('Search query is empty!');
+                if (find_search_config_data.stopWhenEmpty) return;
             }
 
-            $.ajax({
-                url: registerSearchUrl,
-                type: "GET",
-                data: {
-                    // filled name : variable name
-                    registersearch: registersearch_val
-                },
-                success: function(response) {
-                    if (response.registerSearchStatus === "success") {
-                        $(".register_table_container").html(response
-                            .registerSearchProperty);
-                    } else {
-                        toastr.warning("Failed to fetch data.");
-                    }
-                },
-                error: function(err) {
-                    customErrorHandler(err);
-                }
-            });
-        });
-        // Register live search end here
-
-        // admin live search start here
-        $('#admin_search').on('keyup', function() {
-            let value = $(this).val().trim();
-            if (value === "") {
-                toastr.info('Search Query Is Empty !');
-            }
-
-            $.ajax({
-                url: "{{ route('admin.details.search') }}",
-                type: "GET",
-                data: {
-                    admin_search: value
-                },
-                success: function(response) {
-                    if (response.adminSearchStatus === 'success') {
-                        $('.admin_table_container').html(response.adminSearchProperty);
-                    } else {
-                        toastr.warning("Failed to fetch data.");
-                    }
-                },
-                error: function(err) {
-                    customErrorHandler(err);
-                }
-            });
-        });
-        // admin live search end here
-
-        // vendor live search start here
-        $(document).on('keyup', '#vendor_search', debounce(function() {
-            let searchText = $('#vendor_search').val().trim();
-
-            if (searchText === "") {
-                toastr.info('Search Query Is Empty!');
-            }
-
-            $.ajax({
-                url: "{{ route('admin.all_vendor.search') }}",
-                method: "GET",
-                data: {
-                    vendor_search: searchText
-                },
-                success: function(res) {
-                    if (res.vendorSearchStatus === 'success') {
-                        $('.vendor_table_container').html(res.vendorSearchProperty);
-                    } else {
-                        toastr.warning("Failed to fetch data.");
-                    }
-                },
-                error: function(err) {
-                    customErrorHandler(err);
-                }
-            });
-        }, 200)); // wait 2s before sending request
-
-        function debounce(func, delay) {
-            let timer;
-            return function() {
-                clearTimeout(timer); // cancel previous timer
-                timer = setTimeout(func, delay); // run function after delay
-            };
-        }
-        // vendor live search end here
-
-        // user live search start here
-        $(document).on('keyup', '#user_search', function() {
-            let usersearch_val = $(this).val().trim();
-
-            if (usersearch_val === "") {
-                toastr.info('Search Query Is Empty!');
+            if (!url) {
+                toastr.error('Search URL not found!');
                 return;
             }
 
             $.ajax({
-                url: "{{ route('admin.all_user.search') }}",
-                type: "GET",
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+
                 data: {
-                    user_search: usersearch_val
+                    [find_search_config_data.key]: query
                 },
+
                 success: function(response) {
-                    if (response.userSearchStatus === 'success') {
-                        $('.user_table_container').html(response.userSearchProperty);
+                    if (response[find_search_config_data.status] === 'success') {
+                        $(find_search_config_data.container).html(
+                            response[find_search_config_data.property]
+                        );
                     } else {
-                        toastr.warning("Failed to fetch data.");
+                        toastr.warning('Failed to fetch data.');
                     }
                 },
-                error: function(err) {
-                    customErrorHandler(err);
-                }
-            });
-        });
-        // user live search end here
-
-        // category live search start here
-        $(document).on('keyup', '#categorySearchField', function() {
-            performCategorySearch();
-        });
-
-        $(document).on('click', '#categorySearchBtn', function(e) {
-            e.preventDefault();
-            performCategorySearch();
-        });
-
-        const url = "{{ route('admin.categories.search') }}";
-
-        function performCategorySearch() {
-            const categorysearch = $('#categorySearchField').val().trim();
-
-            if (categorysearch === "") {
-                toastr.info('Search Query Is Empty!');
-                $('#categorySearchField').val('');
-
-                loadAllCategories();
-
-            } else {
-                searchCategories(categorysearch);
-            }
-        }
-
-        function loadAllCategories() {
-            $.ajax({
-                url: url,
-                type: "GET",
-                success: function(response) {
-                    if (response.categorySearchStatus === 'success') {
-                        $('.category_table_container').html(response
-                            .categorySearchProperty);
-                    } else {
-                        toastr.warning("Failed to load categories.");
-                    }
-                },
-                error: function(err) {
-                    customErrorHandler(err);
+                error: function(xhr) {
+                    customErrorHandler(xhr);
                 }
             });
         }
 
-        function searchCategories(categorysearch) {
-            $.ajax({
-                url: url,
-                type: "GET",
-                data: {
-                    categorysearch: categorysearch
-                },
-                success: function(response) {
-                    if (response.categorySearchStatus === 'success') {
-                        $('.category_table_container').html(response
-                            .categorySearchProperty);
-                    } else {
-                        toastr.warning("No categories found.");
-                    }
-                },
-                error: function(err) {
-                    customErrorHandler(err);
-                }
-            });
-        }
-        // category live search end here
 
-        // subcategory live search start here
-        const subCategorySearchUrl = "{{ route('admin.sub_categories.search') }}";
-
-        $(document).on('keyup', '#subCategorySearchField', function() {
-            performSubcategorySearch();
+        // All Search Inputs
+        const selectors = Object.keys(searchConfig).join(', ');
+        $(document).on('input', selectors, function() {
+            performSearch($(this));
         });
-
-        $(document).on('click', '#subCategorySearchBtn', function(e) {
-            e.preventDefault();
-            performSubcategorySearch();
-        });
-
-        function performSubcategorySearch() {
-            const query = $('#subCategorySearchField').val().trim();
-
-            if (query === "") {
-                toastr.info('Search Query Is Empty !');
-                $('#subCategorySearchField').val('');
-                empty_subcategory_data();
-
-            } else {
-                get_subcategory_data(query);
-            }
-        }
-
-        function empty_subcategory_data() {
-            $.ajax({
-                url: subCategorySearchUrl,
-                type: "GET",
-                success: function(response) {
-                    if (response.subCategorySearchStatus === 'success') {
-                        $('.subcategory_table_container').html(response
-                            .subCategorySearchProperty);
-                    } else {
-                        toastr.warning("Failed to fetch data.");
-                    }
-                },
-                error: function(err) {
-                    customErrorHandler(err);
-                }
-            });
-        }
-
-        function get_subcategory_data(query) {
-            $.ajax({
-                url: subCategorySearchUrl,
-                type: "GET",
-                data: {
-                    subCategorysearch: query
-                },
-                success: function(response) {
-                    if (response.subCategorySearchStatus === 'success') {
-                        $('.subcategory_table_container').html(response
-                            .subCategorySearchProperty);
-                    } else {
-                        toastr.warning("Failed to fetch data.");
-                    }
-                },
-                error: function(err) {
-                    customErrorHandler(err);
-                }
-            });
-        }
-        // subcategory live search end here
-
-        // product live search start here
-        $(document).on('keyup', '#productsearch', function() {
-
-            let search_query = $(this).val();
-            let url = $(this).data('search-url');
-
-            if (search_query === "") {
-                toastr.info('Search Query Is Empty!');
-            }
-
-            $.ajax({
-                type: "GET",
-                url: url,
-                data: {
-                    product_search: search_query
-                },
-                success: function(response) {
-                    if (response.productSearchStatus === 'success') {
-                        $('.product_table_container').html(
-                            response.productSearchProperty
-                        );
-                    }
-                },
-                error: function(err) {
-                    customErrorHandler(err);
-                }
-            });
-        });
-        // product live search end here
-
-        // banner live search start here
-        $(document).on('keyup', '#banner_search', function() {
-            let search_query = $(this).val();
-            let url = $(this).data('search-url');
-
-            if (search_query === "") {
-                toastr.info('Search Query Is Empty!');
-            }
-
-            $.ajax({
-                type: "GET",
-                url: url,
-                data: {
-                    banner_search: search_query
-                },
-                success: function(response) {
-                    if (response.bannerSearchStatus === 'success') {
-                        $('.banner_table_container').html(
-                            response.bannerSearchProperty
-                        );
-                    }
-                },
-                error: function(err) {
-                    customErrorHandler(err);
-                }
-            });
-        });
-        // banner live search end here
-
-        // brand live search start here
-        $(document).on('keyup', '#brandsearch', function() {
-            let search_query = $(this).val();
-            let url = $(this).data('search-url');
-
-            if (search_query === "") {
-                toastr.info('Search Query Is Empty!');
-            }
-
-            $.ajax({
-                type: "GET",
-                url: url,
-                data: {
-                    brand_search: search_query
-                },
-                success: function(response) {
-                    if (response.brandSearchStatus === 'success') {
-                        $('.brand_table_container').html(
-                            response.brandSearchProperty
-                        );
-                    }
-                },
-                error: function(err) {
-                    customErrorHandler(err);
-                }
-            });
-        });
-        // brand live search end here
-
-        // color live search start here
-        $(document).on('keyup', '#colorSearch', function() {
-            let search_query = $(this).val();
-            let url = $(this).data('search-url');
-
-            if (search_query === "") {
-                toastr.info('Search Query Is Empty!');
-            }
-
-            $.ajax({
-                type: "GET",
-                url: url,
-                data: {
-                    color_search: search_query
-                },
-                success: function(response) {
-                    if (response.colorSearchStatus === 'success') {
-                        $('.color_table_container').html(
-                            response.colorSearchProperty
-                        );
-                    }
-                },
-                error: function(err) {
-                    customErrorHandler(err);
-                }
-            });
-        });
-        // color live search end here
-
-        // model live search start here
-        $(document).on('keyup', '#product_model_search', function() {
-            let search_query = $(this).val();
-            let url = $(this).data('search-url');
-
-            if (search_query === "") {
-                toastr.info('Search Query Is Empty!');
-            }
-
-            $.ajax({
-                type: "GET",
-                url: url,
-                data: {
-                    product_model_search_query: search_query
-                },
-                success: function(response) {
-                    if (response.product_model_search_status === 'success') {
-                        $('.productModel_table_container').html(
-                            response.product_model_search_property
-                        );
-                    }
-                },
-                error: function(err) {
-                    customErrorHandler(err);
-                }
-            });
-        });
-        // model live search end here
-
-        // size live search start here
-        $(document).on('keyup', '#sizeSearch', function() {
-            let search_query = $(this).val();
-            let url = $(this).data('search-url');
-
-            if (search_query === "") {
-                toastr.info('Search Query Is Empty!');
-            }
-
-            $.ajax({
-                type: "GET",
-                url: url,
-                data: {
-                    size_search: search_query
-                },
-                success: function(response) {
-                    if (response.sizeSearchStatus === 'success') {
-                        $('.size_table_container').html(
-                            response.sizeSearchProperty
-                        );
-                    }
-                },
-                error: function(err) {
-                    customErrorHandler(err);
-                }
-            });
-        });
-        // size live search end here
 
     });
 </script>
