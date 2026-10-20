@@ -659,5 +659,6 @@
                 });
         });
         // Sub-category delete end here
+        // sub-category start here
     });
 </script>
