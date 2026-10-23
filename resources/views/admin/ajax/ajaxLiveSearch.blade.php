@@ -104,6 +104,13 @@
                 property: 'sizeSearchProperty',
                 container: '.size_table_container',
             }
+            '#dataserch': {
+                url: @json(route('admin.data.search')),
+                key: 'data',
+                status: 'data',
+                property: 'data',
+                container: '.data_table_container',
+            }
         };
 
         function performSearch(input) {
