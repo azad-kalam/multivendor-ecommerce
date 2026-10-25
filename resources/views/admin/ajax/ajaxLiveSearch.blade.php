@@ -104,6 +104,13 @@
                 property: 'sizeSearchProperty',
                 container: '.size_table_container',
             }
+            '#couponSearch': {
+                url: @json(route('admin.coupons.search')),
+                key: 'coupon_search',
+                status: 'couponSearchStatus',
+                property: 'couponSearchProperty',
+                container: '.coupon_table_container',
+            }
         };
 
         function performSearch(input) {
