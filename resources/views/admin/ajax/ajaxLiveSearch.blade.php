@@ -104,6 +104,7 @@
                 property: 'sizeSearchProperty',
                 container: '.size_table_container',
             }
+            //----------------
             '#couponSearch': {
                 url: @json(route('admin.coupons.search')),
                 key: 'coupon_search',
@@ -111,6 +112,14 @@
                 property: 'couponSearchProperty',
                 container: '.coupon_table_container',
             }
+            '#checkoutSearch': {
+                url: @json(route('admin.checkoutSearch.search')),
+                key: 'checkout_search',
+                status: 'checkoutSearchStatus',
+                property: 'checkoutSearchProperty',
+                container: '.checkout_table_container',
+            }
+            //----------------
         };
 
         function performSearch(input) {
