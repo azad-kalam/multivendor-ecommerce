@@ -119,6 +119,13 @@
                 property: 'checkoutSearchProperty',
                 container: '.checkout_table_container',
             }
+            '#sheepingSearch': {
+                url: @json(route('admin.sheepingSearch.search')),
+                key: 'sheepingSearch',
+                status: 'sheepingSearchStatus',
+                property: 'sheepingSearchProperty',
+                container: '.sheepingSearch_table_container',
+            }
             //----------------
         };
 
