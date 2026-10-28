@@ -126,6 +126,13 @@
                 property: 'sheepingSearchProperty',
                 container: '.sheepingSearch_table_container',
             }
+            '#priceSearch': {
+                url: @json(route('admin.priceSearch.search')),
+                key: 'priceSearch',
+                status: 'priceSearchStatus',
+                property: 'priceSearchProperty',
+                container: '.priceSearch_table_container',
+            }
             //----------------
         };
 
