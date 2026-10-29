@@ -1,9 +1,22 @@
  <div class="card-header p-1">
-     <form action="" method="post">
-         <div class="coupon-box">
-             <input type="text" class="form-control" id="couponCode" placeholder="Enter code">
-             <button type="button" id="applyCoupon">Apply Coupon</button>
+     <form action="{{ route('frontend.carts.apply-coupon') }}" method="POST">
+         @csrf
+
+         <div class="coupon-box mb-1">
+             <input type="text" name="coupon_code" id="coupon_code" maxlength="30" value="{{ old('coupon_code') }}"
+                 class="form-control p-2 @error('coupon_code') is-invalid @enderror" placeholder="Enter coupon code"
+                 required>
+
+             <button type="submit" id="applyCoupon">
+                 Apply Coupon
+             </button>
          </div>
+
+         @error('coupon_code')
+             <div class="coupon-error text-danger">
+                 {{ $message }}
+             </div>
+         @enderror
      </form>
  </div>
 
