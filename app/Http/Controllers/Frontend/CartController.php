@@ -98,6 +98,11 @@ class CartController extends Controller
         $couponCode = trim($validated['coupon_code']);
 
         $coupon = Coupon::where('coupon_code', $couponCode)->first();
+        Session::put('coupon_data', [
+            'coupon_code' => $coupon['coupon_code'],
+            'discount_type' => $coupon['discount_type'],
+            'discount_value' => $coupon['discount_value'],
+        ]);
 
         if (! $coupon) {
             return back()
