@@ -107,6 +107,8 @@ class CartController extends Controller
             'total_usage_limit' => $coupon['total_usage_limit'],
             'start_at' => $coupon['start_at'],
             'expire_at' => $coupon['expire_at'],
+            'status' => $coupon['status'],
+            'created_at' => $coupon['created_at']
         ]);
 
         if (! $coupon) {
