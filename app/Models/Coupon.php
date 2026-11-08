@@ -1,11 +1,31 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Model;
 
 class Coupon extends Model
 {
+    // protected $fillable = [
+    //     'coupon_name',
+    //     'description',
+    //     'coupon_code',
+    //     'discount_type',
+    //     'discount_value',
+    //     'min_quantity',
+    //     'max_quantity',
+    //     'min_cart_value',
+    //     'max_cart_value',
+    //     'usage_limit_per_user',
+    //     'total_usage_limit',
+    //     'used_count',
+    //     'expire_at',
+    //     'status',
+    // ];
     protected $fillable = [
+        'coupon_options',
+        'coupon_type',
+        'user_id',
         'coupon_name',
         'description',
         'coupon_code',
