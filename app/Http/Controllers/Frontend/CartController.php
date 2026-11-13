@@ -125,14 +125,6 @@ class CartController extends Controller
                 ->with('toastr_error', 'This coupon is inactive.');
         }
 
-        if ($coupon->start_at && $coupon->start_at > now()) {
-            $message = 'Coupon will start on ' . $coupon->start_at->format('d-M-Y');
-            return back()
-                ->withInput()
-                ->withErrors(['coupon_code' => $message])
-                ->with('toastr_error', $message);
-        }
-
         if ($coupon->expire_at && $coupon->expire_at < now()) {
             $message = 'Coupon expired on ' . $coupon->expire_at->format('d-M-Y');
             return back()
