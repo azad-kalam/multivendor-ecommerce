@@ -334,12 +334,11 @@ class CartService
     }
 
 
-    private function getVariantPrice(ProductVariant $variant): array
+    public function getVariantPrice(ProductVariant $variant): array
     {
         $regularPrice = (float) $variant->regular_price;
-        $sellingPrice = (float) $variant->selling_price;
         $discountType = $variant->discount_type;
-        $discountValue = (float) $variant->discount_value;
+        $discountValue =  (float) $variant->discount_value;
 
         $now = now();
 
@@ -347,45 +346,23 @@ class CartService
         $discountNotExpired = !$variant->discount_end || $now->lte($variant->discount_end);
         $discountActive = $discountStarted && $discountNotExpired;
 
-        if (!$discountActive) {
-            return [
-                'regular_price' => $regularPrice,
-                'selling_price' => $regularPrice,
-                'discount_value' => 0,
-            ];
+        $discount = 0;
+
+        if ($discountActive) {
+            if ($discountType === 'fixed') {
+                $discount = $discountValue;
+            } elseif ($discountType === 'percent') {
+                $percentage = $discountValue;
+                $discount = ($regularPrice * $percentage) / 100;
+            }
         }
 
-        if ($discountType === 'none') {
-            return [
-                'regular_price' => $regularPrice,
-                'selling_price' => $regularPrice,
-                'discount_value' => 0,
-            ];
-        }
-
-        if ($discountType === 'fixed') {
-            $sellingPrice = max(0, $regularPrice - $discountValue);
-            return [
-                'regular_price' => $regularPrice,
-                'selling_price' => $sellingPrice,
-                'discount_value' => $discountValue,
-            ];
-        }
-
-        if ($discountType === 'percent') {
-            $discount = ($regularPrice * $discountValue) / 100;
-            $sellingPrice = max(0, $regularPrice - $discount);
-            return [
-                'regular_price' => $regularPrice,
-                'selling_price' => $sellingPrice,
-                'discount_value' => $discount,
-            ];
-        }
+        $sellingPrice =  $regularPrice - $discount;
 
         return [
-            'regular_price' => $regularPrice,
-            'selling_price' => $regularPrice,
-            'discount_value' => 0,
+            'regular_price' => round($regularPrice, 2),
+            'selling_price' => round($sellingPrice, 2),
+            'discount_value' => round($discount, 2),
         ];
     }
 }
