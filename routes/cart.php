@@ -10,4 +10,5 @@ Route::prefix('cart')->name('frontend.carts.')->group(function () {
     Route::delete('/{cartId}', [CartController::class, 'destroy'])->name('destroy');
     Route::get('/shopping-cart', [CartController::class, 'render_cart_and_summary'])->name('shopping-cart');
     Route::post('/apply-coupon', [CartController::class, 'apply_coupon'])->name('apply-coupon');
+    Route::delete('/remove-coupon', [CartController::class, 'remove_coupon'])->name('remove-coupon');
 });
