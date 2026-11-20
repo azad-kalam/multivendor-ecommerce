@@ -22,11 +22,12 @@
 </head>
 
 <body>
+    @include('partials.scripts.script_link')
     <!-- Main Content -->
     @yield('content')
 
     <!-- All scripts link -->
-    @include('partials.scripts.script_link')
+    {{-- @include('partials.scripts.script_link') --}}
 
     <!-- Global CSRF-TOKEN -->
     @include('CSRF.csrf_token')
